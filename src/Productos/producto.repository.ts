@@ -21,13 +21,13 @@ export class ProductoRepository {
   }
 
   async getAll(): Promise<Producto[]> {
-    const result = await this.knexInstance('producto').select('*');
+    const result = await this.knexInstance('productos').select('*');
 
     return result.map((pDto) => getProductoFromDTO(pDto));
   }
 
   async getOne(id: string): Promise<Producto> {
-    const result = await this.knexInstance('producto')
+    const result = await this.knexInstance('productos')
       .select('*')
       .where('id', id)
       .limit(1)
@@ -37,11 +37,11 @@ export class ProductoRepository {
   }
 
   async getPage(page: number): Promise<PagedProductos> {
-    const result = await this.knexInstance('producto')
+    const result = await this.knexInstance('productos')
       .select('*')
       .limit(PAGE_AMOUNT)
       .offset((page - 1) * PAGE_AMOUNT);
-    const count = await this.knexInstance('producto')
+    const count = await this.knexInstance('productos')
       .count<number>('1')
       .first();
 

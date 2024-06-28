@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ReadStream, createReadStream } from 'fs';
+import { Knex } from 'knex';
 import { join } from 'path';
-import { KnexProvider } from 'src/Database';
+import { KNEX_INSTANCE } from 'src/constants/database';
 
 @Injectable()
 export class FotoRepository {
-  constructor(private readonly knexProvider: KnexProvider) {}
+  constructor(@Inject(KNEX_INSTANCE) private readonly knex: Knex) {}
 
   async get(id: string): Promise<ReadStream> {
-    const knex = this.knexProvider.getInstance();
-    const result = await knex('producto_fotos')
+    const result = await this.knex('producto_fotos')
       .select('*')
       .where('id', id)
       .limit(1)

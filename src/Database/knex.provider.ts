@@ -10,7 +10,7 @@ export class KnexProvider {
       this.instance = knex({
         client: 'sqlite3',
         connection: {
-          filename: './mydb.sqlite',
+          filename: './ladespen.sqlite',
         },
       });
     }

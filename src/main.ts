@@ -3,7 +3,7 @@ import { AppModule } from './App';
 import { AllExceptionsFilter } from './App/exception.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   await app.listen(3000);

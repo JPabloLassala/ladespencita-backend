@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Producto } from "./producto.entity";
 
 export class ProductoRequestDTO {
+  @ApiProperty({ name: "asdasda", example: "Producto 1", required: false })
   @ApiProperty({ example: "Producto 1", required: false })
   nombre?: string;
   @ApiProperty({ example: 1, required: false })
@@ -34,10 +35,10 @@ export class ProductoRequestDTO {
   valorx12?: number;
 
   static toProducto = (
-    id: string,
     dto: ProductoRequestDTO,
+    id?: string,
   ): Partial<Producto> => ({
-    id: parseInt(id),
+    id: id ? parseInt(id) : undefined,
     nombre: dto.nombre,
     unidadesMetroLineal: dto.unidadesMetroLineal,
     medidas: {

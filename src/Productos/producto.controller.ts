@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { ProductoRepository } from "./producto.repository";
 import { Producto } from "./producto.entity";
 import { ProductoRequestDTO } from "./Product.record.dto";
 import {
+  CreateSwaggerDoc,
   GetAllSwaggerDoc,
   GetOneSwaggerDoc,
   UpdateOneSwaggerDoc,
@@ -30,7 +31,19 @@ export class ProductoController {
     @Param("id") id: string,
     @Body() updateProductDTO: ProductoRequestDTO,
   ): Promise<Producto> {
-    const partialProducto = ProductoRequestDTO.toProducto(id, updateProductDTO);
+    const partialProducto = ProductoRequestDTO.toProducto(updateProductDTO, id);
     return await this.productoRepository.updateOne(partialProducto);
+  }
+
+  @Post()
+  @CreateSwaggerDoc()
+  async create(
+    @Body() createProductDTO: ProductoRequestDTO,
+  ): Promise<Producto> {
+    const partialProducto = ProductoRequestDTO.toProducto(
+      createProductDTO,
+      undefined,
+    );
+    return await this.productoRepository.createOne(partialProducto);
   }
 }

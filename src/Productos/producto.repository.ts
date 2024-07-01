@@ -60,4 +60,12 @@ export class ProductoRepository {
 
     return ProductoRecordDTO.toProducto(result[0] as ProductoRecordDTO);
   }
+
+  async createOne(partialProducto: Partial<Producto>): Promise<Producto> {
+    const result = await this.knex("productos")
+      .insert(partialProducto, ["*"])
+      .returning("*");
+
+    return ProductoRecordDTO.toProducto(result[0] as ProductoRecordDTO);
+  }
 }

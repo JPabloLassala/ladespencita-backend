@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { ProductoRepository } from "./producto.repository";
 import { Producto } from "./producto.entity";
-import { ProductoRequestDTO } from "./Product.record.dto";
+import { ProductoRequestDTO } from "./producto.dto";
 import {
   CreateSwaggerDoc,
   GetAllSwaggerDoc,

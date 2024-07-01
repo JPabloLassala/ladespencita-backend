@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Knex } from "knex";
 import { Producto } from "./producto.entity";
-import { ProductoRecordDTO, ProductoRequestDTO } from "./Product.record.dto";
+import { ProductoRecordDTO, ProductoRequestDTO } from "./producto.dto";
 import { KNEX_INSTANCE } from "src/constants/database";
 
 const PAGE_AMOUNT = 10;

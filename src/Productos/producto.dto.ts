@@ -1,37 +1,20 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { Producto } from "./producto.entity";
 
 export class ProductoRequestDTO {
-  @ApiProperty({ name: "asdasda", example: "Producto 1", required: false })
-  @ApiProperty({ example: "Producto 1", required: false })
   nombre?: string;
-  @ApiProperty({ example: 1, required: false })
   unidadesMetroLineal?: number;
-  @ApiProperty({ example: 1, required: false })
   altura?: number;
-  @ApiProperty({ example: 1, required: false })
   ancho?: number;
-  @ApiProperty({ example: 1, required: false })
   profundidad?: number;
-  @ApiProperty({ example: 1, required: false })
   diametro?: number;
-  @ApiProperty({ example: 1, required: false })
   valorUnitarioGarantia?: number;
-  @ApiProperty({ example: 1, required: false })
   costoProducto?: number;
-  @ApiProperty({ example: 1, required: false })
   costoGrafica?: number;
-  @ApiProperty({ example: 1, required: false })
   diseno?: number;
-  @ApiProperty({ example: 1, required: false })
   costoTotal?: number;
-  @ApiProperty({ example: 1, required: false })
   valorx1?: number;
-  @ApiProperty({ example: 1, required: false })
   valorx3?: number;
-  @ApiProperty({ example: 1, required: false })
   valorx6?: number;
-  @ApiProperty({ example: 1, required: false })
   valorx12?: number;
 
   static toProducto = (dto: ProductoRequestDTO, id?: string): Partial<Producto> => ({

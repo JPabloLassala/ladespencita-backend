@@ -1,1 +1,1 @@
-export const KNEX_INSTANCE = 'KNEX_INSTANCE';
+export const KNEX_INSTANCE = "KNEX_INSTANCE";

@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class AlquilerRepository {
-  constructor(private readonly ) {}
+  constructor(private readonly) {}
 
   async getAll() {
-    return 'getAll';
+    return "getAll";
   }
 
   async getOne() {
-    return 'getOne';
+    return "getOne";
   }
 
   async getAlquileresByProducto() {
-    return 'getAlquileresByProducto';
+    return "getAlquileresByProducto";
   }
 }

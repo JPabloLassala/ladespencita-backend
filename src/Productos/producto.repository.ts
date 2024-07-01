@@ -19,17 +19,11 @@ export class ProductoRepository {
   async getAll(): Promise<Producto[]> {
     const result = await this.knex("productos").select("*");
 
-    return result.map(
-      (pDto) => ProductoRequestDTO.toProducto(pDto.id, pDto) as Producto,
-    );
+    return result.map((pDto) => ProductoRequestDTO.toProducto(pDto.id, pDto) as Producto);
   }
 
   async getOne(id: string): Promise<Producto> {
-    const result = await this.knex("productos")
-      .select("*")
-      .where("id", id)
-      .limit(1)
-      .first();
+    const result = await this.knex("productos").select("*").where("id", id).limit(1).first();
 
     return ProductoRequestDTO.toProducto(result.id, result) as Producto;
   }
@@ -62,9 +56,7 @@ export class ProductoRepository {
   }
 
   async createOne(partialProducto: Partial<Producto>): Promise<Producto> {
-    const result = await this.knex("productos")
-      .insert(partialProducto, ["*"])
-      .returning("*");
+    const result = await this.knex("productos").insert(partialProducto, ["*"]).returning("*");
 
     return ProductoRecordDTO.toProducto(result[0] as ProductoRecordDTO);
   }

@@ -34,10 +34,7 @@ export class ProductoRequestDTO {
   @ApiProperty({ example: 1, required: false })
   valorx12?: number;
 
-  static toProducto = (
-    dto: ProductoRequestDTO,
-    id?: string,
-  ): Partial<Producto> => ({
+  static toProducto = (dto: ProductoRequestDTO, id?: string): Partial<Producto> => ({
     id: id ? parseInt(id) : undefined,
     nombre: dto.nombre,
     unidadesMetroLineal: dto.unidadesMetroLineal,
@@ -60,6 +57,25 @@ export class ProductoRequestDTO {
       diseno: dto.diseno,
       total: dto.costoTotal,
     },
+  });
+
+  static fromProducto = (producto: Partial<Producto>): Partial<ProductoRecordDTO> => ({
+    id: producto.id,
+    nombre: producto.nombre ?? undefined,
+    unidadesMetroLineal: producto.unidadesMetroLineal ?? undefined,
+    altura: producto?.medidas?.altura ?? undefined,
+    ancho: producto?.medidas?.ancho ?? undefined,
+    profundidad: producto?.medidas?.profundidad ?? undefined,
+    diametro: producto?.medidas?.diametro ?? undefined,
+    valorUnitarioGarantia: producto?.valor?.unitarioGarantia ?? undefined,
+    costoProducto: producto?.costo?.producto ?? undefined,
+    costoGrafica: producto?.costo?.grafica ?? undefined,
+    diseno: producto?.costo?.diseno ?? undefined,
+    costoTotal: producto?.costo?.total ?? undefined,
+    valorx1: producto?.valor?.x1 ?? undefined,
+    valorx3: producto?.valor?.x3 ?? undefined,
+    valorx6: producto?.valor?.x6 ?? undefined,
+    valorx12: producto?.valor?.x12 ?? undefined,
   });
 }
 
@@ -106,9 +122,7 @@ export class ProductoRecordDTO {
     },
   });
 
-  static fromProducto = (
-    producto: Partial<Producto>,
-  ): Partial<ProductoRecordDTO> => ({
+  static fromProducto = (producto: Partial<Producto>): Partial<ProductoRecordDTO> => ({
     id: producto.id,
     nombre: producto.nombre ?? undefined,
     unidadesMetroLineal: producto.unidadesMetroLineal ?? undefined,

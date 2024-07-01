@@ -1,21 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from "@nestjs/common";
 
-@Controller('alquileres')
+@Controller("alquileres")
 export class AlquilerController {
   constructor() {}
 
   @Get()
   async getAll() {
-    return 'getAll';
+    return "getAll";
   }
 
-  @Get(':id')
+  @Get(":id")
   async getOne() {
-    return 'getOne';
+    return "getOne";
   }
 
-  @Get('/producto/:id')
+  @Get("/producto/:id")
   async getAlquileresByProducto() {
-    return 'getAlquileresByProducto';
+    return "getAlquileresByProducto";
   }
 }

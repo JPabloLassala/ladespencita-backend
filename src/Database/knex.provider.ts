@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Knex, knex } from 'knex';
+import { Injectable } from "@nestjs/common";
+import { Knex, knex } from "knex";
 
 @Injectable()
 export class KnexProvider {
@@ -8,9 +8,9 @@ export class KnexProvider {
   constructor() {
     if (!this.instance) {
       this.instance = knex({
-        client: 'sqlite3',
+        client: "sqlite3",
         connection: {
-          filename: './ladespen.sqlite',
+          filename: "./ladespen.sqlite",
         },
       });
     }

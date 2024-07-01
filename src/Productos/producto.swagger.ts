@@ -1,12 +1,12 @@
-import { ApiProperty, ApiResponse } from '@nestjs/swagger';
-import { ProductoRequestDTO } from './Product.record.dto';
-import { Producto } from './producto.entity';
+import { ApiProperty, ApiResponse } from "@nestjs/swagger";
+import { ProductoRequestDTO } from "./Product.record.dto";
+import { Producto } from "./producto.entity";
 
 export const UpdateOneSwaggerDoc = () =>
   ApiProperty({
     type: ProductoRequestDTO,
     example: {
-      nombre: 'Producto 1',
+      nombre: "Producto 1",
       unidadesMetroLineal: 1,
       altura: 1,
       ancho: 1,

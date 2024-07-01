@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Producto } from './producto.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { Producto } from "./producto.entity";
 
 export class ProductoRequestDTO {
-  @ApiProperty({ example: 'Producto 1', required: false })
+  @ApiProperty({ example: "Producto 1", required: false })
   nombre?: string;
   @ApiProperty({ example: 1, required: false })
   unidadesMetroLineal?: number;

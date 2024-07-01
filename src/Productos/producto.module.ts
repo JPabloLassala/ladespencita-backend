@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Module } from "@nestjs/common";
 
-import { ProductoController } from './producto.controller';
-import { ProductoRepository } from './producto.repository';
-import { DatabaseModule } from 'src/Database';
+import { ProductoController } from "./producto.controller";
+import { ProductoRepository } from "./producto.repository";
+import { DatabaseModule } from "src/Database";
 
 @Module({
   imports: [DatabaseModule],

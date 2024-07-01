@@ -1,14 +1,14 @@
-import { Knex } from 'knex';
-import { ProductoRecordDTO } from 'src/Productos/Product.record.dto';
+import { Knex } from "knex";
+import { ProductoRecordDTO } from "src/Productos";
 
 export async function seed(knex: Knex): Promise<void> {
   // Deletes ALL existing entries
-  await knex('producto').del();
+  await knex("producto").del();
 
   // Inserts seed entries
-  await knex<ProductoRecordDTO>('producto').insert([
+  await knex<ProductoRecordDTO>("producto").insert([
     {
-      nombre: 'Cereales caja',
+      nombre: "Cereales caja",
       unidadesMetroLineal: 5,
       altura: 28,
       costoProducto: 0,
@@ -22,7 +22,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 2295,
     },
     {
-      nombre: 'Cereales caja ABOLLADAS (%50 off)',
+      nombre: "Cereales caja ABOLLADAS (%50 off)",
       unidadesMetroLineal: 5,
       altura: 28,
       costoProducto: 0,
@@ -36,7 +36,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 2295,
     },
     {
-      nombre: 'Arveja lata',
+      nombre: "Arveja lata",
       unidadesMetroLineal: 12,
       altura: 8,
       costoProducto: 700,
@@ -50,7 +50,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 794.25,
     },
     {
-      nombre: 'Choclo lata',
+      nombre: "Choclo lata",
       unidadesMetroLineal: 12,
       altura: 8,
       costoProducto: 700,
@@ -64,7 +64,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 794.25,
     },
     {
-      nombre: 'Duraznos lata',
+      nombre: "Duraznos lata",
       unidadesMetroLineal: 10,
       altura: 11.5,
       costoProducto: 1650,
@@ -78,7 +78,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1221.75,
     },
     {
-      nombre: 'Dulce de leche lata',
+      nombre: "Dulce de leche lata",
       unidadesMetroLineal: 9,
       altura: 13,
       costoProducto: 1000,
@@ -92,7 +92,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 929.25,
     },
     {
-      nombre: 'Jardinera lata',
+      nombre: "Jardinera lata",
       unidadesMetroLineal: 12,
       altura: 9.5,
       costoProducto: 700,
@@ -106,7 +106,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 794.25,
     },
     {
-      nombre: 'Tomate caja',
+      nombre: "Tomate caja",
       unidadesMetroLineal: 9,
       altura: 9.5,
       costoProducto: 700,
@@ -120,7 +120,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 794.25,
     },
     {
-      nombre: 'Tomate lata',
+      nombre: "Tomate lata",
       unidadesMetroLineal: 12,
       altura: 11,
       costoProducto: 700,
@@ -134,7 +134,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 794.25,
     },
     {
-      nombre: 'Agua mineral 2 litros',
+      nombre: "Agua mineral 2 litros",
       unidadesMetroLineal: 10,
       altura: 34,
       costoProducto: 1300,
@@ -148,7 +148,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1084.5,
     },
     {
-      nombre: 'Agua mineral con gas 2 litros',
+      nombre: "Agua mineral con gas 2 litros",
       unidadesMetroLineal: 10,
       altura: 34,
       costoProducto: 1300,
@@ -162,7 +162,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1084.5,
     },
     {
-      nombre: 'Gaseosa pomelo chica 600 ccotra botella',
+      nombre: "Gaseosa pomelo chica 600 ccotra botella",
       unidadesMetroLineal: 15,
       altura: 23,
       costoProducto: 850,
@@ -176,7 +176,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 882,
     },
     {
-      nombre: 'Gaseosa cola chica 600 cc otra botella',
+      nombre: "Gaseosa cola chica 600 cc otra botella",
       unidadesMetroLineal: 15,
       altura: 23,
       costoProducto: 850,
@@ -190,7 +190,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 882,
     },
     {
-      nombre: 'Gaseosa limón chica 600 cc otra botella',
+      nombre: "Gaseosa limón chica 600 cc otra botella",
       unidadesMetroLineal: 15,
       altura: 23,
       costoProducto: 850,
@@ -204,7 +204,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 882,
     },
     {
-      nombre: 'Gaseosa naranja chica 600 cc otra botella',
+      nombre: "Gaseosa naranja chica 600 cc otra botella",
       unidadesMetroLineal: 15,
       altura: 23,
       costoProducto: 850,
@@ -218,7 +218,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 882,
     },
     {
-      nombre: 'Gaseosa cola 2litros',
+      nombre: "Gaseosa cola 2litros",
       unidadesMetroLineal: 9,
       altura: 36,
       costoProducto: 1300,
@@ -232,7 +232,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1084.5,
     },
     {
-      nombre: 'Gaseosa lima 2litros',
+      nombre: "Gaseosa lima 2litros",
       unidadesMetroLineal: 9,
       altura: 36,
       costoProducto: 1300,
@@ -246,7 +246,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1084.5,
     },
     {
-      nombre: 'Gaseosa naranja 2litros',
+      nombre: "Gaseosa naranja 2litros",
       unidadesMetroLineal: 9,
       altura: 36,
       costoProducto: 1300,
@@ -260,7 +260,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1084.5,
     },
     {
-      nombre: 'Gaseosa pomelo 2litros',
+      nombre: "Gaseosa pomelo 2litros",
       unidadesMetroLineal: 9,
       altura: 36,
       costoProducto: 1300,
@@ -274,7 +274,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1084.5,
     },
     {
-      nombre: 'Botella de jugo natural 500cc - Zanahoria',
+      nombre: "Botella de jugo natural 500cc - Zanahoria",
       unidadesMetroLineal: 14,
       altura: 20,
       costoProducto: 1000,
@@ -288,7 +288,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 810,
     },
     {
-      nombre: 'Botella de jugo natural 500cc - Kale',
+      nombre: "Botella de jugo natural 500cc - Kale",
       unidadesMetroLineal: 14,
       altura: 20,
       costoProducto: 1000,
@@ -302,7 +302,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 810,
     },
     {
-      nombre: 'Botella de jugo natural 500cc - Remolacha',
+      nombre: "Botella de jugo natural 500cc - Remolacha",
       unidadesMetroLineal: 14,
       altura: 20,
       costoProducto: 1000,
@@ -316,7 +316,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 810,
     },
     {
-      nombre: 'Botella de champagne 750ml',
+      nombre: "Botella de champagne 750ml",
       unidadesMetroLineal: 10,
       altura: 26,
       costoProducto: 7000,
@@ -330,7 +330,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 4950,
     },
     {
-      nombre: 'Botella de leche descremada 1 litro',
+      nombre: "Botella de leche descremada 1 litro",
       unidadesMetroLineal: 10,
       altura: 25,
       costoProducto: 100,
@@ -344,7 +344,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1170,
     },
     {
-      nombre: 'Botella de leche entera 1 litro',
+      nombre: "Botella de leche entera 1 litro",
       unidadesMetroLineal: 10,
       altura: 25,
       costoProducto: 100,
@@ -358,7 +358,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1170,
     },
     {
-      nombre: 'Lavandina 1 litro',
+      nombre: "Lavandina 1 litro",
       unidadesMetroLineal: 8,
       altura: 30,
       costoProducto: 1900,
@@ -372,7 +372,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1334.25,
     },
     {
-      nombre: 'Lavandina 500cc',
+      nombre: "Lavandina 500cc",
       unidadesMetroLineal: 11,
       altura: 27,
       costoProducto: 1300,
@@ -386,7 +386,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1064.25,
     },
     {
-      nombre: 'Caja torta chocolate',
+      nombre: "Caja torta chocolate",
       unidadesMetroLineal: 6,
       altura: 19,
       costoProducto: 0,
@@ -400,7 +400,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1845,
     },
     {
-      nombre: 'Caja torta chocolate  ABOLLADAS (%50 off)',
+      nombre: "Caja torta chocolate  ABOLLADAS (%50 off)",
       unidadesMetroLineal: 6,
       altura: 19,
       costoProducto: 0,
@@ -414,7 +414,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 922.5,
     },
     {
-      nombre: 'Caja bizcchuelo',
+      nombre: "Caja bizcchuelo",
       unidadesMetroLineal: 6,
       altura: 19,
       costoProducto: 0,
@@ -428,7 +428,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1845,
     },
     {
-      nombre: 'Caja bizcchuelo  ABOLLADAS (%50 off)',
+      nombre: "Caja bizcchuelo  ABOLLADAS (%50 off)",
       unidadesMetroLineal: 6,
       altura: 19,
       costoProducto: 0,
@@ -442,7 +442,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 922.5,
     },
     {
-      nombre: 'Detergente CYAN',
+      nombre: "Detergente CYAN",
       unidadesMetroLineal: 13,
       altura: 28,
       costoProducto: 1800,
@@ -456,7 +456,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1289.25,
     },
     {
-      nombre: 'Detergente ROSA',
+      nombre: "Detergente ROSA",
       unidadesMetroLineal: 13,
       altura: 28,
       costoProducto: 1800,
@@ -470,7 +470,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1289.25,
     },
     {
-      nombre: 'Detergente BLANCO',
+      nombre: "Detergente BLANCO",
       unidadesMetroLineal: 13,
       altura: 28,
       costoProducto: 1800,
@@ -484,7 +484,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1289.25,
     },
     {
-      nombre: 'Detergente AMARILLO',
+      nombre: "Detergente AMARILLO",
       unidadesMetroLineal: 13,
       altura: 28,
       costoProducto: 1800,
@@ -498,7 +498,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1289.25,
     },
     {
-      nombre: 'Detergentes ABOLLADOS (%50 off)',
+      nombre: "Detergentes ABOLLADOS (%50 off)",
       unidadesMetroLineal: 13,
       altura: 28,
       costoProducto: 900,
@@ -512,7 +512,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 681.75,
     },
     {
-      nombre: 'Desodorante piso azul',
+      nombre: "Desodorante piso azul",
       unidadesMetroLineal: 13,
       altura: 28,
       costoProducto: 1200,
@@ -526,7 +526,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1019.25,
     },
     {
-      nombre: 'Desodorante piso amarillo',
+      nombre: "Desodorante piso amarillo",
       unidadesMetroLineal: 13,
       altura: 28,
       costoProducto: 1200,
@@ -540,7 +540,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1019.25,
     },
     {
-      nombre: 'Desodorante piso violeta',
+      nombre: "Desodorante piso violeta",
       unidadesMetroLineal: 13,
       altura: 28,
       costoProducto: 1200,
@@ -554,7 +554,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1019.25,
     },
     {
-      nombre: 'Sobre trenet',
+      nombre: "Sobre trenet",
       unidadesMetroLineal: 12,
       altura: 23,
       costoProducto: 700,
@@ -568,7 +568,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 794.25,
     },
     {
-      nombre: 'Pulverizador baño',
+      nombre: "Pulverizador baño",
       unidadesMetroLineal: 9,
       altura: 27,
       costoProducto: 1300,
@@ -582,7 +582,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1064.25,
     },
     {
-      nombre: 'Pulverizador limpiavidrios',
+      nombre: "Pulverizador limpiavidrios",
       unidadesMetroLineal: 9,
       altura: 27,
       costoProducto: 1300,
@@ -596,7 +596,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1064.25,
     },
     {
-      nombre: 'Aceite tapa amarilla',
+      nombre: "Aceite tapa amarilla",
       unidadesMetroLineal: 12,
       altura: 27,
       costoProducto: 2400,
@@ -610,7 +610,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1559.25,
     },
     {
-      nombre: 'Aceite tapa amarilla (otra botella)',
+      nombre: "Aceite tapa amarilla (otra botella)",
       unidadesMetroLineal: 12,
       altura: 27,
       costoProducto: 2400,
@@ -624,7 +624,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1559.25,
     },
     {
-      nombre: 'Aceite tapa amarilla (tapa verde abollado) 50% off',
+      nombre: "Aceite tapa amarilla (tapa verde abollado) 50% off",
       unidadesMetroLineal: 12,
       altura: 27,
       costoProducto: 1200,
@@ -638,7 +638,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 816.75,
     },
     {
-      nombre: 'Vinagre manzana',
+      nombre: "Vinagre manzana",
       unidadesMetroLineal: 14,
       altura: 25,
       costoProducto: 1400,
@@ -652,7 +652,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1170,
     },
     {
-      nombre: 'Vinagre vino',
+      nombre: "Vinagre vino",
       unidadesMetroLineal: 14,
       altura: 25,
       costoProducto: 1400,
@@ -666,7 +666,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1170,
     },
     {
-      nombre: 'Vinagre vino ABOLLADO (%50 off)',
+      nombre: "Vinagre vino ABOLLADO (%50 off)",
       unidadesMetroLineal: 14,
       altura: 25,
       costoProducto: 700,
@@ -680,7 +680,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 652.5,
     },
     {
-      nombre: 'Vinagre alcohol (con etiqueta vinagre vino)',
+      nombre: "Vinagre alcohol (con etiqueta vinagre vino)",
       unidadesMetroLineal: 14,
       altura: 25,
       costoProducto: 700,
@@ -694,7 +694,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 855,
     },
     {
-      nombre: 'Galletas de agua pack x3',
+      nombre: "Galletas de agua pack x3",
       unidadesMetroLineal: 5,
       altura: 11,
       costoProducto: 1400,
@@ -708,7 +708,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1755,
     },
     {
-      nombre: 'Galletitas Nax rojas',
+      nombre: "Galletitas Nax rojas",
       unidadesMetroLineal: 8,
       altura: 18,
       costoProducto: 0,
@@ -722,7 +722,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1935,
     },
     {
-      nombre: 'Galletitas Nax azules',
+      nombre: "Galletitas Nax azules",
       unidadesMetroLineal: 8,
       altura: 18,
       costoProducto: 0,
@@ -736,7 +736,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1935,
     },
     {
-      nombre: 'Papa tubo chica roja',
+      nombre: "Papa tubo chica roja",
       unidadesMetroLineal: 13,
       altura: 8,
       costoProducto: 400,
@@ -750,7 +750,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 675,
     },
     {
-      nombre: 'Papa tubo chica amarilla',
+      nombre: "Papa tubo chica amarilla",
       unidadesMetroLineal: 13,
       altura: 8,
       costoProducto: 400,
@@ -764,7 +764,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 675,
     },
     {
-      nombre: 'Papa tubo chica verde',
+      nombre: "Papa tubo chica verde",
       unidadesMetroLineal: 13,
       altura: 8,
       costoProducto: 400,
@@ -778,7 +778,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 675,
     },
     {
-      nombre: 'Papa tubo chica azul',
+      nombre: "Papa tubo chica azul",
       unidadesMetroLineal: 13,
       altura: 8,
       costoProducto: 400,
@@ -792,7 +792,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 675,
     },
     {
-      nombre: 'Papa tubo grande roja',
+      nombre: "Papa tubo grande roja",
       unidadesMetroLineal: 13,
       altura: 21,
       costoProducto: 2300,
@@ -806,7 +806,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1665,
     },
     {
-      nombre: 'Papa tubo grande amarilla',
+      nombre: "Papa tubo grande amarilla",
       unidadesMetroLineal: 13,
       altura: 21,
       costoProducto: 2300,
@@ -820,7 +820,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1665,
     },
     {
-      nombre: 'Papa tubo grande verde',
+      nombre: "Papa tubo grande verde",
       unidadesMetroLineal: 13,
       altura: 21,
       costoProducto: 2300,
@@ -834,7 +834,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1665,
     },
     {
-      nombre: 'Papa tubo grande azul',
+      nombre: "Papa tubo grande azul",
       unidadesMetroLineal: 13,
       altura: 21,
       costoProducto: 2300,
@@ -848,14 +848,14 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1665,
     },
     {
-      nombre: 'Paquete de papas fritas',
+      nombre: "Paquete de papas fritas",
       unidadesMetroLineal: 10,
       altura: 24,
       ancho: 16,
       valorUnitarioGarantia: 8600,
     },
     {
-      nombre: 'Alfajor blanco',
+      nombre: "Alfajor blanco",
       unidadesMetroLineal: 14,
       altura: 2.5,
       diametro: 6,
@@ -870,7 +870,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 585,
     },
     {
-      nombre: 'Alfajor negro',
+      nombre: "Alfajor negro",
       unidadesMetroLineal: 14,
       altura: 2.5,
       diametro: 6,
@@ -885,7 +885,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 585,
     },
     {
-      nombre: 'Carbón',
+      nombre: "Carbón",
       unidadesMetroLineal: 4,
       altura: 50,
       costoProducto: 0,
@@ -899,7 +899,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: 1620,
     },
     {
-      nombre: 'Mueble Kiosko Tribuna Metal Naranja',
+      nombre: "Mueble Kiosko Tribuna Metal Naranja",
       unidadesMetroLineal: null,
       altura: 129,
       ancho: 90,
@@ -915,7 +915,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Mueble canastero de alambre',
+      nombre: "Mueble canastero de alambre",
       unidadesMetroLineal: null,
       altura: 108,
       ancho: 35,
@@ -931,7 +931,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Exhibidor de productos con ganchos',
+      nombre: "Exhibidor de productos con ganchos",
       unidadesMetroLineal: null,
       altura: 193,
       ancho: 69,
@@ -947,7 +947,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Mueble Exhibidor verde',
+      nombre: "Mueble Exhibidor verde",
       unidadesMetroLineal: null,
       altura: 150,
       ancho: 47,
@@ -963,7 +963,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Mueble exhibidor blanco',
+      nombre: "Mueble exhibidor blanco",
       unidadesMetroLineal: null,
       altura: null,
       costoProducto: 50000,
@@ -977,7 +977,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Mueble exhibidor con estantes de acrílico',
+      nombre: "Mueble exhibidor con estantes de acrílico",
       unidadesMetroLineal: null,
       altura: null,
       costoProducto: 50000,
@@ -991,7 +991,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Exhibidor de postales',
+      nombre: "Exhibidor de postales",
       unidadesMetroLineal: null,
       altura: 182,
       costoProducto: 25000,
@@ -1005,7 +1005,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Canastos Panaderos',
+      nombre: "Canastos Panaderos",
       unidadesMetroLineal: null,
       altura: 15,
       ancho: 70,
@@ -1021,7 +1021,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Canastos de compra',
+      nombre: "Canastos de compra",
       unidadesMetroLineal: null,
       altura: 22.5,
       ancho: 30,
@@ -1037,7 +1037,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Chango de supermercado con asiento',
+      nombre: "Chango de supermercado con asiento",
       unidadesMetroLineal: null,
       altura: 102,
       ancho: 60,
@@ -1053,7 +1053,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Chango de supermercado sin asiento',
+      nombre: "Chango de supermercado sin asiento",
       unidadesMetroLineal: null,
       altura: 110,
       ancho: 60,
@@ -1069,7 +1069,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Changuito de compras blanco',
+      nombre: "Changuito de compras blanco",
       unidadesMetroLineal: null,
       altura: null,
       costoProducto: 25000,
@@ -1083,7 +1083,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Changuito de compras metálico',
+      nombre: "Changuito de compras metálico",
       unidadesMetroLineal: null,
       altura: null,
       costoProducto: 25000,
@@ -1097,7 +1097,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Canasto negro',
+      nombre: "Canasto negro",
       unidadesMetroLineal: null,
       altura: null,
       costoProducto: 25000,
@@ -1111,7 +1111,7 @@ export async function seed(knex: Knex): Promise<void> {
       valorx12: null,
     },
     {
-      nombre: 'Canasto verde',
+      nombre: "Canasto verde",
       unidadesMetroLineal: null,
       altura: null,
       costoProducto: 25000,

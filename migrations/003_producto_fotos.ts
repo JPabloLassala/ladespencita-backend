@@ -1,8 +1,6 @@
 import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.renameTable("producto", "productos");
-  await knex.schema.renameTable("alquiler", "alquileres");
   await knex.schema.alterTable("productos", (table) => {
     table.dropColumn("foto");
   });
@@ -22,6 +20,4 @@ export async function down(knex: Knex): Promise<void> {
   await knex.schema.alterTable("productos", (table) => {
     table.string("foto").notNullable();
   });
-  await knex.schema.renameTable("productos", "producto");
-  await knex.schema.renameTable("alquileres", "alquiler");
 }

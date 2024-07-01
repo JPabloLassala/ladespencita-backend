@@ -3,10 +3,10 @@ import { ProductoRecordDTO } from "src/Productos";
 
 export async function seed(knex: Knex): Promise<void> {
   // Deletes ALL existing entries
-  await knex("producto").del();
+  await knex("productos").del();
 
   // Inserts seed entries
-  await knex<ProductoRecordDTO>("producto").insert([
+  await knex<ProductoRecordDTO>("productos").insert([
     {
       nombre: "Cereales caja",
       unidadesMetroLineal: 5,

@@ -1,12 +1,13 @@
 import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable("alquiler", (table) => {
+  await knex.schema.createTable("alquileres", (table) => {
     table.increments("id").primary().notNullable();
     table.string("productora").notNullable();
     table.string("proyecto").notNullable();
+    table.integer("cantidad").notNullable();
     table.integer("producto_id").notNullable();
-    table.foreign("producto_id").references("id").inTable("producto");
+    table.foreign("producto_id").references("id").inTable("productos");
     table.integer("unidadesCotizadas").nullable();
     table.integer("unidadesAlquiladas").nullable();
     table.integer("valorUnitarioGarantia").nullable();
@@ -25,5 +26,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTable("alquiler");
+  await knex.schema.dropTable("alquileres");
 }

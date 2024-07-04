@@ -1,17 +1,18 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
+import { AlquilerRepository } from "./alquiler.repository";
 
 @Controller("alquileres")
 export class AlquilerController {
-  constructor() {}
+  constructor(private readonly alquilerRepository: AlquilerRepository) {}
 
   @Get()
-  async getAll() {
-    return "getAll";
+  async getAlquileresWithoutProducts() {
+    return await this.alquilerRepository.getAlquileres();
   }
 
   @Get(":id")
-  async getOne() {
-    return "getOne";
+  async getOne(@Param("id") id: number) {
+    return await this.alquilerRepository.getAlquiler(id);
   }
 
   @Get("/producto/:id")

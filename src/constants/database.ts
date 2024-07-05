@@ -1,1 +1,2 @@
-export const KNEX_INSTANCE = "KNEX_INSTANCE";
+export const PRODUCTO_MODEL = "PRODUCTO_MODEL";
+export const ALQUILER_MODEL = "ALQUILER_MODEL";

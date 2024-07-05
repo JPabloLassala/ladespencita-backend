@@ -1,62 +1,36 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Knex } from "knex";
 import { Producto } from "./producto.entity";
-import { ProductoRecordDTO, ProductoRequestDTO } from "./producto.dto";
-import { KNEX_INSTANCE } from "src/constants/database";
-
-const PAGE_AMOUNT = 10;
-
-type PagedProductos = {
-  productos: Producto[];
-  page: number;
-  total: number;
-};
+import { ProductoRecordDTO, ProductoRequestDTO } from "./producto.schema";
+import { PRODUCTO_MODEL } from "src/constants/database";
+import { Model } from "mongoose";
 
 @Injectable()
 export class ProductoRepository {
-  constructor(@Inject(KNEX_INSTANCE) private readonly knex: Knex) {}
+  constructor(@Inject(PRODUCTO_MODEL) private readonly productoModel: Model<ProductoRecordDTO>) {}
 
   async getAll(): Promise<Producto[]> {
-    const result = await this.knex("productos").select("*");
+    const productoModels = await this.productoModel.find().lean().exec();
 
-    return result.map((pDto) => ProductoRequestDTO.toProducto(pDto.id, pDto) as Producto);
+    return productoModels.map((p) => ProductoRequestDTO.toProducto(p) as Producto);
   }
 
   async getOne(id: string): Promise<Producto> {
-    const result = await this.knex("productos").select("*").where("id", id).limit(1).first();
+    const productoModel = await this.productoModel.findOne({ id }).lean().exec();
 
-    return ProductoRequestDTO.toProducto(result.id, result) as Producto;
-  }
-
-  async getPage(page: number): Promise<PagedProductos> {
-    const result = await this.knex("productos")
-      .select("*")
-      .limit(PAGE_AMOUNT)
-      .offset((page - 1) * PAGE_AMOUNT);
-    const count = await this.knex("productos").count<number>("1").first();
-
-    return {
-      productos: result.map((pDto) => ProductoRecordDTO.toProducto(pDto)),
-      page,
-      total: count,
-    };
+    return ProductoRequestDTO.toProducto(productoModel) as Producto;
   }
 
   async updateOne(partialProducto: Partial<Producto>): Promise<Producto> {
-    const result = await this.knex("productos")
-      .where("id", partialProducto.id)
-      .update(
-        {
-          ...partialProducto,
-        },
-        ["*"],
-      );
+    const result = this.productoModel
+      .findOneAndUpdate({ id: partialProducto.id }, partialProducto, { new: true })
+      .lean()
+      .exec();
 
     return ProductoRecordDTO.toProducto(result[0] as ProductoRecordDTO);
   }
 
   async createOne(partialProducto: Partial<Producto>): Promise<Producto> {
-    const result = await this.knex("productos").insert(partialProducto, ["*"]).returning("*");
+    const result = await this.productoModel.create(ProductoRecordDTO.fromProducto(partialProducto));
 
     return ProductoRecordDTO.toProducto(result[0] as ProductoRecordDTO);
   }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiResponse } from "@nestjs/swagger";
-import { ProductoRequestDTO } from "./producto.dto";
+import { ProductoRequestDTO } from "./producto.schema";
 import { Producto } from "./producto.entity";
 import { HttpStatus, applyDecorators } from "@nestjs/common";
 

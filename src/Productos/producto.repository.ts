@@ -1,23 +1,22 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Producto } from "./producto.entity";
-import { ProductoRecordDTO, ProductoRequestDTO } from "./producto.schema";
 import { PRODUCTO_MODEL } from "src/constants/database";
 import { Model } from "mongoose";
 
 @Injectable()
 export class ProductoRepository {
-  constructor(@Inject(PRODUCTO_MODEL) private readonly productoModel: Model<ProductoRecordDTO>) {}
+  constructor(@Inject(PRODUCTO_MODEL) private readonly productoModel: Model<Producto>) {}
 
   async getAll(): Promise<Producto[]> {
     const productoModels = await this.productoModel.find().lean().exec();
 
-    return productoModels.map((p) => ProductoRequestDTO.toProducto(p) as Producto);
+    return productoModels;
   }
 
-  async getOne(id: string): Promise<Producto> {
-    const productoModel = await this.productoModel.findOne({ id }).lean().exec();
+  async getOne(nombre: string): Promise<Producto> {
+    const productoModel = await this.productoModel.findOne({ nombre }).lean().exec();
 
-    return ProductoRequestDTO.toProducto(productoModel) as Producto;
+    return productoModel;
   }
 
   async updateOne(partialProducto: Partial<Producto>): Promise<Producto> {
@@ -26,12 +25,12 @@ export class ProductoRepository {
       .lean()
       .exec();
 
-    return ProductoRecordDTO.toProducto(result[0] as ProductoRecordDTO);
+    return result;
   }
 
   async createOne(partialProducto: Partial<Producto>): Promise<Producto> {
-    const result = await this.productoModel.create(ProductoRecordDTO.fromProducto(partialProducto));
+    const result = await this.productoModel.create(partialProducto);
 
-    return ProductoRecordDTO.toProducto(result[0] as ProductoRecordDTO);
+    return result;
   }
 }

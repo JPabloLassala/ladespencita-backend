@@ -36,8 +36,7 @@ export class ProductoController {
   @Patch()
   async updateOne(@Body() updateProducto: Partial<Producto>): Promise<Producto> {
     try {
-      const partialProducto = ProductoRequestDTO.toProducto(updateProductDTO);
-      return await this.productoRepository.updateOne(partialProducto);
+      return await this.productoRepository.updateOne(updateProducto);
     } catch (error) {
       throw new HttpException(
         { status: HttpStatus.NOT_MODIFIED, error: "Internal Server Error" },

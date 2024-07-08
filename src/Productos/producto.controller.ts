@@ -10,26 +10,17 @@ import {
 } from "@nestjs/common";
 import { ProductoRepository } from "./producto.repository";
 import { Producto } from "./producto.entity";
-import { ProductoRequestDTO } from "./producto.schema";
-import {
-  CreateSwaggerDoc,
-  GetAllSwaggerDoc,
-  GetOneSwaggerDoc,
-  UpdateOneSwaggerDoc,
-} from "./producto.swagger";
 
 @Controller("productos")
 export class ProductoController {
   constructor(private readonly productoRepository: ProductoRepository) {}
 
   @Get()
-  @GetAllSwaggerDoc()
   async getAll(): Promise<Producto[]> {
     return await this.productoRepository.getAll();
   }
 
   @Get(":id")
-  @GetOneSwaggerDoc()
   async getOne(@Param("id") id: string): Promise<Producto> {
     try {
       return await this.productoRepository.getOne(id);
@@ -42,12 +33,8 @@ export class ProductoController {
     }
   }
 
-  @Patch(":id")
-  @UpdateOneSwaggerDoc()
-  async updateOne(
-    @Param("id") id: string,
-    @Body() updateProductDTO: ProductoRequestDTO,
-  ): Promise<Producto> {
+  @Patch()
+  async updateOne(@Body() updateProducto: Partial<Producto>): Promise<Producto> {
     try {
       const partialProducto = ProductoRequestDTO.toProducto(updateProductDTO);
       return await this.productoRepository.updateOne(partialProducto);
@@ -61,9 +48,9 @@ export class ProductoController {
   }
 
   @Post()
-  @CreateSwaggerDoc()
-  async create(@Body() createProductDTO: ProductoRequestDTO): Promise<Producto> {
-    const partialProducto = ProductoRequestDTO.toProducto(createProductDTO);
+  async create(@Body() createProductDTO: Producto): Promise<Producto> {
+    const partialProducto = createProductDTO;
+
     return await this.productoRepository.createOne(partialProducto);
   }
 }

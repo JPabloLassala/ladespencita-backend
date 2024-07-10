@@ -1,5 +1,5 @@
-export class Producto {
-  id?: number;
+export interface Producto {
+  id?: string;
   nombre: string;
   unidadesMetroLineal: number;
   medidas: {

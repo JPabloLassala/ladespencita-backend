@@ -1,6 +1,7 @@
 import { Producto } from "src/Productos";
 
 export type AlquilerProducto = {
+  id?: string;
   producto: Producto;
   unidadesAlquiladas: number;
   unidadesCotizadas: number;
@@ -17,7 +18,7 @@ export type AlquilerProducto = {
 };
 
 export class Alquiler {
-  id?: number;
+  id?: string;
   productora: string;
   proyecto: string;
   productos: AlquilerProducto[];

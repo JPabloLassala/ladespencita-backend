@@ -40,6 +40,7 @@ async function seed(AlquilerModel: mongoose.Model<any>): Promise<void> {
   const alquileres: AlquilerRecordDTO[] = new Array(5)
     .fill(undefined)
     .map<AlquilerRecordDTO>(() => ({
+      id: faker.string.uuid(),
       productora: faker.company.name(),
       proyecto: faker.company.name(),
       productos: productosAlquiler1,

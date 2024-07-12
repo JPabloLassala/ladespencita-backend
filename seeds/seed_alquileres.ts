@@ -25,7 +25,6 @@ async function seed(AlquilerModel: mongoose.Model<any>): Promise<void> {
 
   const getProductosAlquilerArray: () => AlquilerProductoDTO[] = () => {
     const productoDtos = faker.helpers.arrayElements(productos, { min: 3, max: 30 });
-    console.log(productoDtos.map((p) => `${p.id} - ${p.nombre}`));
     return productoDtos.map((productoDto) => {
       const valorx1 = parseInt(faker.string.numeric(3), 10);
       return {
@@ -41,14 +40,14 @@ async function seed(AlquilerModel: mongoose.Model<any>): Promise<void> {
         unidadesAlquiladas: parseInt(faker.string.numeric(2), 10),
         unidadesCotizadas: parseInt(faker.string.numeric(2), 10),
         cantidad: faker.number.int({ min: 1, max: productoDto.stock - 9 }),
-        producto: faker.helpers.arrayElement(productos),
+        producto: productoDto,
       };
     });
   };
   const alquileres: AlquilerRecordDTO[] = new Array(5).fill(undefined).map<AlquilerRecordDTO>(
     () =>
       new alquilerModel({
-        id: faker.string.uuid(),
+        _id: new mongoose.Types.ObjectId(),
         productora: faker.company.name(),
         proyecto: faker.company.name(),
         productos: getProductosAlquilerArray(),

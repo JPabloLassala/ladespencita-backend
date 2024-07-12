@@ -86,6 +86,7 @@ export const fromDtoToAlquiler = (dto: AlquilerRecordDTO): Alquiler => {
       id: producto._id,
       producto: {
         id: producto.producto._id,
+        stock: producto.producto.stock,
         nombre: producto.producto.nombre,
         unidadesMetroLineal: producto.producto.unidadesMetroLineal,
         medidas: producto.producto.medidas,

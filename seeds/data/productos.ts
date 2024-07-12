@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { Producto } from "src/Productos";
 
 export const productos: Producto[] = [
@@ -7,6 +8,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 4500,
@@ -27,6 +29,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 4500,
@@ -47,6 +50,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 8,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 700,
       grafica: 900,
@@ -67,6 +71,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 8,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 700,
       grafica: 900,
@@ -87,6 +92,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 11.5,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1650,
       grafica: 900,
@@ -107,6 +113,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 13,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1000,
       grafica: 900,
@@ -127,6 +134,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 9.5,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 700,
       grafica: 900,
@@ -147,6 +155,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 9.5,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 700,
       grafica: 900,
@@ -167,6 +176,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 11,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 700,
       grafica: 900,
@@ -187,6 +197,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 34,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -207,6 +218,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 34,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -227,6 +239,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 23,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 850,
       grafica: 900,
@@ -247,6 +260,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 23,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 850,
       grafica: 900,
@@ -267,6 +281,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 23,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 850,
       grafica: 900,
@@ -287,6 +302,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 23,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 850,
       grafica: 900,
@@ -307,6 +323,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 36,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -327,6 +344,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 36,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -347,6 +365,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 36,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -367,6 +386,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 36,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -387,6 +407,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 20,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1000,
       grafica: 800,
@@ -407,6 +428,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 20,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1000,
       grafica: 800,
@@ -427,6 +449,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 20,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1000,
       grafica: 800,
@@ -447,6 +470,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 26,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 7000,
       grafica: 1000,
@@ -467,6 +491,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 25,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 100,
       grafica: 1000,
@@ -487,6 +512,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 25,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 100,
       grafica: 1000,
@@ -507,6 +533,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 30,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1900,
       grafica: 900,
@@ -527,6 +554,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 27,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -547,6 +575,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 19,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 3500,
@@ -567,6 +596,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 19,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 1750,
@@ -587,6 +617,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 19,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 3500,
@@ -607,6 +638,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 19,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 1750,
@@ -627,6 +659,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1800,
       grafica: 900,
@@ -647,6 +680,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1800,
       grafica: 900,
@@ -667,6 +701,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1800,
       grafica: 900,
@@ -687,6 +722,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1800,
       grafica: 900,
@@ -707,6 +743,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 900,
       grafica: 450,
@@ -727,6 +764,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1200,
       grafica: 900,
@@ -747,6 +785,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1200,
       grafica: 900,
@@ -767,6 +806,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 28,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1200,
       grafica: 900,
@@ -787,6 +827,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 23,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 700,
       grafica: 900,
@@ -807,6 +848,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 27,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -827,6 +869,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 27,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1300,
       grafica: 900,
@@ -847,6 +890,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 27,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 2400,
       grafica: 900,
@@ -867,6 +911,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 27,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 2400,
       grafica: 900,
@@ -887,6 +932,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 27,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1200,
       grafica: 450,
@@ -907,6 +953,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 25,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1400,
       grafica: 900,
@@ -927,6 +974,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 25,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1400,
       grafica: 900,
@@ -947,6 +995,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 25,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 700,
       grafica: 450,
@@ -967,6 +1016,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 25,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 700,
       grafica: 900,
@@ -987,6 +1037,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 11,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1400,
       grafica: 1000,
@@ -1007,6 +1058,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 18,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 3500,
@@ -1027,6 +1079,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 18,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 3500,
@@ -1047,6 +1100,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 8,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 400,
       grafica: 700,
@@ -1067,6 +1121,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 8,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 400,
       grafica: 700,
@@ -1087,6 +1142,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 8,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 400,
       grafica: 700,
@@ -1107,6 +1163,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 8,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 400,
       grafica: 700,
@@ -1127,6 +1184,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 21,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 2300,
       grafica: 1000,
@@ -1147,6 +1205,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 21,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 2300,
       grafica: 1000,
@@ -1167,6 +1226,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 21,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 2300,
       grafica: 1000,
@@ -1187,6 +1247,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 21,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 2300,
       grafica: 1000,
@@ -1208,6 +1269,7 @@ export const productos: Producto[] = [
       altura: 24,
       ancho: 16,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 1000,
       grafica: 800,
@@ -1229,6 +1291,7 @@ export const productos: Producto[] = [
       altura: 2.5,
       diametro: 6,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 200,
       grafica: 800,
@@ -1250,6 +1313,7 @@ export const productos: Producto[] = [
       diametro: 6,
       altura: 2.5,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 200,
       grafica: 800,
@@ -1270,6 +1334,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 50,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 0,
       grafica: 3000,
@@ -1292,6 +1357,7 @@ export const productos: Producto[] = [
       ancho: 90,
       profundidad: 60,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 60000,
       grafica: 0,
@@ -1314,6 +1380,7 @@ export const productos: Producto[] = [
       profundidad: 50,
       ancho: 35,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1336,6 +1403,7 @@ export const productos: Producto[] = [
       ancho: 69,
       profundidad: 41,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 80000,
       grafica: 0,
@@ -1358,6 +1426,7 @@ export const productos: Producto[] = [
       ancho: 47,
       profundidad: 22,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 50000,
       grafica: 0,
@@ -1378,6 +1447,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: null,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 50000,
       grafica: 0,
@@ -1398,6 +1468,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: null,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 50000,
       grafica: 0,
@@ -1418,6 +1489,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: 182,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1440,6 +1512,7 @@ export const productos: Producto[] = [
       ancho: 70,
       profundidad: 60,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1462,6 +1535,7 @@ export const productos: Producto[] = [
       ancho: 30,
       profundidad: 47,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1484,6 +1558,7 @@ export const productos: Producto[] = [
       ancho: 60,
       profundidad: 100,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1506,6 +1581,7 @@ export const productos: Producto[] = [
       ancho: 60,
       profundidad: 95,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1526,6 +1602,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: null,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1546,6 +1623,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: null,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1566,6 +1644,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: null,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,
@@ -1586,6 +1665,7 @@ export const productos: Producto[] = [
     medidas: {
       altura: null,
     },
+    stock: faker.number.int({ min: 10, max: 99 }),
     costo: {
       producto: 25000,
       grafica: 0,

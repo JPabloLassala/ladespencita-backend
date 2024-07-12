@@ -4,6 +4,7 @@ import { Producto } from "./producto.entity";
 export const ProductoSchemaProps = {
   nombre: String,
   unidadesMetroLineal: Number,
+  stock: Number,
   medidas: {
     altura: Number,
     ancho: Number,
@@ -34,6 +35,7 @@ export interface ProductoRecordDTO extends Document {
   _id?: string;
   nombre: string;
   unidadesMetroLineal: number;
+  stock: number;
   medidas: {
     altura: number;
     ancho?: number;
@@ -60,6 +62,7 @@ export const fromDtoToProducto = (dto: ProductoRecordDTO): Producto => {
     id: dto._id,
     nombre: dto.nombre,
     unidadesMetroLineal: dto.unidadesMetroLineal,
+    stock: dto.stock,
     medidas: dto.medidas,
     costo: dto.costo,
     valor: dto.valor,
@@ -72,6 +75,7 @@ export const fromProductoToDto = (producto: Producto): ProductoRecordDTO => {
   return new productoModel({
     _id: new mongoose.Types.ObjectId(producto.id),
     nombre: producto.nombre,
+    stock: producto.stock,
     unidadesMetroLineal: producto.unidadesMetroLineal,
     medidas: producto.medidas,
     costo: producto.costo,

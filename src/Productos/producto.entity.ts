@@ -2,6 +2,7 @@ export interface Producto {
   id?: string;
   nombre: string;
   unidadesMetroLineal: number;
+  stock: number;
   medidas: {
     altura: number;
     ancho?: number;

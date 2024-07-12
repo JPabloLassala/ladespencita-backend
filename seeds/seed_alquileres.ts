@@ -6,6 +6,7 @@ import {
 } from "src/Alquileres/alquiler.schema";
 import { productos } from "./data/productos";
 import mongoose from "mongoose";
+import { fromProductoToDto } from "src/Productos";
 
 export async function seed_Alquileres(): Promise<void> {
   const AlquilerModel = mongoose.model("Alquiler", AlquilerSchema);
@@ -18,8 +19,9 @@ export async function seed_Alquileres(): Promise<void> {
 }
 
 async function seed(AlquilerModel: mongoose.Model<any>): Promise<void> {
+  const alquilerModel = mongoose.model<AlquilerRecordDTO>("Alquiler", AlquilerSchema);
   const productosAlquiler1 = new Array(10).fill(undefined).map((): AlquilerProductoDTO => {
-    const productoDto = faker.helpers.arrayElement(productos);
+    const productoDto = fromProductoToDto(faker.helpers.arrayElement(productos));
     const valorx1 = parseInt(faker.string.numeric(3), 10);
     return {
       valor: {
@@ -37,19 +39,20 @@ async function seed(AlquilerModel: mongoose.Model<any>): Promise<void> {
       producto: productoDto,
     };
   });
-  const alquileres: AlquilerRecordDTO[] = new Array(5)
-    .fill(undefined)
-    .map<AlquilerRecordDTO>(() => ({
-      id: faker.string.uuid(),
-      productora: faker.company.name(),
-      proyecto: faker.company.name(),
-      productos: productosAlquiler1,
-      fechaPresupuesto: new Date(),
-      fechaAlquiler: {
-        inicio: faker.date.anytime(),
-        fin: faker.date.anytime(),
-      },
-    }));
+  const alquileres: AlquilerRecordDTO[] = new Array(5).fill(undefined).map<AlquilerRecordDTO>(
+    () =>
+      new alquilerModel({
+        id: faker.string.uuid(),
+        productora: faker.company.name(),
+        proyecto: faker.company.name(),
+        productos: productosAlquiler1,
+        fechaPresupuesto: new Date(),
+        fechaAlquiler: {
+          inicio: faker.date.anytime(),
+          fin: faker.date.anytime(),
+        },
+      }),
+  );
 
   await AlquilerModel.insertMany(alquileres);
 }

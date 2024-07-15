@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import mongoose from "mongoose";
+import { softDeletePlugin } from "soft-delete-plugin-mongoose";
 import {
   AlquilerProductoDTO,
   AlquilerRecordDTO,
@@ -8,6 +9,7 @@ import {
 import { ProductoRecordDTO, ProductoSchema } from "src/Productos";
 
 export async function seed_Alquileres(): Promise<void> {
+  AlquilerSchema.plugin(softDeletePlugin);
   const AlquilerModel = mongoose.model("Alquiler", AlquilerSchema);
 
   await mongoose.connect("mongodb://root:example@localhost:27017/nest?authSource=admin");

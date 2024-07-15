@@ -5,11 +5,19 @@ import { ProductoRepository } from "./producto.repository";
 import { DatabaseModule } from "src/Database";
 import { Connection } from "mongoose";
 import { PRODUCTO_MODEL } from "src/constants/database";
-import { ProductoSchema } from "./producto.schema";
+import { ProductoRecordDTO, ProductoSchema } from "./producto.schema";
+import { SoftDeleteModel, softDeletePlugin } from "soft-delete-plugin-mongoose";
 
 const productoModelProvider = {
   provide: PRODUCTO_MODEL,
-  useFactory: (connection: Connection) => connection.model("Producto", ProductoSchema),
+  useFactory: (connection: Connection) => {
+    ProductoSchema.plugin(softDeletePlugin);
+
+    return connection.model<ProductoRecordDTO, SoftDeleteModel<ProductoRecordDTO>>(
+      "Producto",
+      ProductoSchema,
+    );
+  },
   inject: ["DATABASE_CONNECTION"],
 };
 

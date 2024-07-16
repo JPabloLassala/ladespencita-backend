@@ -12,6 +12,11 @@ export class AlquilerController {
     return await this.alquilerRepository.getAlquileres();
   }
 
+  @Get(":id")
+  async getOne(@Param("id") id: string) {
+    return await this.alquilerRepository.getAlquiler(id);
+  }
+
   @Patch()
   async updateAlquiler(@Body() alquiler: Partial<Alquiler>) {
     return await this.alquilerRepository.updateOne(alquiler);

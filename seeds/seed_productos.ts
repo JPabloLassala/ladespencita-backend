@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ProductoSchema } from "src/Productos";
+import { ProductoSchema } from "src/Producto";
 import { productos } from "./data/productos";
 import { softDeletePlugin } from "soft-delete-plugin-mongoose";
 

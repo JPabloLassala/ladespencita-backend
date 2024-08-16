@@ -19,6 +19,8 @@ export const ProductoSchemaProps = {
   },
   valor: {
     unitarioGarantia: Number,
+    totalGarantia: Number,
+    unitarioAlquiler: Number,
     x1: Number,
     x3: Number,
     x6: Number,
@@ -50,6 +52,8 @@ export interface ProductoRecordDTO extends Document {
   };
   valor: {
     unitarioGarantia: number;
+    totalGarantia: number;
+    unitarioAlquiler: number;
     x1: number;
     x3: number;
     x6: number;

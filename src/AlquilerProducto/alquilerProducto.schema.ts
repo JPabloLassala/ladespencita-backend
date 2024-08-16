@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import { AlquilerProducto } from "./alquilerProducto.entity";
-import { Producto } from "src/Productos";
-import { Alquiler } from "src/Alquileres";
+import { Producto } from "src/Producto";
+import { Alquiler } from "src/Alquiler";
 
 export const AlquilerProductoSchema = new mongoose.Schema(
   {
     productoId: String,
+    alquilerId: String,
     costo: {
       producto: Number,
       grafica: Number,
@@ -33,6 +34,7 @@ export const AlquilerProductoSchema = new mongoose.Schema(
 
 export interface AlquilerProductoDTO {
   _id?: string;
+  alquilerId: string;
   productoId: string;
   costo: {
     producto: number;
@@ -57,6 +59,7 @@ export interface AlquilerProductoDTO {
 export const fromDtoToAlquilerProducto = (dto: AlquilerProductoDTO): AlquilerProducto => {
   return {
     id: dto._id,
+    alquilerId: dto.alquilerId,
     productoId: dto.productoId,
     costo: dto.costo,
     unidadesAlquiladas: dto.unidadesAlquiladas,
@@ -89,6 +92,7 @@ export const fromProductoToAlquilerProducto = (
 ): AlquilerProducto => {
   return {
     productoId: producto.id,
+    alquilerId: alquiler.id,
     cantidad,
     costo: {
       producto: producto.costo.producto,

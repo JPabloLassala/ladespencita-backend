@@ -1,5 +1,6 @@
 export type AlquilerProducto = {
   id?: string;
+  alquilerId: string;
   productoId: string;
   costo: {
     producto: number;

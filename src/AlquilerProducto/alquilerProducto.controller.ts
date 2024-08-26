@@ -5,7 +5,7 @@ import { AlquilerProductoRepository } from "./alquilerProducto.repository";
 export class AlquilerProductoController {
   constructor(private readonly alquilerProductoRepository: AlquilerProductoRepository) {}
 
-  @Get(":alquilerId")
+  @Get("/:alquilerId")
   async getProductosFromAlquiler(@Param("alquilerId") alquilerId: string) {
     return await this.alquilerProductoRepository.getProductosFromAlquiler(alquilerId);
   }

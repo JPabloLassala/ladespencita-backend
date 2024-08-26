@@ -16,7 +16,9 @@ export class AlquilerProductoRepository {
   ) {}
 
   async getProductosFromAlquiler(alquilerId: string): Promise<AlquilerProducto[]> {
-    const alquilerProductoDocs = await this.alquilerProductoModel.find({ alquilerId }).exec();
+    const alquilerProductoDocs = await this.alquilerProductoModel.find({
+      alquilerId,
+    });
 
     return alquilerProductoDocs.map(fromDtoToAlquilerProducto);
   }

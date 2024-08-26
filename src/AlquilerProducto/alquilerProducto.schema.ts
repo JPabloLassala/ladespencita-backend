@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { AlquilerProducto } from "./alquilerProducto.entity";
 import { Producto } from "src/Producto";
 import { Alquiler } from "src/Alquiler";
 
 export const AlquilerProductoSchema = new mongoose.Schema(
   {
-    productoId: String,
-    alquilerId: String,
+    productoId: Types.ObjectId,
+    alquilerId: Types.ObjectId,
     costo: {
       producto: Number,
       grafica: Number,

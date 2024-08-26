@@ -35,4 +35,11 @@ export class ProductoRepository {
 
     return fromDtoToProducto(result);
   }
+
+  async getProductosBetweenDates(alquileres: {
+    since: string;
+    until: string;
+  }): Promise<Producto[]> {
+    return [];
+  }
 }

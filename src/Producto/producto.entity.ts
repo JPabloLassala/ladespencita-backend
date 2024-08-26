@@ -3,6 +3,7 @@ export interface Producto {
   nombre: string;
   unidadesMetroLineal: number;
   stock: number;
+  disponibles: number;
   medidas: {
     altura: number;
     ancho?: number;

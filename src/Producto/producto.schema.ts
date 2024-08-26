@@ -65,6 +65,7 @@ export const fromDtoToProducto = (dto: ProductoRecordDTO): Producto => {
   return {
     id: dto._id,
     nombre: dto.nombre,
+    disponibles: 0,
     unidadesMetroLineal: dto.unidadesMetroLineal,
     stock: dto.stock,
     medidas: dto.medidas,

@@ -4,6 +4,7 @@ import { Producto } from "src/Producto";
 export const productos: Producto[] = new Array(100).fill(0).map(() => ({
   nombre: faker.commerce.productName(),
   unidadesMetroLineal: faker.number.int({ min: 5, max: 15 }),
+  disponibles: faker.number.int({ min: 0, max: 10 }),
   medidas: {
     altura: faker.number.int({ min: 8, max: 36 }),
   },

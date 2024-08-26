@@ -3,7 +3,7 @@ import { AlquilerRepository } from "./alquiler.repository";
 import { Alquiler } from "./alquiler.entity";
 import { Response } from "express";
 
-@Controller("alquileres")
+@Controller("alquiler")
 export class AlquilerController {
   constructor(private readonly alquilerRepository: AlquilerRepository) {}
 

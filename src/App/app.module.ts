@@ -5,6 +5,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { AlquilerModule } from "src/Alquiler/alquiler.module";
 import { AlquilerProductoModule } from "src/AlquilerProducto";
+import { AuthModule } from "src/Auth";
 
 const getPhotoModule = () => {
   return ServeStaticModule.forRoot({
@@ -14,7 +15,7 @@ const getPhotoModule = () => {
 };
 
 @Module({
-  imports: [ProductoModule, AlquilerModule, AlquilerProductoModule, getPhotoModule()],
+  imports: [AuthModule, ProductoModule, AlquilerModule, AlquilerProductoModule, getPhotoModule()],
   controllers: [],
   providers: [AppService],
 })

@@ -1,54 +1,55 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ALQUILER_MODEL } from "src/constants/database";
-import { AlquilerRecordDTO, fromDtoToAlquiler } from "./alquiler.schema";
+import { AlquilerSchema, fromSchemaToAlquiler } from "./alquiler.schema";
 import { Alquiler } from "./alquiler.entity";
-import { Model } from "mongoose";
 
 @Injectable()
 export class AlquilerRepository {
-  constructor(@Inject(ALQUILER_MODEL) private readonly alquilerModel: Model<AlquilerRecordDTO>) {}
+  constructor(@Inject(ALQUILER_MODEL) private readonly alquilerModel: typeof AlquilerSchema) {}
 
   async getAlquileres(): Promise<Alquiler[]> {
-    const alquilerDocs = await this.alquilerModel.find().exec();
+    const alquilerDocs = await this.alquilerModel.findAll();
 
-    return alquilerDocs.map(fromDtoToAlquiler);
+    return alquilerDocs.map(fromSchemaToAlquiler);
   }
 
   async getAlquileresBetweenDates(alquileres: {
     since: string;
     until: string;
   }): Promise<Alquiler[]> {
-    const alquilerDocs = await this.alquilerModel
-      .find({
-        "fechaAlquiler.inicio": { $gte: alquileres.since },
-        "fechaAlquiler.fin": { $lte: alquileres.until },
-      })
-      .exec();
+    const alquilerDocs = await this.alquilerModel.findAll({
+      where: {
+        fechaInicio: {
+          $between: [alquileres.since, alquileres.until],
+        },
+      },
+    });
 
-    return alquilerDocs.map(fromDtoToAlquiler);
+    return alquilerDocs.map(fromSchemaToAlquiler);
   }
 
   async getAlquiler(id: string): Promise<Alquiler> {
-    const result = await this.alquilerModel.findOne({ _id: id }).exec();
+    const result = await this.alquilerModel.findByPk(id);
 
-    return fromDtoToAlquiler(result);
+    return fromSchemaToAlquiler(result);
   }
 
   async updateOne(partialAlquiler: Partial<Alquiler>): Promise<Alquiler> {
-    const result = await this.alquilerModel
-      .findOneAndUpdate({ id: partialAlquiler.id }, partialAlquiler, { new: true })
-      .exec();
+    const [, [result]] = await this.alquilerModel.update(partialAlquiler, {
+      where: { id: partialAlquiler.id },
+      returning: true,
+    });
 
-    return fromDtoToAlquiler(result);
+    return fromSchemaToAlquiler(result);
   }
 
   async createOne(partialAlquiler: Partial<Alquiler>): Promise<Alquiler> {
     const result = await this.alquilerModel.create(partialAlquiler);
 
-    return fromDtoToAlquiler(result);
+    return fromSchemaToAlquiler(result);
   }
 
   async deleteOne(id: string): Promise<void> {
-    await this.alquilerModel.deleteOne({ _id: id });
+    await this.alquilerModel.destroy({ where: { id: id } });
   }
 }

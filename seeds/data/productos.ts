@@ -1,27 +1,23 @@
 import { faker } from "@faker-js/faker";
-import { Producto } from "src/Producto";
 
-export const productos: Producto[] = new Array(100).fill(0).map(() => ({
+export const productos = new Array(100).fill(0).map(() => ({
   nombre: faker.commerce.productName(),
   unidadesMetroLineal: faker.number.int({ min: 5, max: 15 }),
   disponibles: faker.number.int({ min: 0, max: 10 }),
-  medidas: {
-    altura: faker.number.int({ min: 8, max: 36 }),
-  },
+  medidasAltura: faker.number.int({ min: 1, max: 5 }),
+  medidasAncho: faker.number.int({ min: 1, max: 5 }),
+  medidasProfundidad: faker.number.int({ min: 1, max: 5 }),
+  medidasDiametro: faker.number.int({ min: 1, max: 5 }),
   stock: faker.number.int({ min: 10, max: 99 }),
-  costo: {
-    producto: faker.number.int({ min: 0, max: 7000 }),
-    grafica: faker.number.int({ min: 450, max: 3500 }),
-    diseno: faker.number.int({ min: 0, max: 3000 }),
-    total: faker.number.int({ min: 0, max: 10000 }),
-  },
-  valor: {
-    unitarioGarantia: faker.number.int({ min: 0, max: 10000 }),
-    totalGarantia: faker.number.int({ min: 0, max: 10000 }),
-    unitarioAlquiler: faker.number.int({ min: 0, max: 10000 }),
-    x1: faker.number.int({ min: 0, max: 5000 }),
-    x3: faker.number.int({ min: 0, max: 4500 }),
-    x6: faker.number.int({ min: 0, max: 3500 }),
-    x12: faker.number.int({ min: 0, max: 3000 }),
-  },
+  costoProducto: faker.number.int({ min: 0, max: 7000 }),
+  costoGrafica: faker.number.int({ min: 450, max: 3500 }),
+  costoDiseno: faker.number.int({ min: 0, max: 3000 }),
+  costoTotal: faker.number.int({ min: 0, max: 10000 }),
+  valorUnitarioGarantia: faker.number.int({ min: 0, max: 10000 }),
+  valorTotalGarantia: faker.number.int({ min: 0, max: 10000 }),
+  valorUnitarioAlquiler: faker.number.int({ min: 0, max: 10000 }),
+  valorX1: faker.number.int({ min: 0, max: 5000 }),
+  valorX3: faker.number.int({ min: 0, max: 4500 }),
+  valorX6: faker.number.int({ min: 0, max: 3500 }),
+  valorX12: faker.number.int({ min: 0, max: 3000 }),
 }));

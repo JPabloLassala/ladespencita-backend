@@ -24,14 +24,14 @@ export class ProductoController {
     return await this.productoRepository.getAll();
   }
 
-  @Get("/alquiler")
-  async getProductosBetweenDates(
-    @Body() alquileres: { since: string; until: string },
-  ): Promise<Producto[]> {
-    await this.productoService.getProductosBetweenDates(alquileres);
+  // @Get("/alquiler")
+  // async getProductosBetweenDates(
+  //   @Body() alquileres: { since: string; until: string },
+  // ): Promise<Producto[]> {
+  //   await this.productoService.getProductosBetweenDates(alquileres);
 
-    return [];
-  }
+  //   return [];
+  // }
 
   @Get(":id")
   async getOne(@Param("id") id: string): Promise<Producto> {

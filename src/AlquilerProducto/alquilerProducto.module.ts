@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { AlquilerProductoController } from "./alquilerProducto.controller";
 import { AlquilerProductoRepository } from "./alquilerProducto.repository";
 import { DatabaseModule } from "src/Database";
@@ -11,7 +11,7 @@ export const alquilerProductoModelProvider = {
 };
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [forwardRef(() => DatabaseModule)],
   controllers: [AlquilerProductoController],
   providers: [alquilerProductoModelProvider, AlquilerProductoRepository],
   exports: [AlquilerProductoRepository],

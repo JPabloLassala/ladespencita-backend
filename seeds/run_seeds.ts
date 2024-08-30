@@ -5,6 +5,7 @@ import { Sequelize } from "sequelize-typescript";
 import { AlquilerSchema } from "src/Alquiler";
 import { AlquilerProductoSchema } from "src/AlquilerProducto";
 import { ProductoSchema } from "src/Producto";
+import "dotenv/config";
 
 async function run_seeds() {
   const sequelize = new Sequelize({

@@ -17,6 +17,12 @@ export const databaseProviders: Provider[] = [
         port: 5432,
         username: process.env.DB_USER,
         password: process.env.DB_PASS,
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        },
       });
       sequelize.addModels([ProductoSchema, AlquilerSchema, AlquilerProductoSchema]);
       await sequelize.sync();

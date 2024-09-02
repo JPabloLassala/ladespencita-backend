@@ -1,0 +1,60 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import middy from "@middy/core";
+import { MetricUnit } from "@aws-lambda-powertools/metrics";
+import { logger, metrics, tracer } from "../Common/powertools";
+import { DynamoDbStore } from "../Common/dynamodb";
+import { ProductoStore } from "./store/producto-store";
+import { captureLambdaHandler } from "@aws-lambda-powertools/tracer/middleware";
+import { logMetrics } from "@aws-lambda-powertools/metrics/middleware";
+import { injectLambdaContext } from "@aws-lambda-powertools/logger/middleware";
+
+const store: ProductoStore = new DynamoDbStore();
+const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  logger.appendKeys({
+    resource_path: event.requestContext.resourcePath,
+  });
+
+  const id = event.pathParameters!.id;
+  if (id === undefined) {
+    logger.warn("Missing 'id' parameter in path while trying to delete a product", {
+      details: { eventPathParameters: event.pathParameters },
+    });
+
+    return {
+      statusCode: 400,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ message: "Missing 'id' parameter in path" }),
+    };
+  }
+
+  try {
+    await store.deleteProducto(id);
+
+    logger.info("Deleted product with ID " + id);
+    metrics.addMetric("productDeleted", MetricUnit.Count, 1);
+    metrics.addMetadata("productId", id);
+
+    return {
+      statusCode: 200,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ message: "Product deleted" }),
+    };
+  } catch (error) {
+    logger.error("Unexpected error occurred while trying to delete product with ID " + id, error);
+
+    return {
+      statusCode: 500,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(error),
+    };
+  }
+};
+
+const handler = middy(lambdaHandler)
+  .use(captureLambdaHandler(tracer))
+  .use(logMetrics(metrics, { captureColdStartMetric: true }))
+  .use(injectLambdaContext(logger, { clearState: true }));
+
+export { handler };

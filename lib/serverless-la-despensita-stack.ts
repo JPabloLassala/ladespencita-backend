@@ -33,7 +33,7 @@ export class ServerlessLaDespensitaStack extends Stack {
 
     const functionSettings = {
       handler: "handler",
-      runtime: aws_lambda.Runtime.NODEJS_16_X,
+      runtime: aws_lambda.Runtime.NODEJS_LATEST,
       memorySize: 256,
       environment: {
         TABLE_NAME: productosTable.tableName,
@@ -43,6 +43,18 @@ export class ServerlessLaDespensitaStack extends Stack {
       tracing: aws_lambda.Tracing.ACTIVE,
       bundling: esBuildSettings,
     };
+
+    const postLoginFunction = new aws_lambda_nodejs.NodejsFunction(this, "PostLoginFunction", {
+      awsSdkConnectionReuse: true,
+      entry: "./src/api/Auth/login.ts",
+      ...functionSettings,
+    });
+
+    const checkTokenFunction = new aws_lambda_nodejs.NodejsFunction(this, "CheckTokenFunction", {
+      awsSdkConnectionReuse: true,
+      entry: "./src/api/Auth/check-token.ts",
+      ...functionSettings,
+    });
 
     const getProductosFunction = new aws_lambda_nodejs.NodejsFunction(
       this,
@@ -92,10 +104,18 @@ export class ServerlessLaDespensitaStack extends Stack {
     });
 
     const productos = api.root.addResource("productos");
-    productos.addMethod("GET", new aws_apigateway.LambdaIntegration(getProductosFunction));
+    productos.addMethod("GET", new aws_apigateway.LambdaIntegration(getProductosFunction), {
+      authorizer: new aws_apigateway.TokenAuthorizer(this, "TokenAuthorizer", {
+        handler: checkTokenFunction,
+        identitySource: "method.request.header.Authorization",
+      }),
+    });
+
+    const login = api.root.addResource("login");
+    login.addMethod("POST", new aws_apigateway.LambdaIntegration(postLoginFunction));
 
     const producto = productos.addResource("{id}");
-    producto.addMethod("GET", new aws_apigateway.LambdaIntegration(getProductFunction));
+    producto.addMethod("GET", new aws_apigateway.LambdaIntegration(getProductFunction), {});
     producto.addMethod("PUT", new aws_apigateway.LambdaIntegration(putProductFunction));
     producto.addMethod("DELETE", new aws_apigateway.LambdaIntegration(deleteProductFunction));
 

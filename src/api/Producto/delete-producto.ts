@@ -9,6 +9,8 @@ import { ProductoStore } from "./store/producto-store";
 import { captureLambdaHandler } from "@aws-lambda-powertools/tracer/middleware";
 import { logMetrics } from "@aws-lambda-powertools/metrics/middleware";
 import { injectLambdaContext } from "@aws-lambda-powertools/logger/middleware";
+import httpHeaderNormalizer from "@middy/http-header-normalizer";
+import jsonBodyParser from "@middy/http-json-body-parser";
 
 const store: ProductoStore = new DynamoDbStore();
 const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -53,6 +55,8 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
 };
 
 const handler = middy(lambdaHandler)
+  .use(httpHeaderNormalizer())
+  .use(jsonBodyParser())
   .use(captureLambdaHandler(tracer))
   .use(logMetrics(metrics, { captureColdStartMetric: true }))
   .use(injectLambdaContext(logger, { clearState: true }));

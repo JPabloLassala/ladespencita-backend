@@ -1,3 +1,4 @@
+import { WriteRequest } from "@aws-sdk/client-dynamodb";
 import { Producto } from "../model";
 
 export class ProductoSchema {
@@ -76,5 +77,34 @@ export const fromProductoToSchema = (producto: Producto | Partial<Producto>): Pr
     valorX3: producto.valor.x3,
     valorX6: producto.valor.x6,
     valorX12: producto.valor.x12,
+  };
+};
+
+export const fromSchemaToDynamoDbCommand = (producto: ProductoSchema): WriteRequest => {
+  return {
+    PutRequest: {
+      Item: {
+        id: { N: producto.id },
+        nombre: { S: producto.nombre },
+        unidadesMetroLineal: { N: producto.unidadesMetroLineal.toString() },
+        stock: { N: producto.stock.toString() },
+        disponibles: { N: producto.disponibles.toString() },
+        medidasAltura: { N: producto.medidasAltura.toString() },
+        medidasAncho: { N: producto.medidasAncho.toString() },
+        medidasProfundidad: { N: producto.medidasProfundidad.toString() },
+        medidasDiametro: { N: producto.medidasDiametro.toString() },
+        costoProducto: { N: producto.costoProducto.toString() },
+        costoGrafica: { N: producto.costoGrafica.toString() },
+        costoDiseno: { N: producto.costoDiseno.toString() },
+        costoTotal: { N: producto.costoTotal.toString() },
+        valorUnitarioGarantia: { N: producto.valorUnitarioGarantia.toString() },
+        valorTotalGarantia: { N: producto.valorTotalGarantia.toString() },
+        valorUnitarioAlquiler: { N: producto.valorUnitarioAlquiler.toString() },
+        valorX1: { N: producto.valorX1.toString() },
+        valorX3: { N: producto.valorX3.toString() },
+        valorX6: { N: producto.valorX6.toString() },
+        valorX12: { N: producto.valorX12.toString() },
+      },
+    },
   };
 };

@@ -1,8 +1,11 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
-import { CfnOutput, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
+import { CfnOutput, CustomResource, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { aws_apigateway, aws_lambda_nodejs, aws_dynamodb, aws_logs, aws_lambda } from "aws-cdk-lib";
+import { DynamoEventSource, SnsDlq } from "aws-cdk-lib/aws-lambda-event-sources";
+import { StartingPosition } from "aws-cdk-lib/aws-lambda";
+import { Topic } from "aws-cdk-lib/aws-sns";
 
 export class ServerlessLaDespensitaStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -12,10 +15,12 @@ export class ServerlessLaDespensitaStack extends Stack {
       tableName: "Productos",
       partitionKey: {
         name: "id",
-        type: aws_dynamodb.AttributeType.STRING,
+        type: aws_dynamodb.AttributeType.NUMBER,
       },
       billingMode: aws_dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: RemovalPolicy.DESTROY,
+      stream: aws_dynamodb.StreamViewType.NEW_IMAGE,
+      timeToLiveAttribute: "ttl",
     });
 
     const envVariables = {
@@ -28,7 +33,7 @@ export class ServerlessLaDespensitaStack extends Stack {
     };
 
     const esBuildSettings = {
-      minify: true,
+      minify: false,
     };
 
     const functionSettings = {
@@ -43,6 +48,27 @@ export class ServerlessLaDespensitaStack extends Stack {
       tracing: aws_lambda.Tracing.ACTIVE,
       bundling: esBuildSettings,
     };
+
+    const populateTableFunction = new aws_lambda_nodejs.NodejsFunction(
+      this,
+      "PopulateTableFunction",
+      {
+        awsSdkConnectionReuse: true,
+        entry: "./src/Database/populate.ts",
+        ...functionSettings,
+      },
+    );
+
+    populateTableFunction.addEventSource(
+      new DynamoEventSource(productosTable, {
+        startingPosition: StartingPosition.LATEST,
+        batchSize: 5,
+        bisectBatchOnError: true,
+        enabled: true,
+        retryAttempts: 3,
+        onFailure: new SnsDlq(new Topic(this, "DlqTopic")),
+      }),
+    );
 
     const postLoginFunction = new aws_lambda_nodejs.NodejsFunction(this, "PostLoginFunction", {
       awsSdkConnectionReuse: true,
@@ -93,6 +119,8 @@ export class ServerlessLaDespensitaStack extends Stack {
       identitySource: "method.request.header.Authorization",
     });
 
+    productosTable.grantStreamRead(populateTableFunction);
+    productosTable.grantWriteData(populateTableFunction);
     productosTable.grantReadData(getProductosFunction);
     productosTable.grantReadData(getProductFunction);
     productosTable.grantWriteData(deleteProductFunction);

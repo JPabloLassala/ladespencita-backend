@@ -88,6 +88,11 @@ export class ServerlessLaDespensitaStack extends Stack {
       },
     );
 
+    const tokenAuthorizer = new aws_apigateway.TokenAuthorizer(this, "TokenAuthorizer", {
+      handler: checkTokenFunction,
+      identitySource: "method.request.header.Authorization",
+    });
+
     productosTable.grantReadData(getProductosFunction);
     productosTable.grantReadData(getProductFunction);
     productosTable.grantWriteData(deleteProductFunction);
@@ -105,19 +110,26 @@ export class ServerlessLaDespensitaStack extends Stack {
 
     const productos = api.root.addResource("productos");
     productos.addMethod("GET", new aws_apigateway.LambdaIntegration(getProductosFunction), {
-      authorizer: new aws_apigateway.TokenAuthorizer(this, "TokenAuthorizer", {
-        handler: checkTokenFunction,
-        identitySource: "method.request.header.Authorization",
-      }),
+      authorizer: tokenAuthorizer,
+      authorizationType: aws_apigateway.AuthorizationType.CUSTOM,
     });
 
     const login = api.root.addResource("login");
     login.addMethod("POST", new aws_apigateway.LambdaIntegration(postLoginFunction));
 
     const producto = productos.addResource("{id}");
-    producto.addMethod("GET", new aws_apigateway.LambdaIntegration(getProductFunction), {});
-    producto.addMethod("PUT", new aws_apigateway.LambdaIntegration(putProductFunction));
-    producto.addMethod("DELETE", new aws_apigateway.LambdaIntegration(deleteProductFunction));
+    producto.addMethod("GET", new aws_apigateway.LambdaIntegration(getProductFunction), {
+      authorizer: tokenAuthorizer,
+      authorizationType: aws_apigateway.AuthorizationType.CUSTOM,
+    });
+    producto.addMethod("PUT", new aws_apigateway.LambdaIntegration(putProductFunction), {
+      authorizer: tokenAuthorizer,
+      authorizationType: aws_apigateway.AuthorizationType.CUSTOM,
+    });
+    producto.addMethod("DELETE", new aws_apigateway.LambdaIntegration(deleteProductFunction), {
+      authorizer: tokenAuthorizer,
+      authorizationType: aws_apigateway.AuthorizationType.CUSTOM,
+    });
 
     new CfnOutput(this, "ApiURL", {
       value: `${api.url}productos`,

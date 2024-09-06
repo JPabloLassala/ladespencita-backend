@@ -1,24 +1,19 @@
 import { injectLambdaContext } from "@aws-lambda-powertools/logger/middleware";
-import { logMetrics } from "@aws-lambda-powertools/metrics/middleware";
-import { captureLambdaHandler } from "@aws-lambda-powertools/tracer/middleware";
 import {
   APIGatewayAuthorizerResult,
-  APIGatewayProxyResult,
-  APIGatewayRequestAuthorizerEvent,
-  Callback,
-  Context,
+  APIGatewayTokenAuthorizerEvent,
   StatementEffect,
 } from "aws-lambda";
-import { logger, metrics, tracer } from "../Common/powertools";
+import { logger } from "../Common/powertools";
 import middy from "@middy/core";
-import httpHeaderNormalizer from "@middy/http-header-normalizer";
+import { JwtPayload, verify } from "jsonwebtoken";
 
 // Help function to generate an IAM policy
-const generatePolicy = (
+function generatePolicy(
   principalId: string,
   effect: string,
   resource: string,
-): APIGatewayAuthorizerResult => {
+): APIGatewayAuthorizerResult {
   const authResponse: APIGatewayAuthorizerResult = {
     principalId,
     policyDocument: {
@@ -39,47 +34,33 @@ const generatePolicy = (
   };
 
   return authResponse;
-};
+}
 
 const lambdaHandler = async (
-  event: APIGatewayRequestAuthorizerEvent,
-  context: Context,
-  callback: Callback,
-): Promise<APIGatewayProxyResult> => {
-  logger.appendKeys({
-    resource_path: event.requestContext.resourcePath,
-  });
-
+  event: APIGatewayTokenAuthorizerEvent,
+): Promise<APIGatewayAuthorizerResult> => {
   try {
-    const token = event.headers.Authorization;
-    switch (token) {
-      case "allow":
-        callback(null, generatePolicy("user", "Allow", event.methodArn));
-        break;
-      case "deny":
-        callback(null, generatePolicy("user", "Deny", event.methodArn));
-        break;
-      case "unauthorized":
-        callback("Unauthorized"); // Return a 401 Unauthorized response
-        break;
-      default:
-        callback("Error: Invalid token"); // Return a 500 Invalid token response
-    }
+    const token = event.authorizationToken.split(" ")[1];
+    console.log("Token extracted");
+    const decoded = verify(token, "secret", { algorithms: ["HS256"] }) as JwtPayload;
+    console.log("Token decoded");
+    const policy = generatePolicy(decoded.username, "Allow", event.methodArn);
+    console.log("Policy generated");
+
+    logger.info("User authenticated", { details: { username: decoded.username } });
+    console.log("User authenticated");
+
+    console.log("Callback executed");
+
+    return policy;
   } catch (error) {
     logger.error("Unexpected error occurred while trying to retrieve products", error as Error);
+    const policy = generatePolicy("user", "Deny", event.methodArn);
 
-    return {
-      statusCode: 500,
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(error),
-    };
+    return policy;
   }
 };
 
-const handler = middy(lambdaHandler)
-  .use(httpHeaderNormalizer())
-  .use(captureLambdaHandler(tracer))
-  .use(logMetrics(metrics, { captureColdStartMetric: true }))
-  .use(injectLambdaContext(logger, { clearState: true }));
+const handler = middy(lambdaHandler).use(injectLambdaContext(logger, { clearState: true }));
 
 export { handler };

@@ -22,6 +22,7 @@ const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPro
         body: JSON.stringify({
           access_token: sign({ username, password }, "secret", {
             expiresIn: "1h",
+            algorithm: "HS256",
           }),
         }),
       };

@@ -11,7 +11,7 @@ EXPOSE 3000
 # Command to run the application
 CMD ["yarn", "start"]
 
-FROM NODE:22-alpine3.20 AS build
+FROM node:22-alpine3.20 AS build
 
 WORKDIR /usr/src/app
 

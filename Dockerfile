@@ -1,6 +1,6 @@
 FROM node:22-alpine3.20 AS development
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY --chown=node:node . .
 
@@ -13,10 +13,10 @@ CMD ["yarn", "start"]
 
 FROM node:22-alpine3.20 AS build
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY --chown=node:node package*.json ./
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=development /app/node_modules ./node_modules
 COPY --chown=node:node . .
 
 RUN yarn build
@@ -25,7 +25,11 @@ RUN yarn ci -f --only=production && yarn cache clean --force
 USER node
 
 FROM node:20-alpine AS production
+
 ENV NODE_ENV production
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+WORKDIR /app
+
+COPY --chown=node:node --from=build /app/node_modules ./node_modules
+COPY --chown=node:node --from=build /app/dist ./dist
 CMD [ "node", "dist/main.js" ]

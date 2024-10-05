@@ -5,11 +5,6 @@ import { alquileres } from "./data/alquileres";
 import { AlquilerSchema } from "src/Alquiler";
 
 export async function seed_Alquileres(): Promise<void> {
-  await AlquilerProductoSchema.destroy({ where: {}, truncate: true });
-  console.log("AlquilerProductos borrados");
-  await AlquilerSchema.destroy({ where: {}, truncate: true });
-  console.log("Alquileres borrados");
-
   await seed();
   console.log("Alquileres insertados");
 }

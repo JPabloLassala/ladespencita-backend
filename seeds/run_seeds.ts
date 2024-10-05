@@ -8,21 +8,12 @@ import { ProductoSchema } from "src/Producto";
 import "dotenv/config";
 
 async function run_seeds() {
-  const sequelize = new Sequelize({
+  const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: "postgres",
-    database: "ladespensita",
-    host: process.env.DB_HOST,
-    port: 5432,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
     models: [AlquilerSchema, AlquilerProductoSchema, ProductoSchema],
   });
+
+  await sequelize.dropAllSchemas({});
 
   await sequelize.sync({ force: true });
   await seed_Products();

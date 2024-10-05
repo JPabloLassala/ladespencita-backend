@@ -20,7 +20,6 @@ COPY --chown=node:node --from=development /app/node_modules ./node_modules
 COPY --chown=node:node . .
 
 RUN yarn build
-RUN yarn ci -f --only=production && yarn cache clean --force
 
 USER node
 
@@ -32,4 +31,5 @@ WORKDIR /app
 
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/dist ./dist
+
 CMD [ "node", "dist/main.js" ]

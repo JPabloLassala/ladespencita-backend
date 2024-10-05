@@ -3,16 +3,36 @@ services:
     build:
       context: "."
       dockerfile: Dockerfile
-      target: production
+      target: development
     working_dir: /app
     platform: ${BUILD_PLATFORM:-}
+    command: [ "yarn", "dev" ]
     container_name: back
     ports:
       - '3000:3000'
     expose:
       - 3000
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
     environment:
-      - MONGO_URL=mongodb://root:example@db:27017/nest?authSource=admin
+      - DATABASE_URL=postgresql://user:password@postgres:5432/ladespen
+
+  postgres:
+    image: postgres:latest
+    platform: ${BUILD_PLATFORM:-}
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ladespen
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  mongo-data:
+  postgres-data:

@@ -9,7 +9,7 @@ import { ConfigModule } from "@nestjs/config";
 
 const getPhotoModule = () => {
   return ServeStaticModule.forRoot({
-    rootPath: join(__dirname, "..", "..", "..", "images"),
+    rootPath: join(__dirname, "..", "images"),
     serveRoot: "/images",
   });
 };

@@ -1,12 +1,50 @@
-import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
+import {
+  AutoIncrement,
+  Column,
+  CreatedAt,
+  DataType,
+  Model,
+  PrimaryKey,
+  Table,
+  UpdatedAt,
+} from "sequelize-typescript";
 import { Producto } from "./producto.entity";
+import { Optional } from "sequelize";
+
+export interface IProductoSchema {
+  id: string;
+  nombre: string;
+  unidadesMetroLineal: number;
+  stock: number;
+  disponibles: number;
+  medidasAltura: number;
+  medidasAncho?: number;
+  medidasProfundidad?: number;
+  medidasDiametro?: number;
+  costoProducto: number;
+  costoGrafica: number;
+  costoDiseno: number;
+  costoTotal: number;
+  valorUnitarioGarantia: number;
+  valorTotalGarantia: number;
+  valorUnitarioAlquiler: number;
+  valorX1: number;
+  valorX3: number;
+  valorX6: number;
+  valorX12: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IProductoCreateSchema
+  extends Optional<IProductoSchema, "id" | "createdAt" | "updatedAt"> {}
 
 @Table({ tableName: "productos", timestamps: true })
-export class ProductoSchema extends Model {
+export class ProductoSchema extends Model<IProductoSchema, IProductoCreateSchema> {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  id?: string;
+  id: string;
   @Column(DataType.STRING)
   nombre: string;
   @Column(DataType.INTEGER)
@@ -45,29 +83,11 @@ export class ProductoSchema extends Model {
   valorX6: number;
   @Column(DataType.INTEGER)
   valorX12: number;
-}
 
-export interface ProductoModel {
-  id?: string;
-  nombre: string;
-  unidadesMetroLineal: number;
-  stock: number;
-  disponibles: number;
-  medidasAltura: number;
-  medidasAncho?: number;
-  medidasProfundidad?: number;
-  medidasDiametro?: number;
-  costoProducto: number;
-  costoGrafica: number;
-  costoDiseno: number;
-  costoTotal: number;
-  valorUnitarioGarantia: number;
-  valorTotalGarantia: number;
-  valorUnitarioAlquiler: number;
-  valorX1: number;
-  valorX3: number;
-  valorX6: number;
-  valorX12: number;
+  @CreatedAt
+  createdAt: Date;
+  @UpdatedAt
+  updatedAt: Date;
 }
 
 export const fromSchemaToProducto = (dto: ProductoSchema): Producto => {

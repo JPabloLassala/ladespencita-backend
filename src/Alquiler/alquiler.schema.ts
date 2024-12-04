@@ -1,21 +1,40 @@
+import { Optional } from "sequelize";
 import { Alquiler } from "./alquiler.entity";
 import {
   AutoIncrement,
   Column,
+  CreatedAt,
   DataType,
   HasMany,
   Model,
   PrimaryKey,
   Table,
+  UpdatedAt,
 } from "sequelize-typescript";
-import { AlquilerProducto, AlquilerProductoSchema } from "src/AlquilerProducto";
+import { AlquilerProductoSchema, IAlquilerProductoSchema } from "src/AlquilerProducto";
+
+export interface IAlquilerSchema {
+  id: string;
+  productora: string;
+  proyecto: string;
+  fechaPresupuesto: Date;
+  fechaInicio: Date;
+  fechaFin: Date;
+  productos: IAlquilerProductoSchema[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IAlquilerCreateSchema
+  extends Optional<IAlquilerSchema, "id" | "createdAt" | "updatedAt"> {}
 
 @Table({ tableName: "alquileres", timestamps: true })
-export class AlquilerSchema extends Model {
+export class AlquilerSchema extends Model<IAlquilerSchema, IAlquilerCreateSchema> {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  id?: string;
+  id: string;
+
   @Column(DataType.STRING)
   productora: string;
   @Column(DataType.STRING)
@@ -28,35 +47,30 @@ export class AlquilerSchema extends Model {
   fechaFin: Date;
 
   @HasMany(() => AlquilerProductoSchema, "alquilerId")
-  productos: AlquilerProducto[];
+  productos: AlquilerProductoSchema[];
+
+  @CreatedAt
+  createdAt: Date;
+  @UpdatedAt
+  updatedAt: Date;
 }
 
-export interface AlquilerRecord {
-  id?: string;
-  productora: string;
-  proyecto: string;
-  fechaPresupuesto: Date;
-  fechaInicio: Date;
-  fechaFin: Date;
-  productos: AlquilerProducto[];
-}
-
-export const fromSchemaToAlquiler = (dto: AlquilerSchema): Alquiler => {
+export const fromSchemaToAlquiler = (schema: AlquilerSchema): Alquiler => {
   return {
-    id: dto.id,
-    productora: dto.productora,
-    proyecto: dto.proyecto,
-    fechaPresupuesto: dto.fechaPresupuesto,
+    id: schema.id,
+    productora: schema.productora,
+    proyecto: schema.proyecto,
+    fechaPresupuesto: schema.fechaPresupuesto,
     fechaAlquiler: {
-      inicio: dto.fechaInicio,
-      fin: dto.fechaFin,
+      inicio: schema.fechaInicio,
+      fin: schema.fechaFin,
     },
-    createdAt: dto.createdAt,
-    updatedAt: dto.updatedAt,
+    createdAt: schema.createdAt,
+    updatedAt: schema.updatedAt,
   };
 };
 
-export const fromAlquilerToDto = (alquiler: Alquiler): AlquilerSchema => {
+export const fromAlquilerToSchema = (alquiler: Alquiler | Partial<Alquiler>): AlquilerSchema => {
   return new AlquilerSchema({
     id: alquiler.id,
     productora: alquiler.productora,

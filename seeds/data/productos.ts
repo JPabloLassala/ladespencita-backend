@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
+import { IProductoCreateSchema } from "src/Producto";
 
-export const productos = new Array(100).fill(0).map(() => ({
+export const productos: IProductoCreateSchema[] = new Array(100).fill(0).map(() => ({
   nombre: faker.commerce.productName(),
   unidadesMetroLineal: faker.number.int({ min: 5, max: 15 }),
   disponibles: faker.number.int({ min: 0, max: 10 }),

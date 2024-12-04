@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
+import { IAlquilerCreateSchema } from "src/Alquiler";
 
-export const alquileres = new Array(5).fill(undefined).map(() => ({
+export const alquileres: IAlquilerCreateSchema[] = new Array(5).fill(undefined).map(() => ({
   productora: faker.company.name(),
   proyecto: faker.company.name(),
   fechaPresupuesto: new Date(),
-  fechaAlquiler: {
-    inicio: faker.date.anytime(),
-    fin: faker.date.anytime(),
-  },
+  fechaInicio: faker.date.anytime(),
+  fechaFin: faker.date.anytime(),
+  productos: [],
 }));

@@ -21,5 +21,6 @@ export const productoModel = {
   ],
   controllers: [ProductoController],
   providers: [ProductoRepository, ProductoService, productoModel],
+  exports: [productoModel],
 })
 export class ProductoModule {}

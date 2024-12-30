@@ -1,5 +1,5 @@
 export class Alquiler {
-  id?: string;
+  id?: number;
   productora: string;
   proyecto: string;
   fechaPresupuesto: Date;

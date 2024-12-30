@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { AlquilerProductoSchema } from "src/AlquilerProducto";
+import { AlquilerProductoSchema, IAlquilerProductoCreateSchema } from "src/AlquilerProducto";
 import { ProductoSchema } from "src/Producto";
 import { alquileres } from "./data/alquileres";
 import { AlquilerSchema } from "src/Alquiler";
@@ -15,11 +15,11 @@ async function seed(): Promise<void> {
   const alquilerModels = await AlquilerSchema.findAll();
   const productoModels = await ProductoSchema.findAll();
 
-  const getProductosAlquilerArray = () => {
+  const getProductosAlquilerArray = (): IAlquilerProductoCreateSchema[] => {
     const alquiler = faker.helpers.arrayElement(alquilerModels);
     const productosToParse = faker.helpers.arrayElements(productoModels, { min: 20, max: 30 });
 
-    return productosToParse.map((productoToParse) => {
+    return productosToParse.map(productoToParse => {
       const valorx1 = parseInt(faker.string.numeric(3), 10);
       return {
         productoId: productoToParse.id,

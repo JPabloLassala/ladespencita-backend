@@ -34,4 +34,10 @@ export class ProductoRepository {
 
     return fromSchemaToProducto(result);
   }
+
+  async getFromIds(ids: number[]): Promise<Producto[]> {
+    const productos = await this.productoModel.findAll({ where: { id: ids } });
+
+    return productos.map(fromSchemaToProducto);
+  }
 }

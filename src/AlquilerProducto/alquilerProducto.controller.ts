@@ -1,10 +1,23 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { AlquilerProductoRepository } from "./alquilerProducto.repository";
 import { AlquilerProductoDto, fromDtoToAlquilerProducto } from "./alquilerProducto.dto";
+import dayjs from "dayjs";
 
 @Controller("alquilerProducto")
 export class AlquilerProductoController {
   constructor(private readonly alquilerProductoRepository: AlquilerProductoRepository) {}
+
+  @Get("/betweenDates")
+  async getAlquileresBetweenDates(
+    @Query() dates: { since: string; until: string },
+    @Body() alquileres: Partial<AlquilerProductoDto>[],
+  ) {
+    return await this.alquilerProductoRepository.isAbleToRentBetweenDates(
+      dayjs(dates.since).utc(true),
+      dayjs(dates.until).utc(true),
+      alquileres,
+    );
+  }
 
   @Get("/:alquilerId")
   async getProductosFromAlquiler(@Param("alquilerId") alquilerId: number) {

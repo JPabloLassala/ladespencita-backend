@@ -1,18 +1,23 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { AlquilerProducto } from "./alquilerProducto.entity";
-import { ALQUILERPRODUCTO_MODEL, PRODUCTO_MODEL } from "src/constants/database";
+import { ALQUILER_MODEL, ALQUILERPRODUCTO_MODEL, PRODUCTO_MODEL } from "src/constants/database";
 import {
   AlquilerProductoSchema,
   fromAlquilerProductoToSchema,
   fromSchemaToAlquilerProducto,
 } from "./alquilerProducto.schema";
 import { ProductoSchema } from "src/Producto";
+import { Dayjs } from "dayjs";
+import { AlquilerSchema } from "src/Alquiler/alquiler.schema";
+import { Op } from "sequelize";
 
 @Injectable()
 export class AlquilerProductoRepository {
   constructor(
     @Inject(ALQUILERPRODUCTO_MODEL)
     private readonly alquilerProductoModel: typeof AlquilerProductoSchema,
+    @Inject(ALQUILER_MODEL)
+    private readonly alquilerModel: typeof AlquilerSchema,
     @Inject(PRODUCTO_MODEL)
     private readonly productoModel: typeof ProductoSchema,
   ) {}
@@ -135,5 +140,58 @@ export class AlquilerProductoRepository {
     });
 
     return alquilerProductos.map(fromSchemaToAlquilerProducto);
+  }
+
+  async isAbleToRentBetweenDates(
+    since: Dayjs,
+    until: Dayjs,
+    alquilerProductos: Partial<AlquilerProducto>[],
+  ): Promise<boolean> {
+    console.log(since, until);
+    const alquileres = await this.alquilerModel.findAll({
+      where: {
+        fechaInicio: {
+          [Op.lte]: until.toDate(),
+        },
+        fechaFin: {
+          [Op.gte]: since.toDate(),
+        },
+      },
+      raw: true,
+    });
+
+    const alquilerIds = alquileres.map(a => a.id);
+    const existingAlquilerProductos = await this.alquilerProductoModel.findAll({
+      where: {
+        alquilerId: {
+          [Op.in]: alquilerIds,
+        },
+      },
+      raw: true,
+    });
+    const quantityPerProducto = existingAlquilerProductos.reduce<Record<number, number>>(
+      (acc, eap) => {
+        if (!acc[eap.productoId]) {
+          acc[eap.productoId] = 0;
+        }
+
+        acc[eap.productoId] += eap.cantidad;
+
+        return acc;
+      },
+      {},
+    );
+    const productoIds = existingAlquilerProductos.map(ap => ap.productoId);
+    const productos = await this.productoModel.findAll({ where: { id: productoIds }, raw: true });
+
+    const higherThanStock = alquilerProductos.filter(ap => {
+      const producto = productos.find(p => p.id === ap.productoId);
+
+      if (!producto) return false;
+
+      return quantityPerProducto[ap.productoId] + ap.cantidad > producto.stock;
+    });
+
+    return higherThanStock.length === 0;
   }
 }

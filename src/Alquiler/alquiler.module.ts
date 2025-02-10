@@ -14,6 +14,6 @@ export const alquilerModel = {
   imports: [DatabaseModule],
   controllers: [AlquilerController],
   providers: [AlquilerRepository, alquilerModel],
-  exports: [AlquilerRepository],
+  exports: [AlquilerRepository, alquilerModel],
 })
 export class AlquilerModule {}

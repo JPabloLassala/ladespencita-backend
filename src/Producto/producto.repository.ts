@@ -1,17 +1,18 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Producto, ProductoCreate } from "./producto.entity";
-import { fromProductoToSchema, fromSchemaToProducto, ProductoSchema } from "./producto.schema";
-import { DB_CONNECTION, IMAGE_MODEL, PRODUCTO_MODEL } from "src/constants";
-import { Sequelize } from "sequelize";
-import { ImageRepository, ImageSchema } from "src/Image";
+import {
+  fromProductoCreateToSchema,
+  fromSchemaToProducto,
+  ProductoSchema,
+} from "./producto.schema";
+import { IMAGE_MODEL, PRODUCTO_MODEL } from "src/constants";
+import { ImageSchema } from "src/Image";
 
 @Injectable()
 export class ProductoRepository {
   constructor(
     @Inject(PRODUCTO_MODEL) private readonly productoModel: typeof ProductoSchema,
     @Inject(IMAGE_MODEL) private readonly imageModel: typeof ImageSchema,
-    @Inject(DB_CONNECTION) private readonly sequelize: Sequelize,
-    private readonly imageRepository: ImageRepository,
   ) {}
 
   async getAll(): Promise<Producto[]> {

@@ -1,5 +1,4 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { Op } from "sequelize";
 import { Dayjs } from "dayjs";
 import { AlquilerAdapter } from "src/Alquiler";
 import { HigherThanStockError } from "./alquilerProducto.errors";

@@ -12,7 +12,9 @@ export class AlquilerAdapter {
   ) {}
 
   async getAlquileres(): Promise<AlquilerEntity[]> {
-    return await this.alquilerRepository.find();
+    return await this.alquilerRepository.find({
+      relations: { productos: true },
+    });
   }
 
   async getAlquileresBetweenDates(alquileres: {

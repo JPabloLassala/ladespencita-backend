@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -52,9 +53,11 @@ export class AlquilerProductoEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToOne(() => ProductoEntity, "productoId")
+  @OneToOne(() => ProductoEntity)
+  @JoinColumn({ name: "productoId" })
   producto: ProductoEntity;
-  @ManyToOne(() => AlquilerEntity, "alquilerId")
+  @ManyToOne(() => AlquilerEntity, a => a.productos)
+  @JoinColumn({ name: "alquilerId" })
   alquiler: AlquilerEntity;
 }
 

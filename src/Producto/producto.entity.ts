@@ -64,7 +64,7 @@ export class ProductoEntity {
   @Column()
   valorX12: number;
 
-  @OneToOne(() => ImageEntity, "productoId")
+  @OneToOne(() => ImageEntity, p => p.producto)
   image: ImageEntity;
 
   @CreateDateColumn()

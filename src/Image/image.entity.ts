@@ -1,5 +1,12 @@
 import { ProductoEntity } from "src/Producto";
-import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
 @Entity({ name: "imagenes" })
 export class ImageEntity {
@@ -18,6 +25,7 @@ export class ImageEntity {
   @CreateDateColumn()
   createdAt: Date;
 
-  @OneToOne(() => ProductoEntity, "productoId")
+  @OneToOne(() => ProductoEntity, p => p.image)
+  @JoinColumn({ name: "productoId" })
   producto: ProductoEntity;
 }

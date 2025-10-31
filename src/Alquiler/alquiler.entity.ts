@@ -11,7 +11,6 @@ import {
 @Entity({ name: "alquileres" })
 export class AlquilerEntity {
   @PrimaryGeneratedColumn()
-  @Column()
   id: number;
 
   @Column()
@@ -29,7 +28,7 @@ export class AlquilerEntity {
   @Column()
   fechaFin: Date;
 
-  @OneToMany(() => AlquilerProductoEntity, "alquilerId")
+  @OneToMany(() => AlquilerProductoEntity, ap => ap.alquiler)
   productos: AlquilerProductoEntity[];
 
   @CreateDateColumn()

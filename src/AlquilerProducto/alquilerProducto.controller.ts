@@ -26,7 +26,9 @@ export class AlquilerProductoController {
         alquilerProductoEntities,
       );
 
-      return res.status(HttpStatus.OK).send();
+      return res.status(HttpStatus.OK).send({
+        isAble: true,
+      });
     } catch (e) {
       if (e instanceof HigherThanStockError) {
         return res.status(HttpStatus.BAD_REQUEST).send(e.alquilerProductosStock);

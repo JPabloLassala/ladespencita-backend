@@ -6,10 +6,9 @@ import { ImageRepository } from "./image.repository";
 export class ImageController {
   constructor(private readonly imageRepository: ImageRepository) {}
 
-  @Post()
+  @Post("upload")
   @UseInterceptors(FileInterceptor("file"))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
     const result = await this.imageRepository.uploadFile(file);
 
     return result;

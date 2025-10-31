@@ -22,7 +22,7 @@ export interface IImageSchema {
 
 export interface IImageCreateSchema extends Optional<IImageSchema, "id" | "createdAt"> {}
 
-@Table({ tableName: "imagenes", timestamps: true })
+@Table({ tableName: "imagenes", timestamps: true, updatedAt: false })
 export class ImageSchema extends Model<IImageSchema, IImageCreateSchema> {
   @PrimaryKey
   @AutoIncrement

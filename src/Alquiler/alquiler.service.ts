@@ -21,15 +21,7 @@ export class AlquilerService {
   async createAlquiler(alquiler: AlquilerCreate) {
     await this.alquilerProductoAdapter.checkAlquilerProductosAvailability(alquiler.productos);
 
-    const newAlquiler = await this.alquilerAdapter.createOne(alquiler);
-    const alquilerProductos = await this.alquilerProductoAdapter.createAlquilerProductos(
-      newAlquiler.id,
-      alquiler.productos,
-    );
-
-    newAlquiler.productos = alquilerProductos;
-
-    return newAlquiler;
+    return await this.alquilerAdapter.createOne(alquiler);
   }
 
   async getOne(id: number) {

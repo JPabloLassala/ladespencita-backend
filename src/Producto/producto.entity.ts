@@ -67,10 +67,10 @@ export class ProductoEntity {
   @OneToOne(() => ImageEntity, p => p.producto)
   image: ImageEntity;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ nullable: false, default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ nullable: true, default: () => "CURRENT_TIMESTAMP" })
   updatedAt?: Date;
 }
 

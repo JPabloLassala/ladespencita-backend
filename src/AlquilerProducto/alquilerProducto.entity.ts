@@ -5,13 +5,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
+  Unique,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { AlquilerEntity } from "src/Alquiler/alquiler.entity";
 
 @Entity({ name: "alquiler_productos" })
+@Unique("uq_alquiler_producto", ["productoId", "alquilerId"])
 export class AlquilerProductoEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -29,10 +30,6 @@ export class AlquilerProductoEntity {
   @Column()
   costoTotal: number;
   @Column()
-  unidadesAlquiladas: number;
-  @Column()
-  unidadesCotizadas: number;
-  @Column()
   cantidad: number;
   @Column()
   valorUnitarioGarantia: number;
@@ -49,16 +46,16 @@ export class AlquilerProductoEntity {
   @Column()
   valorX12: number;
 
-  @OneToOne(() => ProductoEntity)
+  @ManyToOne(() => ProductoEntity)
   @JoinColumn({ name: "productoId" })
   producto: ProductoEntity;
   @ManyToOne(() => AlquilerEntity, a => a.productos)
   @JoinColumn({ name: "alquilerId" })
   alquiler: AlquilerEntity;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ nullable: false, default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
-  @UpdateDateColumn()
+  @UpdateDateColumn({ nullable: true, default: () => "CURRENT_TIMESTAMP" })
   updatedAt?: Date;
 }
 

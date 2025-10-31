@@ -1,4 +1,8 @@
-import { AlquilerProductoCreate, AlquilerProductoEntity } from "src/AlquilerProducto";
+import {
+  AlquilerProductoCreate,
+  AlquilerProductoEntity,
+  AlquilerProductoUpdate,
+} from "src/AlquilerProducto";
 import {
   Column,
   CreateDateColumn,
@@ -48,4 +52,6 @@ export type AlquilerCreate = Omit<
 > & {
   productos: AlquilerProductoCreate[];
 };
-export type AlquilerUpdate = Partial<AlquilerEntity>;
+export type AlquilerUpdate = Partial<AlquilerEntity> & {
+  productos?: (AlquilerProductoUpdate | AlquilerProductoCreate)[];
+};

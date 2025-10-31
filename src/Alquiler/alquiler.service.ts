@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { AlquilerAdapter } from "./alquiler.adapter";
-import { AlquilerCreate, AlquilerEntity } from "./alquiler.entity";
+import { AlquilerCreate, AlquilerUpdate } from "./alquiler.entity";
 import { AlquilerProductoAdapter } from "src/AlquilerProducto";
 
 @Injectable()
@@ -28,7 +28,7 @@ export class AlquilerService {
     return await this.alquilerAdapter.getAlquiler(id);
   }
 
-  async updateAlquiler(alquiler: Partial<AlquilerEntity>) {
+  async updateAlquiler(alquiler: AlquilerUpdate) {
     return await this.alquilerAdapter.updateOne(alquiler);
   }
 

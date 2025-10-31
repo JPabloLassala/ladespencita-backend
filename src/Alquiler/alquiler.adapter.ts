@@ -36,7 +36,8 @@ export class AlquilerAdapter {
   }
 
   async updateOne(partialAlquiler: AlquilerUpdate): Promise<void> {
-    await this.alquilerRepository.update({ id: partialAlquiler.id }, { ...partialAlquiler });
+    const alquiler = await this.alquilerRepository.findOneBy({ id: partialAlquiler.id });
+    await this.alquilerRepository.save({ ...alquiler, ...partialAlquiler });
   }
 
   async createOne(partialAlquiler: AlquilerCreate): Promise<AlquilerEntity> {

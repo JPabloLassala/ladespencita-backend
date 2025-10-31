@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from "@nestjs/common";
 import { Response } from "express";
 import { AlquilerService } from "./alquiler.service";
-import { AlquilerCreate, AlquilerEntity } from "./alquiler.entity";
+import { AlquilerCreate, AlquilerEntity, AlquilerUpdate } from "./alquiler.entity";
 import { ProductoHigherThanAvailableError } from "./alquiler.error";
 
 @Controller("alquiler")
@@ -35,8 +35,8 @@ export class AlquilerController {
     return await this.alquilerService.getAlquiler(id);
   }
 
-  @Patch()
-  async updateAlquiler(@Body() alquiler: Partial<AlquilerEntity>) {
+  @Put()
+  async updateAlquiler(@Body() alquiler: AlquilerUpdate) {
     return await this.alquilerService.updateAlquiler(alquiler);
   }
 

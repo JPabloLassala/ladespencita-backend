@@ -280,6 +280,12 @@ export class AlquilerProductoAdapter {
     });
   }
 
+  async deleteByAlquilerId(alquilerId: number): Promise<void> {
+    await this.alquilerProductoRepository.delete({
+      alquilerId: alquilerId,
+    });
+  }
+
   async getFromAlquilerIds(alquilerIds: number[]): Promise<AlquilerProductoEntity[]> {
     return await this.alquilerProductoRepository.findBy({
       alquilerId: In(alquilerIds),

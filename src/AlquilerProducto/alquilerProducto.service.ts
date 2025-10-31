@@ -15,15 +15,18 @@ export class AlquilerProductoService {
   }
 
   async createMany(alquilerProductos: AlquilerProductoCreate[], alquilerId: number) {
-    return await this.alquilerProductoAdapter.createMany(alquilerProductos, alquilerId);
+    const apsToCreate = alquilerProductos.filter(ap => ap.cantidad > 0);
+    return await this.alquilerProductoAdapter.createMany(apsToCreate, alquilerId);
   }
 
   async updateAlquilerProductos(
     alquilerProductos: (AlquilerProductoUpdate | AlquilerProductoCreate)[],
     alquilerId: number,
   ): Promise<AlquilerProductoEntity[]> {
+    console.log("alquilerProductos", alquilerProductos);
+
     const apsToCreate = alquilerProductos.filter(
-      ap => !ap.hasOwnProperty("id"),
+      ap => !ap.hasOwnProperty("id") && ap.cantidad > 0,
     ) as AlquilerProductoCreate[];
     const apsToUpdate = alquilerProductos.filter(ap =>
       ap.hasOwnProperty("id"),
@@ -39,5 +42,9 @@ export class AlquilerProductoService {
     ]);
 
     return [...created, ...updated];
+  }
+
+  async deleteByAlquilerId(alquilerId: number) {
+    await this.alquilerProductoAdapter.deleteByAlquilerId(alquilerId);
   }
 }

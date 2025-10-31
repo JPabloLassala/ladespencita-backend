@@ -24,7 +24,9 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "type": "node"
+      "type": "node",
+      "restart": true,
+      "timeout": 10000
     }
   ]
 }

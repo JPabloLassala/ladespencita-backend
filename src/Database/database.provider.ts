@@ -11,6 +11,10 @@ export const databaseProvider: Provider = {
   useFactory: async () => {
     const sequelize = new Sequelize(process.env.DATABASE_URL, {
       dialect: "postgres",
+      retry: {
+        max: 5,
+        timeout: 10000,
+      },
     });
     sequelize.addModels([ProductoSchema, AlquilerSchema, AlquilerProductoSchema, ImageSchema]);
     await sequelize.sync();

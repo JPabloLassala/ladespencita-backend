@@ -3,7 +3,7 @@ services:
     build:
       context: "."
       dockerfile: Dockerfile
-      target: development
+      target: production
     working_dir: /app
     platform: ${BUILD_PLATFORM:-}
     container_name: back

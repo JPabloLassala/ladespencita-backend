@@ -9,10 +9,14 @@ export const databaseProviders: Provider[] = [
   {
     provide: DB_CONNECTION,
     useFactory: async () => {
-      console.log(process.env.DB_HOST);
-      const sequelize = new Sequelize({
-        dialect: "sqlite",
-        database: "ladespensita.sqlite",
+      const sequelize = new Sequelize(process.env.DATABASE_URL, {
+        dialect: "postgres",
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        },
       });
       sequelize.addModels([ProductoSchema, AlquilerSchema, AlquilerProductoSchema]);
       await sequelize.sync();

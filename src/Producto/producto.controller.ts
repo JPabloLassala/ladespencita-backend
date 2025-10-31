@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -86,5 +87,11 @@ export class ProductoController {
     const result = await this.productoRepository.getOne(tmpProducto.id.toString());
 
     return result;
+  }
+
+  @Delete(":id")
+  async deleteOne(@Param("id") id: string): Promise<void> {
+    await this.imageRepository.deleteManyFromProducto(id);
+    await this.productoRepository.deleteOne(id);
   }
 }

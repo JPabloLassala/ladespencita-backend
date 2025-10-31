@@ -75,4 +75,13 @@ export class ProductoRepository {
       new Map(),
     );
   }
+
+  async deleteOne(id: string): Promise<void> {
+    const producto = await this.productoModel.findByPk(id);
+    if (!producto) {
+      return null;
+    }
+
+    await producto.destroy();
+  }
 }

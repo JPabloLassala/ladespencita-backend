@@ -4,6 +4,7 @@ import { DB_CONNECTION } from "src/constants";
 import { ProductoSchema } from "src/Producto";
 import { AlquilerSchema } from "src/Alquiler";
 import { AlquilerProductoSchema } from "src/AlquilerProducto";
+import { ImageSchema } from "src/Image";
 
 export const databaseProviders: Provider[] = [
   {
@@ -12,7 +13,7 @@ export const databaseProviders: Provider[] = [
       const sequelize = new Sequelize(process.env.DATABASE_URL, {
         dialect: "postgres",
       });
-      sequelize.addModels([ProductoSchema, AlquilerSchema, AlquilerProductoSchema]);
+      sequelize.addModels([ProductoSchema, AlquilerSchema, AlquilerProductoSchema, ImageSchema]);
       await sequelize.sync();
       return sequelize;
     },

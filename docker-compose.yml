@@ -25,7 +25,7 @@ services:
       - JWT_SECRET=secret
 
   postgres:
-    image: postgres:latest
+    image: postgres:17
     platform: ${BUILD_PLATFORM:-}
     container_name: postgres
     environment:

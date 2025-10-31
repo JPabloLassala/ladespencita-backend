@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch } from "@nestjs/common";
+import { Body, Controller, Get, Patch } from "@nestjs/common";
 import { AlquilerRepository } from "./alquiler.repository";
 import { Alquiler } from "./alquiler.entity";
 

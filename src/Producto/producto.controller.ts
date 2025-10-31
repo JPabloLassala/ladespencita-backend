@@ -5,15 +5,15 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Patch,
   Post,
+  Put,
   UploadedFile,
   UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
 import { ProductoRepository } from "./producto.repository";
-import { Producto, ProductoCreate } from "./producto.entity";
+import { Producto, ProductoUpdateCreate } from "./producto.entity";
 import { ProductoService } from "./producto.service";
 import dayjs from "dayjs";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -54,10 +54,15 @@ export class ProductoController {
     }
   }
 
-  @Patch()
-  async updateOne(@Body() updateProducto: Partial<Producto>): Promise<Producto> {
+  @Put(":id")
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @UseInterceptors(FileInterceptor("file"))
+  async updateOne(
+    @Body() updateProductDTO: ProductoUpdateCreate,
+    @Param("id") id: string,
+  ): Promise<Producto> {
     try {
-      return await this.productoRepository.updateOne(updateProducto);
+      return await this.productoRepository.updateOne({ id: +id, ...updateProductDTO });
     } catch (error) {
       throw new HttpException(
         { status: HttpStatus.NOT_MODIFIED, error: "Internal Server Error" },
@@ -71,7 +76,7 @@ export class ProductoController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(FileInterceptor("file"))
   async create(
-    @Body() createProductDTO: ProductoCreate,
+    @Body() createProductDTO: ProductoUpdateCreate,
     @UploadedFile("file") file: Express.Multer.File,
   ): Promise<Producto> {
     const tmpProducto = await this.productoRepository.createOne(createProductDTO);

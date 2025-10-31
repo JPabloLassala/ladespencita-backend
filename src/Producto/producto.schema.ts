@@ -39,7 +39,7 @@ export interface IProductoSchema {
 export interface IProductoCreateSchema
   extends Optional<IProductoSchema, "id" | "createdAt" | "updatedAt"> {}
 
-@Table({ tableName: "productos", timestamps: true })
+@Table({ tableName: "productos", timestamps: true, paranoid: true })
 export class ProductoSchema extends Model<IProductoSchema, IProductoCreateSchema> {
   @PrimaryKey
   @AutoIncrement

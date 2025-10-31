@@ -14,6 +14,7 @@ services:
       - postgres
     volumes:
       - .:/app
+      - app:/app/node_modules
     environment:
       - DATABASE_URL=postgresql://user:password@postgres:5432/ladespen
       - DEFINED_USERNAME=user
@@ -25,7 +26,7 @@ services:
       context: "../ladespensita"
       dockerfile: Dockerfile
       target: development
-    working_dir: /app
+    working_dir: /front
     platform: ${BUILD_PLATFORM:-}
     container_name: front
     ports:
@@ -33,7 +34,8 @@ services:
     depends_on:
       - back
     volumes:
-      - .:/front
+      - ../ladespensita:/front
+      - front:/front/node_modules
     environment:
       - VITE_API_HOST=http://localhost:3000
   postgres:

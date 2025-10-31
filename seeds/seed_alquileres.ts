@@ -1,9 +1,11 @@
 import { faker } from "@faker-js/faker";
-import { AlquilerProducto } from "src/Alquileres/alquiler.entity";
-import { AlquilerRecordDTO, AlquilerSchema } from "src/Alquileres/alquiler.schema";
+import {
+  AlquilerProductoDTO,
+  AlquilerRecordDTO,
+  AlquilerSchema,
+} from "src/Alquileres/alquiler.schema";
 import { productos } from "./data/productos";
 import mongoose from "mongoose";
-import { ProductoRecordDTO } from "src/Productos";
 
 export async function seed_Alquileres(): Promise<void> {
   const AlquilerModel = mongoose.model("Alquiler", AlquilerSchema);
@@ -16,7 +18,8 @@ export async function seed_Alquileres(): Promise<void> {
 }
 
 async function seed(AlquilerModel: mongoose.Model<any>): Promise<void> {
-  const productosAlquiler1 = new Array(10).fill(undefined).map((): AlquilerProducto => {
+  const productosAlquiler1 = new Array(10).fill(undefined).map((): AlquilerProductoDTO => {
+    const productoDto = faker.helpers.arrayElement(productos);
     const valorx1 = parseInt(faker.string.numeric(3), 10);
     return {
       valor: {
@@ -31,7 +34,7 @@ async function seed(AlquilerModel: mongoose.Model<any>): Promise<void> {
       unidadesAlquiladas: parseInt(faker.string.numeric(2), 10),
       unidadesCotizadas: parseInt(faker.string.numeric(2), 10),
       cantidad: parseInt(faker.string.numeric(1), 10),
-      producto: ProductoRecordDTO.toProducto(faker.helpers.arrayElement(productos)),
+      producto: productoDto,
     };
   });
   const alquileres: AlquilerRecordDTO[] = new Array(5)

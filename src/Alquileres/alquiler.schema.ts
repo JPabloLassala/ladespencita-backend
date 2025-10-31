@@ -1,22 +1,32 @@
-import { ProductoSchema } from "src/Productos";
+import { Producto, ProductoSchemaProps } from "src/Productos";
 import mongoose from "mongoose";
-import { AlquilerProducto } from "./alquiler.entity";
 
-const AlquilerProductoSchema = new mongoose.Schema({
-  producto: ProductoSchema,
-  unidadesAlquiladas: Number,
-  unidadesCotizadas: Number,
-  cantidad: Number,
-  valor: {
-    unitarioGarantia: Number,
-    totalGarantia: Number,
-    unitarioAlquiler: Number,
-    x1: Number,
-    x3: Number,
-    x6: Number,
-    x12: Number,
+const AlquilerProductoSchema = new mongoose.Schema(
+  {
+    producto: new mongoose.Schema(ProductoSchemaProps, {
+      _id: false,
+      versionKey: false,
+      timestamps: false,
+    }),
+    unidadesAlquiladas: Number,
+    unidadesCotizadas: Number,
+    cantidad: Number,
+    valor: {
+      unitarioGarantia: Number,
+      totalGarantia: Number,
+      unitarioAlquiler: Number,
+      x1: Number,
+      x3: Number,
+      x6: Number,
+      x12: Number,
+    },
   },
-});
+  {
+    _id: false,
+    versionKey: false,
+    timestamps: false,
+  },
+);
 
 export const AlquilerSchema = new mongoose.Schema(
   {
@@ -29,13 +39,33 @@ export const AlquilerSchema = new mongoose.Schema(
       fin: Date,
     }),
   },
-  { timestamps: true, collection: "alquileres" },
+  {
+    timestamps: true,
+    collection: "alquileres",
+    versionKey: false,
+  },
 );
+
+export type AlquilerProductoDTO = {
+  producto: Producto;
+  unidadesAlquiladas: number;
+  unidadesCotizadas: number;
+  cantidad: number;
+  valor: {
+    unitarioGarantia: number;
+    totalGarantia: number;
+    unitarioAlquiler: number;
+    x1: number;
+    x3: number;
+    x6: number;
+    x12: number;
+  };
+};
 
 export class AlquilerRecordDTO {
   productora: string;
   proyecto: string;
-  productos: AlquilerProducto[];
+  productos: AlquilerProductoDTO[];
   fechaPresupuesto: Date;
   fechaAlquiler: {
     inicio: Date;

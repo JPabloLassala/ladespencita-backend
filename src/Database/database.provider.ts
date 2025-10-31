@@ -11,12 +11,6 @@ export const databaseProviders: Provider[] = [
     useFactory: async () => {
       const sequelize = new Sequelize(process.env.DATABASE_URL, {
         dialect: "postgres",
-        dialectOptions: {
-          ssl: {
-            require: true,
-            rejectUnauthorized: false,
-          },
-        },
       });
       sequelize.addModels([ProductoSchema, AlquilerSchema, AlquilerProductoSchema]);
       await sequelize.sync();

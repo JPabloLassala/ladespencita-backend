@@ -7,17 +7,24 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { ProductoRepository } from "./producto.repository";
 import { Producto, ProductoCreate } from "./producto.entity";
 import { ProductoService } from "./producto.service";
 import dayjs from "dayjs";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { ImageRepository } from "src/Image";
 
 @Controller("producto")
 export class ProductoController {
   constructor(
     private readonly productoRepository: ProductoRepository,
     private readonly productoService: ProductoService,
+    private readonly imageRepository: ImageRepository,
   ) {}
 
   @Get()
@@ -61,7 +68,18 @@ export class ProductoController {
   }
 
   @Post()
-  async create(@Body() createProductDTO: ProductoCreate): Promise<Producto> {
-    return await this.productoRepository.createOne(createProductDTO);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @UseInterceptors(FileInterceptor("file"))
+  async create(
+    @Body() createProductDTO: ProductoCreate,
+    @UploadedFile("file") file: Express.Multer.File,
+  ): Promise<Producto> {
+    console.log(file);
+    const tmpProducto = await this.productoRepository.createOne(createProductDTO);
+    await this.imageRepository.createOne(file, tmpProducto.id);
+
+    const result = await this.productoRepository.getOne(tmpProducto.id.toString());
+
+    return result;
   }
 }

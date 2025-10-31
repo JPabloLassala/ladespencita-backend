@@ -5,6 +5,8 @@ export const createRandomProducto = (): Producto => ({
   id: faker.number.int(),
   nombre: faker.commerce.productName(),
   unidadesMetroLineal: faker.number.int(),
+  totales: faker.number.int(),
+  disponibles: faker.number.int(),
   medidas: {
     altura: faker.number.int(),
     ancho: faker.number.int(),
@@ -19,6 +21,7 @@ export const createRandomProducto = (): Producto => ({
   },
   valor: {
     unitarioGarantia: faker.number.int(),
+    unitarioAlquiler: faker.number.int(),
     x1: faker.number.int(),
     x3: faker.number.int(),
     x6: faker.number.int(),

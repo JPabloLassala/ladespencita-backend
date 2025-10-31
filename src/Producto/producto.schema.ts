@@ -172,9 +172,9 @@ export const fromProductoCreateToSchema = (producto: ProductoCreate): IProductoC
     costoTotal: 0,
     valorUnitarioGarantia: producto.valorUnitarioGarantia,
     valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
-    valorX1: producto.valorX1,
-    valorX3: producto.valorX3,
-    valorX6: producto.valorX6,
-    valorX12: producto.valorX12,
+    valorX1: producto.valorx1,
+    valorX3: producto.valorx3,
+    valorX6: producto.valorx6,
+    valorX12: producto.valorx12,
   };
 };

@@ -20,7 +20,7 @@ export class ProductoRepository {
       include: [
         {
           model: this.imageModel,
-          as: "images",
+          as: "image",
           required: false,
           attributes: ["id", "url", "productoId", "createdAt"],
         },
@@ -31,7 +31,16 @@ export class ProductoRepository {
   }
 
   async getOne(id: string): Promise<Producto> {
-    const productoModel = await this.productoModel.findByPk(id);
+    const productoModel = await this.productoModel.findByPk(id, {
+      include: [
+        {
+          model: this.imageModel,
+          as: "image",
+          required: true,
+          attributes: ["id", "url", "productoId", "createdAt"],
+        },
+      ],
+    });
 
     return fromSchemaToProducto(productoModel);
   }

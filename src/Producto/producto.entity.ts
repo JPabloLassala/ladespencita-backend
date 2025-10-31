@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { Image } from "src/Image";
 
 export interface Producto {
@@ -29,20 +30,41 @@ export interface Producto {
   image?: Image;
 }
 
-export type ProductoCreate = {
+export class ProductoCreate {
   id?: number;
   nombre: string;
+
+  @Transform(({ value }) => +value)
+  unidadesMetroLineal: number;
+  @Transform(({ value }) => +value)
   metroLineal: number;
+  @Transform(({ value }) => +value)
   totales: number;
+  @Transform(({ value }) => +value)
   disponibles: number;
+  @Transform(({ value }) => +value)
   altura: number;
+  @Transform(({ value }) => +value)
   ancho?: number;
+  @Transform(({ value }) => +value)
   profundidad?: number;
+  @Transform(({ value }) => +value)
   diametro?: number;
+  @Transform(({ value }) => +value)
   valorUnitarioGarantia: number;
+  @Transform(({ value }) => +value)
   valorUnitarioAlquiler: number;
-  valorX1: number;
-  valorX3: number;
-  valorX6: number;
-  valorX12: number;
-};
+  @Transform(({ value }) => +value)
+  valorx1: number;
+  @Transform(({ value }) => +value)
+  valorx3: number;
+  @Transform(({ value }) => +value)
+  valorx6: number;
+  @Transform(({ value }) => +value)
+  valorx12: number;
+  file?: Express.Multer.File;
+
+  constructor(obj: ProductoCreate) {
+    Object.assign(this, obj);
+  }
+}

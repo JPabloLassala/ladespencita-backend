@@ -4557,11 +4557,6 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
-soft-delete-plugin-mongoose@^1.0.17:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/soft-delete-plugin-mongoose/-/soft-delete-plugin-mongoose-1.0.17.tgz#5190bddb642162e9f46a0fa17f291d702efded26"
-  integrity sha512-n/r4uefkR3msj6W5bmQCLnX0pAvAZHB/Dtw/0UXGz9lJ4W7U/XV1l+qmLNyBKwRt28v0XkXbKCTgAUnhhnexSA==
-
 source-map-support@0.5.13:
   version "0.5.13"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.13.tgz#31b24a9c2e73c2de85066c0feb7d44767ed52932"

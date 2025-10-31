@@ -2,13 +2,11 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ALQUILER_MODEL } from "src/constants/database";
 import { AlquilerRecordDTO, fromDtoToAlquiler } from "./alquiler.schema";
 import { Alquiler } from "./alquiler.entity";
-import { SoftDeleteModel } from "soft-delete-plugin-mongoose";
+import { Model } from "mongoose";
 
 @Injectable()
 export class AlquilerRepository {
-  constructor(
-    @Inject(ALQUILER_MODEL) private readonly alquilerModel: SoftDeleteModel<AlquilerRecordDTO>,
-  ) {}
+  constructor(@Inject(ALQUILER_MODEL) private readonly alquilerModel: Model<AlquilerRecordDTO>) {}
 
   async getAlquileres(): Promise<Alquiler[]> {
     const alquilerDocs = await this.alquilerModel.find().exec();
@@ -51,6 +49,6 @@ export class AlquilerRepository {
   }
 
   async deleteOne(id: string): Promise<void> {
-    await this.alquilerModel.softDelete({ _id: id });
+    await this.alquilerModel.deleteOne({ _id: id });
   }
 }

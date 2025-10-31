@@ -17,7 +17,12 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed": "DATABASE_URL=postgres://user:password@localhost/ladespen ts-node -r tsconfig-paths/register ./seeds/run_seeds.ts"
+    "seed": "DATABASE_URL=postgres://user:password@localhost/ladespen ts-node -r tsconfig-paths/register ./seeds/run_seeds.ts",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d src/migration.ts",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:show": "npm run typeorm -- migration:show"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.726.1",

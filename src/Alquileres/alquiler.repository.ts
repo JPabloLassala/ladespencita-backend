@@ -1,60 +1,35 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Knex } from "knex";
-import { KNEX_INSTANCE } from "src/constants/database";
-import { AlquilerProductoRecordDTO, AlquilerRecordDTO } from "./alquiler.dto";
+import { ALQUILER_MODEL } from "src/constants/database";
+import { AlquilerRecordDTO } from "./alquiler.schema";
 import { Alquiler } from "./alquiler.entity";
+import { Model } from "mongoose";
 
 @Injectable()
 export class AlquilerRepository {
-  constructor(@Inject(KNEX_INSTANCE) private readonly knex: Knex) {}
+  constructor(@Inject(ALQUILER_MODEL) private readonly alquilerModel: Model<AlquilerRecordDTO>) {}
 
   async getAlquileres(): Promise<Alquiler[]> {
-    const resultAlquiler = await this.knex()
-      .select<AlquilerRecordDTO[]>("*")
-      .as("a")
-      .fromRaw("alquileres a");
-    const resultProducto = await this.knex()
-      .select<AlquilerProductoRecordDTO[]>("*")
-      .as("ap")
-      .fromRaw("alquileres_productos ap");
+    const alquilerDocs = await this.alquilerModel.find().lean().exec();
 
-    const asda = resultAlquiler.map((r) =>
-      AlquilerRecordDTO.toAlquilerWithoutProductos(r, resultProducto),
-    );
-
-    return asda;
+    return alquilerDocs;
   }
 
-  async getAlquiler(id: number): Promise<Alquiler[]> {
-    const resultAlquiler = await this.knex()
-      .select<AlquilerRecordDTO[]>("*")
-      .as("a")
-      .fromRaw("alquileres a")
-      .where("a.id", id);
-    const resultProducto = await this.knex()
-      .select<AlquilerProductoRecordDTO[]>("*")
-      .as("ap")
-      .fromRaw("alquileres_productos ap")
-      .where("ap.alquiler_id", id);
-
-    return resultAlquiler.map((r) =>
-      AlquilerRecordDTO.toAlquilerWithoutProductos(r, resultProducto),
-    );
+  async getAlquiler(proyecto: string): Promise<Alquiler[]> {
+    return await this.alquilerModel.find({ proyecto }).lean().exec();
   }
 
-  // async getAlquileresWithProducts() {
-  //   const query = this.knex("alquileres")
-  //     .select<(AlquilerRecordDTO & ProductoRecordDTO)[]>("*")
-  //     .leftJoin("productos", "alquileres.producto_id", "productos.id");
+  async updateOne(partialAlquiler: Partial<Alquiler>): Promise<Alquiler> {
+    const result = this.alquilerModel
+      .findOneAndUpdate({ id: partialAlquiler.id }, partialAlquiler, { new: true })
+      .lean()
+      .exec();
 
-  //   console.log(query.toSQL());
+    return result;
+  }
 
-  //   const result = await query;
+  async createOne(partialAlquiler: Partial<Alquiler>): Promise<Alquiler> {
+    const result = await this.alquilerModel.create(partialAlquiler);
 
-  //   return fromDtosToAlquileres(result);
-  // }
-
-  async getAlquileresByProducto() {
-    return "getAlquileresByProducto";
+    return result;
   }
 }

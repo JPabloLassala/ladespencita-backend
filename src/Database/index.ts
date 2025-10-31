@@ -1,2 +1,2 @@
 export * from "./database.module";
-export * from "./knex.provider";
+export * from "./database.provider";

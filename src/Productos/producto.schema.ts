@@ -1,6 +1,27 @@
+import mongoose from "mongoose";
 import { Producto } from "./producto.entity";
 
+export const ProductoSchema = new mongoose.Schema({
+  id: Number,
+  nombre: String,
+  unidadesMetroLineal: Number,
+  altura: Number,
+  ancho: Number,
+  profundidad: Number,
+  diametro: Number,
+  valorUnitarioGarantia: Number,
+  costoProducto: Number,
+  costoGrafica: Number,
+  diseno: Number,
+  costoTotal: Number,
+  valorx1: Number,
+  valorx3: Number,
+  valorx6: Number,
+  valorx12: Number,
+});
+
 export class ProductoRequestDTO {
+  id?: number;
   nombre?: string;
   unidadesMetroLineal?: number;
   altura?: number;
@@ -17,8 +38,8 @@ export class ProductoRequestDTO {
   valorx6?: number;
   valorx12?: number;
 
-  static toProducto = (dto: ProductoRequestDTO, id?: string): Partial<Producto> => ({
-    id: id ? parseInt(id) : undefined,
+  static toProducto = (dto: ProductoRequestDTO): Partial<Producto> => ({
+    id: dto.id,
     nombre: dto.nombre,
     unidadesMetroLineal: dto.unidadesMetroLineal,
     medidas: {
@@ -71,14 +92,14 @@ export class ProductoRecordDTO {
   profundidad?: number;
   diametro?: number;
   valorUnitarioGarantia: number;
-  costoProducto: number;
-  costoGrafica: number;
-  diseno: number;
-  costoTotal: number;
-  valorx1: number;
-  valorx3: number;
-  valorx6: number;
-  valorx12: number;
+  costoProducto?: number;
+  costoGrafica?: number;
+  diseno?: number;
+  costoTotal?: number;
+  valorx1?: number;
+  valorx3?: number;
+  valorx6?: number;
+  valorx12?: number;
 
   static toProducto = (dto: ProductoRecordDTO): Producto => ({
     id: dto.id,

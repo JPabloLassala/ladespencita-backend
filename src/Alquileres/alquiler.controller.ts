@@ -1,22 +1,18 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch } from "@nestjs/common";
 import { AlquilerRepository } from "./alquiler.repository";
+import { Alquiler } from "./alquiler.entity";
 
 @Controller("alquileres")
 export class AlquilerController {
   constructor(private readonly alquilerRepository: AlquilerRepository) {}
 
   @Get()
-  async getAlquileresWithoutProducts() {
+  async getAll() {
     return await this.alquilerRepository.getAlquileres();
   }
 
-  @Get(":id")
-  async getOne(@Param("id") id: number) {
-    return await this.alquilerRepository.getAlquiler(id);
-  }
-
-  @Get("/producto/:id")
-  async getAlquileresByProducto() {
-    return "getAlquileresByProducto";
+  @Patch()
+  async updateAlquiler(@Body() alquiler: Partial<Alquiler>) {
+    return await this.alquilerRepository.updateOne(alquiler);
   }
 }

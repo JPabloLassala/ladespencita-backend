@@ -1,7 +1,7 @@
 import { Producto } from "src/Productos";
 
-type AlquilerProducto = {
-  producto: Producto | number;
+export type AlquilerProducto = {
+  producto: Producto;
   unidadesAlquiladas: number;
   unidadesCotizadas: number;
   cantidad: number;
@@ -26,6 +26,6 @@ export class Alquiler {
     inicio: Date;
     fin: Date;
   };
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { ProductoRepository } from "./producto.repository";
 import { Producto } from "./producto.entity";
-import { ProductoRequestDTO } from "./producto.dto";
+import { ProductoRequestDTO } from "./producto.schema";
 import {
   CreateSwaggerDoc,
   GetAllSwaggerDoc,
@@ -49,7 +49,7 @@ export class ProductoController {
     @Body() updateProductDTO: ProductoRequestDTO,
   ): Promise<Producto> {
     try {
-      const partialProducto = ProductoRequestDTO.toProducto(updateProductDTO, id);
+      const partialProducto = ProductoRequestDTO.toProducto(updateProductDTO);
       return await this.productoRepository.updateOne(partialProducto);
     } catch (error) {
       throw new HttpException(
@@ -63,7 +63,7 @@ export class ProductoController {
   @Post()
   @CreateSwaggerDoc()
   async create(@Body() createProductDTO: ProductoRequestDTO): Promise<Producto> {
-    const partialProducto = ProductoRequestDTO.toProducto(createProductDTO, undefined);
+    const partialProducto = ProductoRequestDTO.toProducto(createProductDTO);
     return await this.productoRepository.createOne(partialProducto);
   }
 }

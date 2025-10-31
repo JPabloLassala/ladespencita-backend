@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "seed": "ts-node -r tsconfig-paths/register ./seeds/run_seeds.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.9",
@@ -25,11 +26,10 @@
     "@nestjs/platform-express": "^10.3.9",
     "@nestjs/serve-static": "^4.0.2",
     "@nestjs/swagger": "^7.4.0",
-    "knex": "^3.1.0",
+    "mongoose": "^8.4.5",
     "multer": "^1.4.5-lts.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1",
-    "sqlite3": "^5.1.7"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

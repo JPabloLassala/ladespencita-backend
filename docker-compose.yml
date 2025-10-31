@@ -6,14 +6,10 @@ services:
       target: development
     working_dir: /app
     platform: ${BUILD_PLATFORM:-}
-    command: [ "yarn", "dev" ]
+    command: ["yarn", "dev"]
     container_name: back
-    profiles:
-      - donotstart
     ports:
-      - '3000:3000'
-    expose:
-      - 3000
+      - "3000:3000"
     depends_on:
       - postgres
     volumes:
@@ -24,6 +20,23 @@ services:
       - DEFINED_PASSWORD=password
       - JWT_SECRET=secret
 
+  front:
+    build:
+      context: "../ladespensita"
+      dockerfile: Dockerfile
+      target: development
+    working_dir: /app
+    platform: ${BUILD_PLATFORM:-}
+    command: ["yarn", "dev"]
+    container_name: front
+    ports:
+      - "5173:5173"
+    depends_on:
+      - postgres
+    volumes:
+      - .:/front
+    environment:
+      - VITE_API_HOST=http://localhost:3000
   postgres:
     image: postgres:17
     platform: ${BUILD_PLATFORM:-}
@@ -42,3 +55,4 @@ services:
 volumes:
   postgres-data:
   app:
+  front:

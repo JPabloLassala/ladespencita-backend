@@ -1003,6 +1003,14 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
+"@types/mongoose-delete@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/mongoose-delete/-/mongoose-delete-1.0.5.tgz#743c5fa56c2ad046dabbbb16d7db0a59c9f0dd30"
+  integrity sha512-HoPLUyDZ07bI0G6ATN7Aqd9Yu/vey7cmpOKuqgsPk1CRX+FP/Wdc8Sg0zGDa7C48tYED6Kt9hWwStGR3sCVQFg==
+  dependencies:
+    "@types/node" "*"
+    mongoose "^5.11 || ^6 || ^7 || ^8"
+
 "@types/multer@^1.4.11":
   version "1.4.11"
   resolved "https://registry.yarnpkg.com/@types/multer/-/multer-1.4.11.tgz#c70792670513b4af1159a2b60bf48cc932af55c5"
@@ -3718,6 +3726,28 @@ mongodb@6.6.2:
     bson "^6.7.0"
     mongodb-connection-string-url "^3.0.0"
 
+mongodb@6.7.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-6.7.0.tgz#f86e51e6530e6a2ca4a99d7cfdf6f409223ac199"
+  integrity sha512-TMKyHdtMcO0fYBNORiYdmM25ijsHs+Njs963r4Tro4OQZzqYigAzYQouwWRg4OIaiLRUEGUh/1UAcH5lxdSLIA==
+  dependencies:
+    "@mongodb-js/saslprep" "^1.1.5"
+    bson "^6.7.0"
+    mongodb-connection-string-url "^3.0.0"
+
+"mongoose@^5.11 || ^6 || ^7 || ^8":
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.5.1.tgz#011192edf77af54dd0826a836459212da317c503"
+  integrity sha512-OhVcwVl91A1G6+XpjDcpkGP7l7ikZkxa0DylX7NT/lcEqAjggzSdqDxb48A+xsDxqNAr0ntSJ1yiE3+KJTOd5Q==
+  dependencies:
+    bson "^6.7.0"
+    kareem "2.6.3"
+    mongodb "6.7.0"
+    mpath "0.9.0"
+    mquery "5.0.0"
+    ms "2.1.3"
+    sift "17.1.3"
+
 mongoose@^8.4.5:
   version "8.4.5"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.4.5.tgz#83960c16b0e76555d2aa24b80c7bb644e9951e3b"
@@ -4431,6 +4461,11 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
+
+soft-delete-plugin-mongoose@^1.0.17:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/soft-delete-plugin-mongoose/-/soft-delete-plugin-mongoose-1.0.17.tgz#5190bddb642162e9f46a0fa17f291d702efded26"
+  integrity sha512-n/r4uefkR3msj6W5bmQCLnX0pAvAZHB/Dtw/0UXGz9lJ4W7U/XV1l+qmLNyBKwRt28v0XkXbKCTgAUnhhnexSA==
 
 source-map-support@0.5.13:
   version "0.5.13"

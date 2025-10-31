@@ -17,6 +17,8 @@ export interface Producto {
   };
   valor: {
     unitarioGarantia: number;
+    totalGarantia: number;
+    unitarioAlquiler: number;
     x1: number;
     x3: number;
     x6: number;

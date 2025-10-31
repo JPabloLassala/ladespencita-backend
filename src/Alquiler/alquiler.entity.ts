@@ -39,8 +39,8 @@ export class AlquilerEntity {
   createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
-export type AlquilerCreate = Omit<AlquilerEntity, "id" | "createdAt" | "updatedAt" | "productos">;
+export type AlquilerCreate = Omit<AlquilerEntity, "id" | "createdAt" | "updatedAt">;
 export type AlquilerUpdate = Partial<AlquilerEntity>;

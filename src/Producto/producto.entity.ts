@@ -71,7 +71,7 @@ export class ProductoEntity {
   createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
 export type ProductoEntityCreate = Omit<ProductoEntity, "id" | "createdAt" | "updatedAt" | "image">;

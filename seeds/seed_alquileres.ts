@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
-import { AlquilerSchema } from "src/Alquiler/alquiler.schema";
 import { AlquilerProductoSchema } from "src/AlquilerProducto";
 import { ProductoSchema } from "src/Producto";
 import { alquileres } from "./data/alquileres";
+import { AlquilerSchema } from "src/Alquiler";
 
 export async function seed_Alquileres(): Promise<void> {
   await AlquilerProductoSchema.destroy({ where: {}, truncate: true });

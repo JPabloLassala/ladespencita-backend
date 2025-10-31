@@ -4,6 +4,7 @@ services:
       context: "."
       dockerfile: Dockerfile
       target: development
+    working_dir: /app
     platform: ${BUILD_PLATFORM:-}
     container_name: back
     ports:

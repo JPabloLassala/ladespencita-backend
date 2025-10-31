@@ -49,10 +49,6 @@ export class ProductoAdapter {
     return await this.productoRepository.save(partialProducto);
   }
 
-  async getFromIds(ids: number[]): Promise<ProductoEntity[]> {
-    return await this.productoRepository.find({ where: { id: In(ids) } });
-  }
-
   async getStockPerId(): Promise<Map<number, number>> {
     const productos = await this.productoRepository.find();
 

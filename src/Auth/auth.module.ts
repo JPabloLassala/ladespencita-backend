@@ -7,10 +7,12 @@ import { APP_GUARD } from "@nestjs/core";
 
 @Module({
   imports: [
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: "7d" },
+    JwtModule.registerAsync({
+      useFactory: async () => ({
+        global: true,
+        secret: process.env.JWT_SECRET,
+        signOptions: { expiresIn: "7d" },
+      }),
     }),
   ],
   controllers: [AuthController],

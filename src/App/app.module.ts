@@ -18,8 +18,8 @@ const getPhotoModule = () => {
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
-    ConfigModule.forRoot(),
     AlquilerModule,
     ProductoModule,
     AlquilerProductoModule,

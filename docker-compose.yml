@@ -8,6 +8,8 @@ services:
     platform: ${BUILD_PLATFORM:-}
     command: [ "yarn", "dev" ]
     container_name: back
+    profiles:
+      - donotstart
     ports:
       - '3000:3000'
     expose:

@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
-  app:
+  back:
     build: .
-    container_name: node-app
+    container_name: back
     ports:
       - '3000:3000'
     expose:
@@ -12,15 +10,24 @@ services:
       - db
     environment:
       - MONGO_URL=mongodb://root:example@db:27017/nest?authSource=admin
-    volumes:
-      - .:/usr/src/app
 
+  front:
+    build:
+      context: .
+      dockerfile: ../ladespensita/Dockerfile
+    container_name: front
+    ports:
+      - '5173:5173'
+    expose:
+      - 5173
+    depends_on:
+      - back
 
   db:
     image: arm64v8/mongo:latest
     platform: linux/arm64
     restart: always
-    container_name: mongo-db
+    container_name: db
     ports:
       - '27017:27017'
     expose:
@@ -34,9 +41,3 @@ services:
 
 volumes:
   mongo-data:
-
-secrets:
-  mongodb_root_password:
-    file: /mongodb/.mongodb_root_password
-  mongodb_root_username:
-    file: /mongodb/.mongodb_root_username

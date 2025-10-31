@@ -9,7 +9,7 @@ import {
   Table,
   UpdatedAt,
 } from "sequelize-typescript";
-import { Producto, ProductoCreate } from "./producto.entity";
+import { Producto, ProductoUpdateCreate } from "./producto.entity";
 import { Optional } from "sequelize";
 import { ImageSchema } from "src/Image";
 
@@ -18,7 +18,6 @@ export interface IProductoSchema {
   nombre: string;
   unidadesMetroLineal: number;
   totales: number;
-  disponibles: number;
   medidasAltura: number;
   medidasAncho?: number;
   medidasProfundidad?: number;
@@ -52,8 +51,6 @@ export class ProductoSchema extends Model<IProductoSchema, IProductoCreateSchema
   unidadesMetroLineal: number;
   @Column(DataType.INTEGER)
   totales: number;
-  @Column(DataType.INTEGER)
-  disponibles: number;
   @Column(DataType.INTEGER)
   medidasAltura: number;
   @Column(DataType.INTEGER)
@@ -98,7 +95,6 @@ export const fromSchemaToProducto = (dto: ProductoSchema): Producto => {
     nombre: dto.nombre,
     unidadesMetroLineal: dto.unidadesMetroLineal,
     totales: dto.totales,
-    disponibles: dto.disponibles,
     medidas: {
       altura: dto.medidasAltura,
       ancho: dto.medidasAncho,
@@ -137,7 +133,6 @@ export const fromProductoToSchema = (producto: Producto | Partial<Producto>): Pr
     nombre: producto.nombre,
     unidadesMetroLineal: producto.unidadesMetroLineal,
     totales: producto.totales,
-    disponibles: producto.disponibles,
     medidasAltura: producto.medidas.altura,
     medidasAncho: producto.medidas.ancho,
     medidasProfundidad: producto.medidas.profundidad,
@@ -155,13 +150,14 @@ export const fromProductoToSchema = (producto: Producto | Partial<Producto>): Pr
   });
 };
 
-export const fromProductoCreateToSchema = (producto: ProductoCreate): IProductoCreateSchema => {
+export const fromProductoCreateToSchema = (
+  producto: ProductoUpdateCreate,
+): IProductoCreateSchema => {
   return {
     id: producto.id,
     nombre: producto.nombre,
     unidadesMetroLineal: producto.metroLineal,
     totales: producto.totales,
-    disponibles: producto.disponibles,
     medidasAltura: producto.altura,
     medidasAncho: producto.ancho,
     medidasProfundidad: producto.profundidad,

@@ -6,7 +6,6 @@ export interface Producto {
   nombre: string;
   unidadesMetroLineal: number;
   totales: number;
-  disponibles: number;
   medidas: {
     altura: number;
     ancho?: number;
@@ -30,7 +29,7 @@ export interface Producto {
   image?: Image;
 }
 
-export class ProductoCreate {
+export class ProductoUpdateCreate {
   id?: number;
   nombre: string;
 
@@ -40,8 +39,6 @@ export class ProductoCreate {
   metroLineal: number;
   @Transform(({ value }) => +value)
   totales: number;
-  @Transform(({ value }) => +value)
-  disponibles: number;
   @Transform(({ value }) => +value)
   altura: number;
   @Transform(({ value }) => +value)
@@ -64,7 +61,7 @@ export class ProductoCreate {
   valorx12: number;
   file?: Express.Multer.File;
 
-  constructor(obj: ProductoCreate) {
+  constructor(obj: ProductoUpdateCreate) {
     Object.assign(this, obj);
   }
 }

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Producto, ProductoCreate } from "./producto.entity";
+import { Producto, ProductoUpdateCreate } from "./producto.entity";
 import {
   fromProductoCreateToSchema,
   fromSchemaToProducto,
@@ -54,7 +54,7 @@ export class ProductoRepository {
     return fromSchemaToProducto(producto);
   }
 
-  async createOne(partialProducto: ProductoCreate): Promise<Producto> {
+  async createOne(partialProducto: ProductoUpdateCreate): Promise<Producto> {
     const productoCreateschema = fromProductoCreateToSchema(partialProducto);
     const result = await this.productoModel.create(productoCreateschema);
 

@@ -8,7 +8,7 @@ export class ImageRepository {
 
   async uploadFile(file: Express.Multer.File): Promise<{ file: string }> {
     try {
-      const result = await this.s3.send(
+      await this.s3.send(
         new PutObjectCommand({
           Bucket: process.env.BACKBLAZE_BUCKET,
           Key: file.originalname,
@@ -17,13 +17,10 @@ export class ImageRepository {
         }),
       );
 
-      console.log("Upload result: ", result);
-
       return {
         file: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${file.originalname}`,
       };
     } catch (error) {
-      console.error("Error uploading file: ", error);
       throw new Error("Upload failed");
     }
   }

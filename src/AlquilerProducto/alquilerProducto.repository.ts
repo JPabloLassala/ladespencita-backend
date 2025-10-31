@@ -3,7 +3,8 @@ import { AlquilerProducto, CreateAlquilerProducto } from "./alquilerProducto.ent
 import { ALQUILERPRODUCTO_MODEL, PRODUCTO_MODEL } from "src/constants/database";
 import {
   AlquilerProductoSchema,
-  fromAlquilerProductoToSchema,
+  fromAlquilerProductoToCreateSchema,
+  fromAlquilerProductoToUpdateSchema,
   fromSchemaToAlquilerProducto,
 } from "./alquilerProducto.schema";
 import { ProductoRepository, ProductoSchema } from "src/Producto";
@@ -50,7 +51,7 @@ export class AlquilerProductoRepository {
     }
 
     const apDtos = alquilerProductos.map(ap => ({
-      ...fromAlquilerProductoToSchema(ap),
+      ...fromAlquilerProductoToCreateSchema(ap),
       id: undefined,
       alquilerId,
     }));
@@ -77,7 +78,7 @@ export class AlquilerProductoRepository {
       );
     }
 
-    const asda = fromAlquilerProductoToSchema(newAlquilerProducto as AlquilerProducto);
+    const asda = fromAlquilerProductoToCreateSchema(newAlquilerProducto as AlquilerProducto);
     const result = await this.alquilerProductoModel.create(asda);
 
     return fromSchemaToAlquilerProducto(result);
@@ -85,11 +86,11 @@ export class AlquilerProductoRepository {
 
   async createBulk(alquilerProductos: AlquilerProducto[]): Promise<void> {
     const apDtos = alquilerProductos.map(ap => ({
-      ...fromAlquilerProductoToSchema(ap),
+      ...fromAlquilerProductoToCreateSchema(ap),
       id: undefined,
     }));
 
-    await AlquilerProductoSchema.bulkCreate(apDtos);
+    await this.alquilerProductoModel.bulkCreate(apDtos);
   }
 
   async updateAlquilerProducto(alquilerProducto: AlquilerProducto): Promise<void> {
@@ -113,7 +114,7 @@ export class AlquilerProductoRepository {
     }
 
     const apDto = {
-      ...fromAlquilerProductoToSchema(alquilerProducto),
+      ...fromAlquilerProductoToUpdateSchema(alquilerProducto),
       id: undefined,
     };
 

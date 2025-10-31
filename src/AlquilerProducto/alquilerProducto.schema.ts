@@ -44,6 +44,9 @@ export interface IAlquilerProductoCreateSchema
     "id" | "createdAt" | "updatedAt" | "producto" | "alquiler"
   > {}
 
+export interface IAlquilerProductoUpdateSchema
+  extends Optional<IAlquilerProductoSchema, "createdAt" | "updatedAt" | "producto" | "alquiler"> {}
+
 @Table({ tableName: "alquiler_productos" })
 export class AlquilerProductoSchema extends Model<
   IAlquilerProductoSchema,
@@ -144,6 +147,54 @@ export const fromAlquilerProductoToSchema = (ap: AlquilerProducto): AlquilerProd
     valorX6: ap.valor.x6,
     valorX12: ap.valor.x12,
   });
+};
+
+export const fromAlquilerProductoToUpdateSchema = (
+  ap: AlquilerProducto,
+): IAlquilerProductoUpdateSchema => {
+  return {
+    id: ap.id,
+    productoId: ap.productoId,
+    alquilerId: ap.alquilerId,
+    costoDiseno: ap.costo.diseno,
+    costoGrafica: ap.costo.grafica,
+    costoProducto: ap.costo.producto,
+    costoTotal: ap.costo.total,
+    unidadesAlquiladas: ap.unidadesAlquiladas,
+    unidadesCotizadas: ap.unidadesCotizadas,
+    cantidad: ap.cantidad,
+    valorTotalGarantia: ap.valor.totalGarantia,
+    valorUnitarioAlquiler: ap.valor.unitarioAlquiler,
+    valorUnitarioGarantia: ap.valor.unitarioGarantia,
+    valorX1: ap.valor.x1,
+    valorX3: ap.valor.x3,
+    valorX6: ap.valor.x6,
+    valorX12: ap.valor.x12,
+  };
+};
+
+export const fromAlquilerProductoToCreateSchema = (
+  ap: AlquilerProducto,
+): IAlquilerProductoCreateSchema => {
+  return {
+    id: ap.id,
+    productoId: ap.productoId,
+    alquilerId: ap.alquilerId,
+    costoDiseno: ap.costo.diseno,
+    costoGrafica: ap.costo.grafica,
+    costoProducto: ap.costo.producto,
+    costoTotal: ap.costo.total,
+    unidadesAlquiladas: ap.unidadesAlquiladas,
+    unidadesCotizadas: ap.unidadesCotizadas,
+    cantidad: ap.cantidad,
+    valorTotalGarantia: ap.valor.totalGarantia,
+    valorUnitarioAlquiler: ap.valor.unitarioAlquiler,
+    valorUnitarioGarantia: ap.valor.unitarioGarantia,
+    valorX1: ap.valor.x1,
+    valorX3: ap.valor.x3,
+    valorX6: ap.valor.x6,
+    valorX12: ap.valor.x12,
+  };
 };
 
 export const fromProductoToAlquilerProducto = (

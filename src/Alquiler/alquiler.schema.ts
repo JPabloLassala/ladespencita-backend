@@ -1,58 +1,69 @@
-import mongoose, { Document } from "mongoose";
 import { Alquiler } from "./alquiler.entity";
+import {
+  AutoIncrement,
+  Column,
+  DataType,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Table,
+} from "sequelize-typescript";
+import { AlquilerProducto, AlquilerProductoSchema } from "src/AlquilerProducto";
 
-export const AlquilerSchema = new mongoose.Schema(
-  {
-    productora: String,
-    proyecto: String,
-    fechaPresupuesto: Date,
-    fechaAlquiler: new mongoose.Schema({
-      inicio: Date,
-      fin: Date,
-    }),
-  },
-  {
-    timestamps: true,
-    collection: "alquileres",
-    versionKey: false,
-  },
-);
+@Table({ tableName: "alquileres", timestamps: true })
+export class AlquilerSchema extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id?: string;
+  @Column(DataType.STRING)
+  productora: string;
+  @Column(DataType.STRING)
+  proyecto: string;
+  @Column(DataType.DATE)
+  fechaPresupuesto: Date;
+  @Column(DataType.DATE)
+  fechaInicio: Date;
+  @Column(DataType.DATE)
+  fechaFin: Date;
 
-export interface AlquilerRecordDTO extends Document {
-  _id?: string;
+  @HasMany(() => AlquilerProductoSchema, "alquilerId")
+  productos: AlquilerProducto[];
+}
+
+export interface AlquilerRecord {
+  id?: string;
   productora: string;
   proyecto: string;
   fechaPresupuesto: Date;
-  fechaAlquiler: {
-    inicio: Date;
-    fin: Date;
-  };
-  createdAt?: Date;
-  updatedAt?: Date;
+  fechaInicio: Date;
+  fechaFin: Date;
+  productos: AlquilerProducto[];
 }
 
-export const fromDtoToAlquiler = (dto: AlquilerRecordDTO): Alquiler => {
+export const fromSchemaToAlquiler = (dto: AlquilerSchema): Alquiler => {
   return {
-    id: dto._id,
+    id: dto.id,
     productora: dto.productora,
     proyecto: dto.proyecto,
     fechaPresupuesto: dto.fechaPresupuesto,
-    fechaAlquiler: dto.fechaAlquiler,
+    fechaAlquiler: {
+      inicio: dto.fechaInicio,
+      fin: dto.fechaFin,
+    },
     createdAt: dto.createdAt,
     updatedAt: dto.updatedAt,
   };
 };
 
-export const fromAlquilerToDto = (producto: Alquiler): AlquilerRecordDTO => {
-  const alquilerModel = mongoose.model<AlquilerRecordDTO>("Alquiler", AlquilerSchema);
-
-  return new alquilerModel({
-    _id: producto.id,
-    productora: producto.productora,
-    proyecto: producto.proyecto,
-    fechaPresupuesto: producto.fechaPresupuesto,
-    fechaAlquiler: producto.fechaAlquiler,
-    createdAt: producto.createdAt,
-    updatedAt: producto.updatedAt,
+export const fromAlquilerToDto = (alquiler: Alquiler): AlquilerSchema => {
+  return new AlquilerSchema({
+    id: alquiler.id,
+    productora: alquiler.productora,
+    proyecto: alquiler.proyecto,
+    fechaInicio: alquiler.fechaAlquiler.inicio,
+    fechaFin: alquiler.fechaAlquiler.fin,
+    createdAt: alquiler.createdAt,
+    updatedAt: alquiler.updatedAt,
   });
 };

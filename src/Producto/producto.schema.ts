@@ -1,89 +1,127 @@
-import mongoose, { Document } from "mongoose";
+import { AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 import { Producto } from "./producto.entity";
 
-export const ProductoSchemaProps = {
-  nombre: String,
-  unidadesMetroLineal: Number,
-  stock: Number,
-  medidas: {
-    altura: Number,
-    ancho: Number,
-    profundidad: Number,
-    diametro: Number,
-  },
-  costo: {
-    producto: Number,
-    grafica: Number,
-    diseno: Number,
-    total: Number,
-  },
-  valor: {
-    unitarioGarantia: Number,
-    totalGarantia: Number,
-    unitarioAlquiler: Number,
-    x1: Number,
-    x3: Number,
-    x6: Number,
-    x12: Number,
-  },
-};
+@Table({ tableName: "productos", timestamps: true })
+export class ProductoSchema extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id?: string;
+  @Column(DataType.STRING)
+  nombre: string;
+  @Column(DataType.INTEGER)
+  unidadesMetroLineal: number;
+  @Column(DataType.INTEGER)
+  stock: number;
 
-export const ProductoSchema = new mongoose.Schema(ProductoSchemaProps, {
-  timestamps: true,
-  versionKey: false,
-});
+  disponibles: number;
+  @Column(DataType.INTEGER)
+  medidasAltura: number;
+  @Column(DataType.INTEGER)
+  medidasAncho?: number;
+  @Column(DataType.INTEGER)
+  medidasProfundidad?: number;
+  @Column(DataType.INTEGER)
+  medidasDiametro?: number;
+  @Column(DataType.INTEGER)
+  costoProducto: number;
+  @Column(DataType.INTEGER)
+  costoGrafica: number;
+  @Column(DataType.INTEGER)
+  costoDiseno: number;
+  @Column(DataType.INTEGER)
+  costoTotal: number;
+  @Column(DataType.INTEGER)
+  valorUnitarioGarantia: number;
+  @Column(DataType.INTEGER)
+  valorTotalGarantia: number;
+  @Column(DataType.INTEGER)
+  valorUnitarioAlquiler: number;
+  @Column(DataType.INTEGER)
+  valorX1: number;
+  @Column(DataType.INTEGER)
+  valorX3: number;
+  @Column(DataType.INTEGER)
+  valorX6: number;
+  @Column(DataType.INTEGER)
+  valorX12: number;
+}
 
-export interface ProductoRecordDTO extends Document {
-  _id?: string;
+export interface ProductoModel {
+  id?: string;
   nombre: string;
   unidadesMetroLineal: number;
   stock: number;
-  medidas: {
-    altura: number;
-    ancho?: number;
-    profundidad?: number;
-    diametro?: number;
-  };
-  costo: {
-    producto: number;
-    grafica: number;
-    diseno: number;
-    total: number;
-  };
-  valor: {
-    unitarioGarantia: number;
-    totalGarantia: number;
-    unitarioAlquiler: number;
-    x1: number;
-    x3: number;
-    x6: number;
-    x12: number;
-  };
+  disponibles: number;
+  medidasAltura: number;
+  medidasAncho?: number;
+  medidasProfundidad?: number;
+  medidasDiametro?: number;
+  costoProducto: number;
+  costoGrafica: number;
+  costoDiseno: number;
+  costoTotal: number;
+  valorUnitarioGarantia: number;
+  valorTotalGarantia: number;
+  valorUnitarioAlquiler: number;
+  valorX1: number;
+  valorX3: number;
+  valorX6: number;
+  valorX12: number;
 }
 
-export const fromDtoToProducto = (dto: ProductoRecordDTO): Producto => {
+export const fromSchemaToProducto = (dto: ProductoSchema): Producto => {
   return {
-    id: dto._id,
+    id: dto.id,
     nombre: dto.nombre,
-    disponibles: 0,
     unidadesMetroLineal: dto.unidadesMetroLineal,
     stock: dto.stock,
-    medidas: dto.medidas,
-    costo: dto.costo,
-    valor: dto.valor,
+    disponibles: dto.disponibles,
+    medidas: {
+      altura: dto.medidasAltura,
+      ancho: dto.medidasAncho,
+      profundidad: dto.medidasProfundidad,
+      diametro: dto.medidasDiametro,
+    },
+    costo: {
+      producto: dto.costoProducto,
+      grafica: dto.costoGrafica,
+      diseno: dto.costoDiseno,
+      total: dto.costoTotal,
+    },
+    valor: {
+      unitarioGarantia: dto.valorUnitarioGarantia,
+      totalGarantia: dto.valorTotalGarantia,
+      unitarioAlquiler: dto.valorUnitarioAlquiler,
+      x1: dto.valorX1,
+      x3: dto.valorX3,
+      x6: dto.valorX6,
+      x12: dto.valorX12,
+    },
   };
 };
 
-export const fromProductoToDto = (producto: Producto): ProductoRecordDTO => {
-  const productoModel = mongoose.model<ProductoRecordDTO>("Producto", ProductoSchema);
-
-  return new productoModel({
-    _id: new mongoose.Types.ObjectId(producto.id),
+export const fromProductoToSchema = (producto: Producto | Partial<Producto>): ProductoSchema => {
+  return new ProductoSchema({
+    id: producto.id,
     nombre: producto.nombre,
-    stock: producto.stock,
     unidadesMetroLineal: producto.unidadesMetroLineal,
-    medidas: producto.medidas,
-    costo: producto.costo,
-    valor: producto.valor,
+    stock: producto.stock,
+    disponibles: producto.disponibles,
+    medidasAltura: producto.medidas.altura,
+    medidasAncho: producto.medidas.ancho,
+    medidasProfundidad: producto.medidas.profundidad,
+    medidasDiametro: producto.medidas.diametro,
+    costoProducto: producto.costo.producto,
+    costoGrafica: producto.costo.grafica,
+    costoDiseno: producto.costo.diseno,
+    costoTotal: producto.costo.total,
+    valorUnitarioGarantia: producto.valor.unitarioGarantia,
+    valorTotalGarantia: producto.valor.totalGarantia,
+    valorUnitarioAlquiler: producto.valor.unitarioAlquiler,
+    valorX1: producto.valor.x1,
+    valorX3: producto.valor.x3,
+    valorX6: producto.valor.x6,
+    valorX12: producto.valor.x12,
   });
 };

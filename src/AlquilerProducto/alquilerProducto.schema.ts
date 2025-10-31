@@ -1,85 +1,114 @@
-import mongoose, { Types } from "mongoose";
 import { AlquilerProducto } from "./alquilerProducto.entity";
-import { Producto } from "src/Producto";
-import { Alquiler } from "src/Alquiler";
+import { fromSchemaToProducto, Producto, ProductoSchema } from "src/Producto";
+import { Alquiler, AlquilerSchema, fromSchemaToAlquiler } from "src/Alquiler";
+import {
+  AutoIncrement,
+  BelongsTo,
+  Column,
+  DataType,
+  Model,
+  PrimaryKey,
+  Table,
+} from "sequelize-typescript";
 
-export const AlquilerProductoSchema = new mongoose.Schema(
-  {
-    productoId: Types.ObjectId,
-    alquilerId: Types.ObjectId,
-    costo: {
-      producto: Number,
-      grafica: Number,
-      diseno: Number,
-      total: Number,
-    },
-    unidadesAlquiladas: Number,
-    unidadesCotizadas: Number,
-    cantidad: Number,
-    valor: {
-      unitarioGarantia: Number,
-      totalGarantia: Number,
-      unitarioAlquiler: Number,
-      x1: Number,
-      x3: Number,
-      x6: Number,
-      x12: Number,
-    },
-  },
-  {
-    versionKey: false,
-    timestamps: false,
-  },
-);
+@Table({ tableName: "alquiler_productos" })
+export class AlquilerProductoSchema extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id?: number;
 
-export interface AlquilerProductoDTO {
-  _id?: string;
-  alquilerId: string;
-  productoId: string;
-  costo: {
-    producto: number;
-    grafica: number;
-    diseno: number;
-    total: number;
-  };
+  @BelongsTo(() => ProductoSchema, "productoId")
+  producto: ProductoSchema;
+  @BelongsTo(() => AlquilerSchema, "alquilerId")
+  alquiler: AlquilerSchema;
+
+  @Column(DataType.INTEGER)
+  costoProducto: number;
+  @Column(DataType.INTEGER)
+  costoGrafica: number;
+  @Column(DataType.INTEGER)
+  costoDiseno: number;
+  @Column(DataType.INTEGER)
+  costoTotal: number;
+  @Column(DataType.INTEGER)
+  unidadesAlquiladas: number;
+  @Column(DataType.INTEGER)
+  unidadesCotizadas: number;
+  @Column(DataType.INTEGER)
+  cantidad: number;
+  @Column(DataType.INTEGER)
+  valorUnitarioGarantia: number;
+  @Column(DataType.INTEGER)
+  valorTotalGarantia: number;
+  @Column(DataType.INTEGER)
+  valorUnitarioAlquiler: number;
+  @Column(DataType.INTEGER)
+  valorX1: number;
+  @Column(DataType.INTEGER)
+  valorX3: number;
+  @Column(DataType.INTEGER)
+  valorX6: number;
+  @Column(DataType.INTEGER)
+  valorX12: number;
+}
+
+export interface AlquilerProductoRecord {
+  id?: number;
+  producto: ProductoSchema;
+  alquiler: AlquilerSchema;
+  costoProducto: number;
+  costoGrafica: number;
+  costoDiseno: number;
+  costoTotal: number;
   unidadesAlquiladas: number;
   unidadesCotizadas: number;
   cantidad: number;
-  valor: {
-    unitarioGarantia: number;
-    totalGarantia: number;
-    unitarioAlquiler: number;
-    x1: number;
-    x3: number;
-    x6: number;
-    x12: number;
-  };
+  valorUnitarioGarantia: number;
+  valorTotalGarantia: number;
+  valorUnitarioAlquiler: number;
+  valorX1: number;
+  valorX3: number;
+  valorX6: number;
+  valorX12: number;
 }
 
-export const fromDtoToAlquilerProducto = (dto: AlquilerProductoDTO): AlquilerProducto => {
+export const fromSchemaToAlquilerProducto = (schema: AlquilerProductoSchema): AlquilerProducto => {
   return {
-    id: dto._id,
-    alquilerId: dto.alquilerId,
-    productoId: dto.productoId,
-    costo: dto.costo,
-    unidadesAlquiladas: dto.unidadesAlquiladas,
-    unidadesCotizadas: dto.unidadesCotizadas,
-    cantidad: dto.cantidad,
-    valor: dto.valor,
+    id: schema.id,
+    alquiler: fromSchemaToAlquiler(schema.alquiler),
+    producto: fromSchemaToProducto(schema.producto),
+    costo: {
+      diseno: schema.costoDiseno,
+      grafica: schema.costoGrafica,
+      producto: schema.costoProducto,
+      total: schema.costoTotal,
+    },
+    unidadesAlquiladas: schema.unidadesAlquiladas,
+    unidadesCotizadas: schema.unidadesCotizadas,
+    cantidad: schema.cantidad,
+    valor: {
+      totalGarantia: schema.valorTotalGarantia,
+      unitarioAlquiler: schema.valorUnitarioAlquiler,
+      unitarioGarantia: schema.valorUnitarioGarantia,
+      x1: schema.valorX1,
+      x3: schema.valorX3,
+      x6: schema.valorX6,
+      x12: schema.valorX12,
+    },
   };
 };
 
-export const fromAlquilerProductoToDto = (producto: AlquilerProducto): AlquilerProductoDTO => {
-  const alquilerModel = mongoose.model<AlquilerProductoDTO>("Alquiler", AlquilerProductoSchema);
-
-  return new alquilerModel({
-    _id: producto.id,
-    productoId: producto.productoId,
-    costo: producto.costo,
-    unidadesAlquiladas: producto.unidadesAlquiladas,
-    unidadesCotizadas: producto.unidadesCotizadas,
-    cantidad: producto.cantidad,
-    valor: producto.valor,
+export const fromAlquilerProductoToSchema = (ap: AlquilerProducto): AlquilerProductoSchema => {
+  return new AlquilerProductoSchema({
+    id: ap.id,
+    producto: ap.producto,
+    alquiler: ap.alquiler,
+    costo: ap.costo,
+    unidadesAlquiladas: ap.unidadesAlquiladas,
+    unidadesCotizadas: ap.unidadesCotizadas,
+    cantidad: ap.cantidad,
+    valor: ap.valor,
   });
 };
 
@@ -91,8 +120,8 @@ export const fromProductoToAlquilerProducto = (
   unidadesCotizadas: number,
 ): AlquilerProducto => {
   return {
-    productoId: producto.id,
-    alquilerId: alquiler.id,
+    producto: producto,
+    alquiler: alquiler,
     cantidad,
     costo: {
       producto: producto.costo.producto,

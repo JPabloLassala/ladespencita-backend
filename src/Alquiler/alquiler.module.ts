@@ -3,24 +3,17 @@ import { DatabaseModule } from "src/Database";
 import { AlquilerController } from "./alquiler.controller";
 import { AlquilerRepository } from "./alquiler.repository";
 import { ALQUILER_MODEL } from "src/constants/database";
-import { Connection, Model } from "mongoose";
-import { AlquilerRecordDTO, AlquilerSchema } from "./alquiler.schema";
+import { AlquilerSchema } from "./alquiler.schema";
 
-const alquilerModelProvider = {
+export const alquilerModel = {
   provide: ALQUILER_MODEL,
-  useFactory: (connection: Connection) => {
-    return connection.model<AlquilerRecordDTO, Model<AlquilerRecordDTO>>(
-      "Alquiler",
-      AlquilerSchema,
-    );
-  },
-  inject: ["DATABASE_CONNECTION"],
+  useValue: AlquilerSchema,
 };
 
 @Module({
   imports: [DatabaseModule],
   controllers: [AlquilerController],
-  providers: [AlquilerRepository, alquilerModelProvider],
+  providers: [AlquilerRepository, alquilerModel],
   exports: [AlquilerRepository],
 })
 export class AlquilerModule {}

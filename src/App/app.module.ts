@@ -3,8 +3,8 @@ import { AppService } from "./app.service";
 import { ProductoModule } from "src/Producto";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
-import { AlquilerModule } from "src/Alquiler/alquiler.module";
-import { AlquilerProductoModule } from "src/AlquilerProducto";
+// import { AlquilerModule } from "src/Alquiler/alquiler.module";
+// import { AlquilerProductoModule } from "src/AlquilerProducto";
 import { AuthModule } from "src/Auth";
 
 const getPhotoModule = () => {
@@ -15,7 +15,7 @@ const getPhotoModule = () => {
 };
 
 @Module({
-  imports: [AuthModule, ProductoModule, AlquilerModule, AlquilerProductoModule, getPhotoModule()],
+  imports: [AuthModule, ProductoModule, getPhotoModule()],
   controllers: [],
   providers: [AppService],
 })

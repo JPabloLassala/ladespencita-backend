@@ -1,15 +1,19 @@
-import mongoose from "mongoose";
-import { env } from "process";
+import { Sequelize } from "sequelize-typescript";
+import { Provider } from "@nestjs/common";
+import { DB_CONNECTION } from "src/constants";
+import { ProductoSchema } from "src/Producto";
 
-export const databaseProviders = [
+export const databaseProviders: Provider[] = [
   {
-    provide: "DATABASE_CONNECTION",
-    useFactory: (): Promise<typeof mongoose> => {
-      console.log(`Mongo debug is ${env.MONGO_DEBUG}`);
-      mongoose.set("debug", Boolean(env.MONGO_DEBUG));
-      return mongoose.connect(
-        env.MONGO_URL || "mongodb://root:example@db:27017/nest?authSource=admin",
-      );
+    provide: DB_CONNECTION,
+    useFactory: async () => {
+      const sequelize = new Sequelize({
+        dialect: "sqlite",
+        database: "ladespen.sqlite",
+      });
+      sequelize.addModels([ProductoSchema]);
+      await sequelize.sync();
+      return sequelize;
     },
   },
 ];

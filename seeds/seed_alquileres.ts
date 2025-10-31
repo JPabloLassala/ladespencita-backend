@@ -1,78 +1,51 @@
 import { faker } from "@faker-js/faker";
-import mongoose from "mongoose";
-import { AlquilerRecordDTO, AlquilerSchema } from "src/Alquiler/alquiler.schema";
-import { AlquilerProductoDTO, AlquilerProductoSchema } from "src/AlquilerProducto";
-import { ProductoRecordDTO, ProductoSchema } from "src/Producto";
+import { AlquilerSchema } from "src/Alquiler/alquiler.schema";
+import { AlquilerProductoSchema } from "src/AlquilerProducto";
+import { ProductoSchema } from "src/Producto";
+import { alquileres } from "./data/alquileres";
 
 export async function seed_Alquileres(): Promise<void> {
-  const AlquilerModel = mongoose.model("Alquiler", AlquilerSchema);
-  const AlquilerProductoModel = mongoose.model("AlquilerProducto", AlquilerProductoSchema);
-
-  await mongoose.connect("mongodb://root:example@localhost:27017/nest?authSource=admin");
-  await AlquilerProductoModel.deleteMany({});
+  await AlquilerProductoSchema.destroy({ where: {}, truncate: true });
   console.log("AlquilerProductos borrados");
-  await AlquilerModel.deleteMany({});
+  await AlquilerSchema.destroy({ where: {}, truncate: true });
   console.log("Alquileres borrados");
-  await seed(AlquilerModel);
+
+  await seed();
   console.log("Alquileres insertados");
 }
 
-async function seed(AlquilerModel: mongoose.Model<any>): Promise<void> {
-  const alquilerModel = mongoose.model<AlquilerRecordDTO>("Alquiler", AlquilerSchema);
-  const productoModel = mongoose.model<ProductoRecordDTO>("Producto", ProductoSchema);
-  const alquilerProductoModel = mongoose.model<AlquilerProductoDTO>(
-    "AlquilerProducto",
-    AlquilerProductoSchema,
-  );
+async function seed(): Promise<void> {
+  await AlquilerSchema.bulkCreate(alquileres);
 
-  const alquileres: AlquilerRecordDTO[] = new Array(5).fill(undefined).map<AlquilerRecordDTO>(
-    () =>
-      new alquilerModel({
-        _id: new mongoose.Types.ObjectId(),
-        productora: faker.company.name(),
-        proyecto: faker.company.name(),
-        fechaPresupuesto: new Date(),
-        fechaAlquiler: {
-          inicio: faker.date.anytime(),
-          fin: faker.date.anytime(),
-        },
-      }),
-  );
+  const alquilerModels = await AlquilerSchema.findAll();
+  const productoModels = await ProductoSchema.findAll();
 
-  await AlquilerModel.insertMany(alquileres);
+  const getProductosAlquilerArray = () => {
+    const alquiler = faker.helpers.arrayElement(alquilerModels);
+    const productosToParse = faker.helpers.arrayElements(productoModels, { min: 20, max: 30 });
 
-  const productos = await productoModel.find().exec();
-  const getProductosAlquilerArray: () => Omit<AlquilerProductoDTO, "_id">[] = () => {
-    const alquiler = faker.helpers.arrayElement(alquileres);
-    const productoDtos = faker.helpers.arrayElements(productos, { min: 20, max: 30 });
-
-    return productoDtos.map((productoDto) => {
+    return productosToParse.map((productoToParse) => {
       const valorx1 = parseInt(faker.string.numeric(3), 10);
       return {
-        productoId: productoDto._id,
-        alquilerId: alquiler._id,
-        valor: {
-          unitarioGarantia: parseInt(faker.string.numeric(4)),
-          totalGarantia: parseInt(faker.string.numeric(4)),
-          unitarioAlquiler: valorx1,
-          x1: valorx1,
-          x3: valorx1 * 3,
-          x6: valorx1 * 6,
-          x12: valorx1 * 12,
-        },
-
-        costo: {
-          producto: productoDto.costo.producto,
-          grafica: productoDto.costo.grafica,
-          diseno: productoDto.costo.diseno,
-          total: productoDto.costo.total,
-        },
+        productoId: productoToParse.id,
+        alquilerId: alquiler.id,
+        valorUnitarioGarantia: parseInt(faker.string.numeric(4)),
+        valorTotalGarantia: parseInt(faker.string.numeric(4)),
+        valorUnitarioAlquiler: valorx1,
+        valorX1: valorx1,
+        valorX3: valorx1 * 3,
+        valorX6: valorx1 * 6,
+        valorX12: valorx1 * 12,
+        costoProducto: productoToParse.costoProducto,
+        costoGrafica: productoToParse.costoGrafica,
+        costoDiseno: productoToParse.costoDiseno,
+        costoTotal: productoToParse.costoTotal,
         unidadesAlquiladas: parseInt(faker.string.numeric(2), 10),
         unidadesCotizadas: parseInt(faker.string.numeric(2), 10),
-        cantidad: faker.number.int({ min: 1, max: productoDto.stock - 9 }),
+        cantidad: faker.number.int({ min: 1, max: productoToParse.stock - 9 }),
       };
     });
   };
 
-  await alquilerProductoModel.collection.insertMany(getProductosAlquilerArray());
+  await AlquilerProductoSchema.bulkCreate(getProductosAlquilerArray());
 }

@@ -1,29 +1,21 @@
 import { Module } from "@nestjs/common";
-
 import { ProductoController } from "./producto.controller";
 import { ProductoRepository } from "./producto.repository";
-import { DatabaseModule } from "src/Database";
-import { Connection, Model } from "mongoose";
-import { PRODUCTO_MODEL } from "src/constants/database";
-import { ProductoRecordDTO, ProductoSchema } from "./producto.schema";
 import { ProductoService } from "./producto.service";
-import { AlquilerModule } from "src/Alquiler";
-import { AlquilerProductoModule } from "src/AlquilerProducto";
+import { ProductoSchema } from "./producto.schema";
+import { PRODUCTO_MODEL } from "src/constants";
+import { DatabaseModule } from "src/Database";
+// import { AlquilerModule } from "src/Alquiler";
+// import { AlquilerProductoModule } from "src/AlquilerProducto";
 
-const productoModelProvider = {
+export const productoModel = {
   provide: PRODUCTO_MODEL,
-  useFactory: (connection: Connection) => {
-    return connection.model<ProductoRecordDTO, Model<ProductoRecordDTO>>(
-      "Producto",
-      ProductoSchema,
-    );
-  },
-  inject: ["DATABASE_CONNECTION"],
+  useValue: ProductoSchema,
 };
 
 @Module({
-  imports: [DatabaseModule, AlquilerModule, AlquilerProductoModule],
+  imports: [DatabaseModule],
   controllers: [ProductoController],
-  providers: [ProductoRepository, productoModelProvider, ProductoService],
+  providers: [ProductoRepository, ProductoService, productoModel],
 })
 export class ProductoModule {}

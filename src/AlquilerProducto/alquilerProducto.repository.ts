@@ -1,39 +1,39 @@
 import { Inject, Injectable } from "@nestjs/common";
-import {
-  AlquilerProductoDTO,
-  fromAlquilerProductoToDto,
-  fromDtoToAlquilerProducto,
-} from "./alquilerProducto.schema";
 import { AlquilerProducto } from "./alquilerProducto.entity";
-import { Model } from "mongoose";
 import { ALQUILERPRODUCTO_MODEL } from "src/constants/database";
+import {
+  AlquilerProductoSchema,
+  fromAlquilerProductoToSchema,
+  fromSchemaToAlquilerProducto,
+} from "./alquilerProducto.schema";
 
 @Injectable()
 export class AlquilerProductoRepository {
   constructor(
     @Inject(ALQUILERPRODUCTO_MODEL)
-    private readonly alquilerProductoModel: Model<AlquilerProductoDTO>,
+    private readonly alquilerProductoModel: typeof AlquilerProductoSchema,
   ) {}
 
-  async getProductosFromAlquiler(alquilerId: string): Promise<AlquilerProducto[]> {
-    const alquilerProductoDocs = await this.alquilerProductoModel.find({
-      alquilerId,
+  async getProductosFromAlquiler(id: string): Promise<AlquilerProducto[]> {
+    const alquilerProductoSchemas = await this.alquilerProductoModel.findAll({
+      where: { alquilerId: id },
     });
 
-    return alquilerProductoDocs.map(fromDtoToAlquilerProducto);
+    return alquilerProductoSchemas.map(fromSchemaToAlquilerProducto);
   }
 
   async createOne(partialAlquilerProducto: Partial<AlquilerProducto>): Promise<AlquilerProducto> {
     const result = await this.alquilerProductoModel.create(partialAlquilerProducto);
 
-    return fromDtoToAlquilerProducto(result);
+    return fromSchemaToAlquilerProducto(result);
   }
 
   async createBulk(alquilerProductos: AlquilerProducto[]): Promise<void> {
     const apDtos = alquilerProductos.map((ap) => ({
-      ...fromAlquilerProductoToDto(ap),
-      _id: undefined,
+      ...fromAlquilerProductoToSchema(ap),
+      id: undefined,
     }));
-    await this.alquilerProductoModel.collection.insertMany(apDtos);
+
+    await AlquilerProductoSchema.bulkCreate(apDtos);
   }
 }

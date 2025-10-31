@@ -1,4 +1,4 @@
-import { AlquilerProductoEntity } from "src/AlquilerProducto";
+import { AlquilerProductoCreate, AlquilerProductoEntity } from "src/AlquilerProducto";
 import {
   Column,
   CreateDateColumn,
@@ -32,15 +32,20 @@ export class AlquilerEntity {
   @Column()
   fechaFin: Date;
 
-  @OneToMany(() => AlquilerProductoEntity, ap => ap.alquiler)
+  @OneToMany(() => AlquilerProductoEntity, ap => ap.alquiler, { cascade: ["insert"] })
   productos: AlquilerProductoEntity[];
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @CreateDateColumn({ nullable: false, default: () => "CURRENT_TIMESTAMP" })
+  createdAt?: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ nullable: true, default: () => "CURRENT_TIMESTAMP" })
   updatedAt?: Date;
 }
 
-export type AlquilerCreate = Omit<AlquilerEntity, "id" | "createdAt" | "updatedAt">;
+export type AlquilerCreate = Omit<
+  AlquilerEntity,
+  "id" | "createdAt" | "updatedAt" | "productos"
+> & {
+  productos: AlquilerProductoCreate[];
+};
 export type AlquilerUpdate = Partial<AlquilerEntity>;

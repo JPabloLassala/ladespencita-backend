@@ -4,3 +4,8 @@ export type AlquilerProductosStock = {
   inUse: number;
   requested: number;
 };
+
+export type AlquilerProductoRemaining = {
+  productoId: number;
+  remaining: number;
+};

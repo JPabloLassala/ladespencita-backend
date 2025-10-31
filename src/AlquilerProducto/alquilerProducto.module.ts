@@ -6,6 +6,7 @@ import { ProductoEntity, ProductoModule } from "src/Producto";
 import { AlquilerModule } from "src/Alquiler";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AlquilerProductoEntity } from "./alquilerProducto.entity";
+import { AlquilerProductoService } from "./alquilerProducto.service";
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { AlquilerProductoEntity } from "./alquilerProducto.entity";
     TypeOrmModule.forFeature([AlquilerProductoEntity, ProductoEntity]),
   ],
   controllers: [AlquilerProductoController],
-  providers: [AlquilerProductoAdapter],
-  exports: [AlquilerProductoAdapter],
+  providers: [AlquilerProductoAdapter, AlquilerProductoService],
+  exports: [AlquilerProductoAdapter, AlquilerProductoService],
 })
 export class AlquilerProductoModule {}

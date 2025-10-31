@@ -19,11 +19,12 @@ export class AlquilerService {
   }
 
   async createAlquiler(alquiler: AlquilerCreate) {
-    const productos = alquiler.productos;
+    await this.alquilerProductoAdapter.checkAlquilerProductosAvailability(alquiler.productos);
+
     const newAlquiler = await this.alquilerAdapter.createOne(alquiler);
     const alquilerProductos = await this.alquilerProductoAdapter.createAlquilerProductos(
       newAlquiler.id,
-      productos,
+      alquiler.productos,
     );
 
     newAlquiler.productos = alquilerProductos;

@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Res } from "@nestjs/common";
 import { Response } from "express";
 import { AlquilerService } from "./alquiler.service";
 import { AlquilerCreate, AlquilerEntity } from "./alquiler.entity";
+import { ProductoHigherThanAvailableError } from "./alquiler.error";
 
 @Controller("alquiler")
 export class AlquilerController {
@@ -13,8 +14,20 @@ export class AlquilerController {
   }
 
   @Post()
-  async createAlquiler(@Body() alquiler: AlquilerCreate) {
-    return await this.alquilerService.createAlquiler(alquiler);
+  async createAlquiler(@Body() alquiler: AlquilerCreate, @Res() res: Response) {
+    try {
+      const result = await this.alquilerService.createAlquiler(alquiler);
+
+      return res.status(HttpStatus.CREATED).json(result);
+    } catch (error) {
+      if (error instanceof ProductoHigherThanAvailableError) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          error: "La cantidad de productos solicitados supera la disponibilidad.",
+          productos: error.products,
+        });
+      }
+      throw error;
+    }
   }
 
   @Get(":id")

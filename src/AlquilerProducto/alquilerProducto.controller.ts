@@ -5,51 +5,32 @@ import { HigherThanStockError } from "./alquilerProducto.errors";
 import { AlquilerProductoAdapter } from "./alquilerProducto.adapter";
 import { AlquilerProductoEntity } from "./alquilerProducto.entity";
 import { AlquilerProductoCreateDTO, AlquilerProductoUpdateDTO } from "./alquilerProducto.dto";
+import { AlquilerProductoService } from "./alquilerProducto.service";
 
 @Controller("alquilerProducto")
 export class AlquilerProductoController {
-  constructor(private readonly alquilerProductoRepository: AlquilerProductoAdapter) {}
+  constructor(
+    private readonly alquilerProductoAdapter: AlquilerProductoAdapter,
+    private readonly alquilerProductoService: AlquilerProductoService,
+  ) {}
 
-  @Post("/betweendates")
-  async isAbleToRentBetweenDates(
-    @Res() res: Response,
-    @Query("since") since: string,
-    @Query("until") until: string,
-    @Body() alquilerProductos: Partial<AlquilerProductoEntity>[],
-  ) {
-    const dateSince = dayjs(since);
-    const dateUntil = dayjs(until);
-    try {
-      await this.alquilerProductoRepository.isAbleToRentBetweenDates(
-        dateSince,
-        dateUntil,
-        alquilerProductos,
-      );
-
-      return res.status(HttpStatus.OK).send({
-        isAble: true,
-      });
-    } catch (e) {
-      if (e instanceof HigherThanStockError) {
-        return res.status(HttpStatus.BAD_REQUEST).send(e.alquilerProductosStock);
-      }
-
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
-    }
+  @Get("/stock")
+  async getRemainingStock() {
+    return await this.alquilerProductoService.getRemainingStock();
   }
 
   @Get("/:alquilerId")
   async getProductosFromAlquiler(@Param("alquilerId") alquilerId: number) {
-    return await this.alquilerProductoRepository.getProductosFromAlquiler(alquilerId);
+    return await this.alquilerProductoAdapter.getProductosFromAlquiler(alquilerId);
   }
 
   @Post("/:alquilerId")
   async createAlquilerProducto(@Body() alquilerProducto: AlquilerProductoCreateDTO) {
-    return await this.alquilerProductoRepository.createOne(alquilerProducto);
+    return await this.alquilerProductoAdapter.createOne(alquilerProducto);
   }
 
   @Post("/:alquilerId")
   async updatealquilerProducto(@Body() alquilerProductoDto: AlquilerProductoUpdateDTO) {
-    return await this.alquilerProductoRepository.updateAlquilerProducto(alquilerProductoDto);
+    return await this.alquilerProductoAdapter.updateAlquilerProducto(alquilerProductoDto);
   }
 }

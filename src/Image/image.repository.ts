@@ -16,17 +16,18 @@ export class ImageRepository {
     productoId: number,
     imageNumber: number,
   ): Promise<{ file: string }> {
+    const extension = file.originalname.split(".").pop();
     await this.s3.send(
       new PutObjectCommand({
         Bucket: process.env.BACKBLAZE_BUCKET,
-        Key: `${productoId}/${imageNumber}`,
+        Key: `${productoId}/${imageNumber}.${extension}`,
         ContentType: file.mimetype,
         Body: file.buffer,
       }),
     );
 
     return {
-      file: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${file.originalname}`,
+      file: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${productoId}/${imageNumber}.${extension}`,
     };
   }
 

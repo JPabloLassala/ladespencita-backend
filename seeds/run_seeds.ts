@@ -15,6 +15,12 @@ async function run_seeds() {
     port: 5432,
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
     models: [AlquilerSchema, AlquilerProductoSchema, ProductoSchema],
   });
 

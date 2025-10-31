@@ -16,6 +16,20 @@ export class AlquilerRepository {
     return alquilerDocs.map(fromDtoToAlquiler);
   }
 
+  async getAlquileresBetweenDates(alquileres: {
+    since: string;
+    until: string;
+  }): Promise<Alquiler[]> {
+    const alquilerDocs = await this.alquilerModel
+      .find({
+        "fechaAlquiler.inicio": { $gte: alquileres.since },
+        "fechaAlquiler.fin": { $lte: alquileres.until },
+      })
+      .exec();
+
+    return alquilerDocs.map(fromDtoToAlquiler);
+  }
+
   async getAlquiler(id: string): Promise<Alquiler> {
     const result = await this.alquilerModel.findOne({ _id: id }).exec();
 

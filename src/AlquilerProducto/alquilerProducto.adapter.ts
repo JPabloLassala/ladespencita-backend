@@ -210,61 +210,6 @@ export class AlquilerProductoAdapter {
     });
   }
 
-  async isAbleToRentBetweenDates(
-    since: Dayjs,
-    until: Dayjs,
-    alquilerProductos: Partial<AlquilerProductoEntity>[],
-  ): Promise<boolean> {
-    console.log(since, until);
-    const alquileres = await this.alquilerAdapter.getAlquileresBetweenDates({
-      since,
-      until,
-    });
-    const alquilerIds = alquileres.map(a => a.id);
-    const existingAlquilerProductos = await this.getFromAlquilerIds(alquilerIds);
-    const quantityPerProducto = existingAlquilerProductos.reduce<Record<number, number>>(
-      (acc, eap) => {
-        if (!acc[eap.productoId]) {
-          acc[eap.productoId] = 0;
-        }
-
-        acc[eap.productoId] += eap.cantidad;
-
-        return acc;
-      },
-      {},
-    );
-    const productoStocks = await this.productoAdapter.getStockPerId();
-    const stockPerAlquilerProductoSet: Map<number, any> = alquilerProductos.reduce((acc, ap) => {
-      const stock = productoStocks.get(ap.productoId) || 0;
-
-      if (!acc.has(ap.productoId)) {
-        acc.set(ap.productoId, {
-          stock,
-          requested: 0,
-        });
-      }
-
-      const current = acc.get(ap.productoId);
-      current.requested += ap.cantidad;
-
-      return acc;
-    }, new Map());
-    const higherThanStock = Array.from(stockPerAlquilerProductoSet.entries()).filter(
-      ([productoId, { stock, requested }]) => {
-        const existing = quantityPerProducto[productoId] || 0;
-
-        return existing + requested > stock;
-      },
-    );
-
-    if (higherThanStock.length > 0) {
-      throw new HigherThanStockError(higherThanStock);
-    }
-
-    return true;
-  }
-
   async updateMany(alquilerProductos: AlquilerProductoUpdate[]): Promise<AlquilerProductoEntity[]> {
     await Promise.all(
       alquilerProductos.map(ap => this.alquilerProductoRepository.update({ id: ap.id }, { ...ap })),

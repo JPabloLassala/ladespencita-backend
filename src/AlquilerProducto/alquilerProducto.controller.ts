@@ -1,9 +1,5 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from "@nestjs/common";
-import dayjs from "dayjs";
-import { Response } from "express";
-import { HigherThanStockError } from "./alquilerProducto.errors";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { AlquilerProductoAdapter } from "./alquilerProducto.adapter";
-import { AlquilerProductoEntity } from "./alquilerProducto.entity";
 import { AlquilerProductoCreateDTO, AlquilerProductoUpdateDTO } from "./alquilerProducto.dto";
 import { AlquilerProductoService } from "./alquilerProducto.service";
 
@@ -14,9 +10,9 @@ export class AlquilerProductoController {
     private readonly alquilerProductoService: AlquilerProductoService,
   ) {}
 
-  @Get("/stock")
-  async getRemainingStock() {
-    return await this.alquilerProductoService.getRemainingStock();
+  @Get("/availability")
+  async checkAlquilerProductosAvailability(@Body() alquilerProductos: AlquilerProductoCreateDTO[]) {
+    return await this.alquilerProductoService.checkAlquilerProductsAvailability(alquilerProductos);
   }
 
   @Get("/:alquilerId")
@@ -25,8 +21,11 @@ export class AlquilerProductoController {
   }
 
   @Post("/:alquilerId")
-  async createAlquilerProducto(@Body() alquilerProducto: AlquilerProductoCreateDTO) {
-    return await this.alquilerProductoAdapter.createOne(alquilerProducto);
+  async createAlquilerProducto(
+    @Body() alquilerProducto: AlquilerProductoCreateDTO[],
+    @Param("alquilerId") alquilerId: number,
+  ) {
+    return await this.alquilerProductoService.createMany(alquilerProducto, alquilerId);
   }
 
   @Post("/:alquilerId")

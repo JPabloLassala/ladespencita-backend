@@ -27,10 +27,7 @@ export class AlquilerProductoAdapter {
   ) {}
 
   async getProductosFromAlquiler(id: number): Promise<AlquilerProductoEntity[]> {
-    return await this.alquilerProductoRepository.find({
-      where: { alquilerId: id },
-      relations: { alquiler: true, producto: true },
-    });
+    return await this.alquilerProductoRepository.findBy({ alquilerId: id });
   }
 
   async getRemainingStock(): Promise<AlquilerProductoRemaining[]> {
@@ -139,8 +136,13 @@ export class AlquilerProductoAdapter {
     return await this.alquilerProductoRepository.create(newAlquilerProducto);
   }
 
-  async createBulk(alquilerProductos: AlquilerProductoCreate[]): Promise<void> {
-    await this.alquilerProductoRepository.save(alquilerProductos);
+  async createBulk(
+    alquilerProductos: AlquilerProductoCreate[],
+    alquilerId: number,
+  ): Promise<AlquilerProductoEntity[]> {
+    return await this.alquilerProductoRepository.save(
+      alquilerProductos.map(ap => ({ ...ap, alquilerId })),
+    );
   }
 
   async updateAlquilerProducto(alquilerProducto: AlquilerProductoUpdate): Promise<void> {

@@ -13,7 +13,7 @@ export const DatabaseModule: DynamicModule = TypeOrmModule.forRootAsync({
     type: "postgres",
     url: configService.get("DATABASE_URL"),
     entities: [ProductoEntity, AlquilerEntity, ImageEntity, AlquilerProductoEntity],
-    synchronize: false,
+    synchronize: true,
     retryAttempts: 3,
     retryDelay: 3000,
   }),

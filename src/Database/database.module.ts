@@ -1,11 +1,20 @@
 import { DynamicModule, Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { AlquilerEntity } from "src/Alquiler";
+import { AlquilerProductoEntity } from "src/AlquilerProducto";
+import { ImageEntity } from "src/Image";
+import { ProductoEntity } from "src/Producto";
 
-export const DatabaseModule: DynamicModule = TypeOrmModule.forRoot({
-  type: "postgres",
-  url: process.env.DATABASE_URL,
-  entities: [__dirname + "/**/*.entity{.ts,.js}"],
-  synchronize: false,
-  retryAttempts: 3,
-  retryDelay: 3000,
+export const DatabaseModule: DynamicModule = TypeOrmModule.forRootAsync({
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (configService: ConfigService) => ({
+    type: "postgres",
+    url: configService.get("DATABASE_URL"),
+    entities: [ProductoEntity, AlquilerEntity, ImageEntity, AlquilerProductoEntity],
+    synchronize: false,
+    retryAttempts: 3,
+    retryDelay: 3000,
+  }),
 });

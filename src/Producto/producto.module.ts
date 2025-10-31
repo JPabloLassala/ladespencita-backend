@@ -6,6 +6,8 @@ import { DatabaseModule } from "src/Database";
 import { AlquilerModule } from "src/Alquiler";
 import { AlquilerProductoModule } from "src/AlquilerProducto";
 import { ImageModule } from "src/Image";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ProductoEntity } from "./producto.entity";
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import { ImageModule } from "src/Image";
     forwardRef(() => ImageModule),
     forwardRef(() => AlquilerModule),
     forwardRef(() => AlquilerProductoModule),
+    TypeOrmModule.forFeature([ProductoEntity]),
   ],
   controllers: [ProductoController],
   providers: [ProductoAdapter, ProductoService],

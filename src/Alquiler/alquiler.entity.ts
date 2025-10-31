@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { ALQUILER_STATUS } from "./alquiler.const";
 
 @Entity({ name: "alquileres" })
 export class AlquilerEntity {
@@ -18,6 +19,9 @@ export class AlquilerEntity {
 
   @Column()
   proyecto: string;
+
+  @Column({ type: "varchar", default: ALQUILER_STATUS.PENDING })
+  status: ALQUILER_STATUS;
 
   @Column()
   fechaPresupuesto: Date;

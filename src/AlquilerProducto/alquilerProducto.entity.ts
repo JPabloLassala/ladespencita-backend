@@ -48,10 +48,6 @@ export class AlquilerProductoEntity {
   valorX6: number;
   @Column()
   valorX12: number;
-  @CreateDateColumn()
-  createdAt: Date;
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   @OneToOne(() => ProductoEntity)
   @JoinColumn({ name: "productoId" })
@@ -59,6 +55,11 @@ export class AlquilerProductoEntity {
   @ManyToOne(() => AlquilerEntity, a => a.productos)
   @JoinColumn({ name: "alquilerId" })
   alquiler: AlquilerEntity;
+
+  @CreateDateColumn()
+  createdAt: Date;
+  @UpdateDateColumn()
+  updatedAt?: Date;
 }
 
 export type AlquilerProductoCreate = Omit<

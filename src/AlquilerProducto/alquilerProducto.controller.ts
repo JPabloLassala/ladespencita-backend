@@ -12,6 +12,18 @@ export class AlquilerProductoController {
   }
 
   @Post("/:alquilerId")
+  async createAlquilerProductos(
+    @Param("alquilerId") alquilerId: number,
+    @Body() alquilerProductos: Partial<AlquilerProductoDto>[],
+  ) {
+    const alquilerProductoEntities = alquilerProductos.map(fromDtoToAlquilerProducto);
+    return await this.alquilerProductoRepository.createAlquilerProductos(
+      alquilerId,
+      alquilerProductoEntities,
+    );
+  }
+
+  @Post("/:alquilerId")
   async updatealquilerProductos(@Body() alquilerProductos: Partial<AlquilerProductoDto>[]) {
     const alquilerProductoEntities = alquilerProductos.map(fromDtoToAlquilerProducto);
     return await this.alquilerProductoRepository.updateAlquilerProductos(alquilerProductoEntities);

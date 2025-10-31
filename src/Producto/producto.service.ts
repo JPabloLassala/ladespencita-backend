@@ -1,24 +1,41 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
+import { Dayjs } from "dayjs";
 import { AlquilerRepository } from "src/Alquiler";
 import { AlquilerProductoRepository } from "src/AlquilerProducto";
+import { Producto } from "./producto.entity";
+import { ProductoRepository } from "./producto.repository";
 
 @Injectable()
 export class ProductoService {
   constructor(
     private readonly alquilerProductoRepository: AlquilerProductoRepository,
     private readonly alquilerRepository: AlquilerRepository,
+    private readonly productoRepository: ProductoRepository,
   ) {}
 
-  async getProductosBetweenDates(alquileres: { since: string; until: string }): Promise<void> {
-    const alquileresBetweenDates =
-      await this.alquilerRepository.getAlquileresBetweenDates(alquileres);
-    console.log(alquileresBetweenDates.map(a => a.id));
-    const alquilerProductosFromAlquileres = await Promise.allSettled(
-      alquileresBetweenDates.map(alquiler =>
-        this.alquilerProductoRepository.getProductosFromAlquiler(alquiler.id),
-      ),
+  async getProductosBetweenDates({
+    since,
+    until,
+  }: {
+    since: Dayjs;
+    until: Dayjs;
+  }): Promise<Producto[]> {
+    const alquileres = await this.alquilerRepository.getAlquileresBetweenDates({
+      since,
+      until,
+    });
+    Logger.log(alquileres);
+    const alquilerProductos = await this.alquilerProductoRepository.getProductosFromAlquilerIds(
+      alquileres.map(a => a.id),
     );
+    const productos = await this.productoRepository.getAll();
+    const productosInStock = productos.map(p => {
+      const alquilerProducto = alquilerProductos.filter(ap => ap.productoId === p.id);
+      const amount = alquilerProducto.reduce((acc, ap) => acc + ap.cantidad, 0);
 
-    console.log(alquilerProductosFromAlquileres);
+      return { ...p, cantidad: p.stock - amount };
+    });
+
+    return productosInStock;
   }
 }

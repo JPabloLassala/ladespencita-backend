@@ -39,3 +39,4 @@ services:
 
 volumes:
   postgres-data:
+  app:

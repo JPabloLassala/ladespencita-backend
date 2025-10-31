@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ALQUILER_MODEL } from "src/constants/database";
 import { AlquilerSchema, fromSchemaToAlquiler } from "./alquiler.schema";
 import { Alquiler } from "./alquiler.entity";
+import { Dayjs } from "dayjs";
 
 @Injectable()
 export class AlquilerRepository {
@@ -13,14 +14,12 @@ export class AlquilerRepository {
     return alquilerDocs.map(fromSchemaToAlquiler);
   }
 
-  async getAlquileresBetweenDates(alquileres: {
-    since: string;
-    until: string;
-  }): Promise<Alquiler[]> {
+  async getAlquileresBetweenDates(alquileres: { since: Dayjs; until: Dayjs }): Promise<Alquiler[]> {
     const alquilerDocs = await this.alquilerModel.findAll({
       where: {
         fechaInicio: {
-          $between: [alquileres.since, alquileres.until],
+          $gte: alquileres.since.toDate(),
+          $lte: alquileres.until.toDate(),
         },
       },
     });

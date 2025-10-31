@@ -26,6 +26,30 @@ export class AlquilerProductoRepository {
     return alquilerProductoSchemas.map(fromSchemaToAlquilerProducto);
   }
 
+  async createAlquilerProductos(
+    alquilerId: number,
+    alquilerProductos: AlquilerProducto[],
+  ): Promise<void> {
+    const productoIds = alquilerProductos.map(ap => ap.productoId);
+    const productos = await this.productoModel.findAll({ where: { id: productoIds } });
+
+    const exceededAlquilerProductos = this.findQuantityHigherThanStock([], [], productos);
+
+    if (exceededAlquilerProductos.length > 0) {
+      throw new Error(
+        `La cantidad de los siguientes productos supera el stock: ${JSON.stringify(exceededAlquilerProductos)}`,
+      );
+    }
+
+    const apDtos = alquilerProductos.map(ap => ({
+      ...fromAlquilerProductoToSchema(ap),
+      id: undefined,
+      alquilerId,
+    }));
+
+    await AlquilerProductoSchema.bulkCreate(apDtos);
+  }
+
   async createOne(partialAlquilerProducto: Partial<AlquilerProducto>): Promise<AlquilerProducto> {
     const asda = fromAlquilerProductoToSchema(partialAlquilerProducto as AlquilerProducto);
     const result = await this.alquilerProductoModel.create(asda);
@@ -102,5 +126,14 @@ export class AlquilerProductoRepository {
     }
 
     return quantityHigherThanStock;
+  }
+
+  async getProductosFromAlquilerIds(alquilerIds: number[]): Promise<AlquilerProducto[]> {
+    const alquilerProductos = await this.alquilerProductoModel.findAll({
+      where: { alquilerId: alquilerIds },
+      include: [{ all: true }],
+    });
+
+    return alquilerProductos.map(fromSchemaToAlquilerProducto);
   }
 }

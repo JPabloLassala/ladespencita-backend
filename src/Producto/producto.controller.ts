@@ -11,6 +11,7 @@ import {
 import { ProductoRepository } from "./producto.repository";
 import { Producto } from "./producto.entity";
 import { ProductoService } from "./producto.service";
+import dayjs from "dayjs";
 
 @Controller("producto")
 export class ProductoController {
@@ -32,6 +33,15 @@ export class ProductoController {
 
   //   return [];
   // }
+
+  @Get("/in-stock")
+  async getProductosBetweenDates(
+    @Body() dates: { since: string; until: string },
+  ): Promise<Producto[]> {
+    const since = dayjs(dates.since);
+    const until = dayjs(dates.until);
+    return await this.productoService.getProductosBetweenDates({ since, until });
+  }
 
   @Get(":id")
   async getOne(@Param("id") id: string): Promise<Producto> {

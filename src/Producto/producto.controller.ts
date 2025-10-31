@@ -25,15 +25,6 @@ export class ProductoController {
     return await this.productoRepository.getAll();
   }
 
-  // @Get("/alquiler")
-  // async getProductosBetweenDates(
-  //   @Body() alquileres: { since: string; until: string },
-  // ): Promise<Producto[]> {
-  //   await this.productoService.getProductosBetweenDates(alquileres);
-
-  //   return [];
-  // }
-
   @Get("/in-stock")
   async getProductosBetweenDates(
     @Body() dates: { since: string; until: string },
@@ -71,8 +62,6 @@ export class ProductoController {
 
   @Post()
   async create(@Body() createProductDTO: ProductoCreate): Promise<Producto> {
-    const partialProducto = createProductDTO;
-
-    return await this.productoRepository.createOne(partialProducto);
+    return await this.productoRepository.createOne(createProductDTO);
   }
 }

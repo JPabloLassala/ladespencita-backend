@@ -29,4 +29,20 @@ export interface Producto {
   image?: Image;
 }
 
-export type ProductoCreate = Omit<Producto, "id" | "images">;
+export type ProductoCreate = {
+  id?: number;
+  nombre: string;
+  metroLineal: number;
+  totales: number;
+  disponibles: number;
+  altura: number;
+  ancho?: number;
+  profundidad?: number;
+  diametro?: number;
+  valorUnitarioGarantia: number;
+  valorUnitarioAlquiler: number;
+  valorX1: number;
+  valorX3: number;
+  valorX6: number;
+  valorX12: number;
+};

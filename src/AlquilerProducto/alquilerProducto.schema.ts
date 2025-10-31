@@ -218,7 +218,7 @@ export const fromProductoToAlquilerProducto = (
     unidadesCotizadas,
     valor: {
       unitarioGarantia: producto.valor.unitarioGarantia,
-      totalGarantia: producto.valor.totalGarantia,
+      totalGarantia: 0,
       unitarioAlquiler: producto.valor.unitarioAlquiler,
       x1: producto.valor.x1,
       x3: producto.valor.x3,

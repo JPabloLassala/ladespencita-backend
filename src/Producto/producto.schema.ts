@@ -154,3 +154,27 @@ export const fromProductoToSchema = (producto: Producto | Partial<Producto>): Pr
     valorX12: producto.valor.x12,
   });
 };
+
+export const fromProductoCreateToSchema = (producto: ProductoCreate): IProductoCreateSchema => {
+  return {
+    id: producto.id,
+    nombre: producto.nombre,
+    unidadesMetroLineal: producto.metroLineal,
+    totales: producto.totales,
+    disponibles: producto.disponibles,
+    medidasAltura: producto.altura,
+    medidasAncho: producto.ancho,
+    medidasProfundidad: producto.profundidad,
+    medidasDiametro: producto.diametro,
+    costoDiseno: 0,
+    costoGrafica: 0,
+    costoProducto: 0,
+    costoTotal: 0,
+    valorUnitarioGarantia: producto.valorUnitarioGarantia,
+    valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
+    valorX1: producto.valorX1,
+    valorX3: producto.valorX3,
+    valorX6: producto.valorX6,
+    valorX12: producto.valorX12,
+  };
+};

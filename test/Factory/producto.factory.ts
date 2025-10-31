@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Producto } from "src/Productos";
+import { Producto } from "src/Producto";
 
 export const createRandomProducto = (): Producto => ({
   id: faker.number.int(),

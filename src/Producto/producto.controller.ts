@@ -60,10 +60,21 @@ export class ProductoController {
   @UseInterceptors(FileInterceptor("file"))
   async updateOne(
     @Body() updateProductDTO: ProductoUpdateCreate,
+    @UploadedFile() file: Express.Multer.File,
     @Param("id") id: string,
   ): Promise<Producto> {
     try {
-      return await this.productoRepository.updateOne({ id: +id, ...updateProductDTO });
+      console.log(file);
+      if (file) {
+        await this.imageRepository.deleteManyFromProducto(id);
+        await this.imageRepository.createOne(file, +id);
+      }
+      await this.productoRepository.updateOne({ id: +id, ...updateProductDTO });
+      const producto = await this.productoRepository.getOne(id);
+
+      console.log(producto);
+
+      return producto;
     } catch (error) {
       throw new HttpException(
         { status: HttpStatus.NOT_MODIFIED, error: "Internal Server Error" },
@@ -81,7 +92,6 @@ export class ProductoController {
     @UploadedFile("file") file: Express.Multer.File,
   ): Promise<Producto> {
     const tmpProducto = await this.productoRepository.createOne(createProductDTO);
-    console.log(tmpProducto.id);
     await this.imageRepository.createOne(file, tmpProducto.id);
 
     const result = await this.productoRepository.getOne(tmpProducto.id.toString());

@@ -18,6 +18,9 @@ services:
       - .:/app
     environment:
       - DATABASE_URL=postgresql://user:password@postgres:5432/ladespen
+      - DEFINED_USERNAME=user
+      - DEFINED_PASSWORD=password
+      - JWT_SECRET=secret
 
   postgres:
     image: postgres:latest

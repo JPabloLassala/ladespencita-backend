@@ -1,6 +1,7 @@
 import { ProductoRecordDTO, ProductoSchemaProps } from "src/Productos";
 import mongoose, { Document } from "mongoose";
 import { Alquiler } from "./alquiler.entity";
+import { softDeletePlugin } from "soft-delete-plugin-mongoose";
 
 const AlquilerProductoSchema = new mongoose.Schema(
   {

@@ -1,12 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Producto } from "./producto.entity";
 import { PRODUCTO_MODEL } from "src/constants/database";
-import { Model } from "mongoose";
 import { fromDtoToProducto, ProductoRecordDTO } from "./producto.schema";
+import { SoftDeleteModel } from "soft-delete-plugin-mongoose";
 
 @Injectable()
 export class ProductoRepository {
-  constructor(@Inject(PRODUCTO_MODEL) private readonly productoModel: Model<ProductoRecordDTO>) {}
+  constructor(
+    @Inject(PRODUCTO_MODEL) private readonly productoModel: SoftDeleteModel<ProductoRecordDTO>,
+  ) {}
 
   async getAll(): Promise<Producto[]> {
     const productoModels = await this.productoModel.find().exec();

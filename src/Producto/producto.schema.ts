@@ -3,7 +3,7 @@ import {
   Column,
   CreatedAt,
   DataType,
-  HasMany,
+  HasOne,
   Model,
   PrimaryKey,
   Table,
@@ -83,8 +83,8 @@ export class ProductoSchema extends Model<IProductoSchema, IProductoCreateSchema
   @Column(DataType.INTEGER)
   valorX12: number;
 
-  @HasMany(() => ImageSchema, "productoId")
-  images: ImageSchema[];
+  @HasOne(() => ImageSchema, "productoId")
+  image: ImageSchema;
 
   @CreatedAt
   createdAt: Date;
@@ -113,20 +113,21 @@ export const fromSchemaToProducto = (dto: ProductoSchema): Producto => {
     },
     valor: {
       unitarioGarantia: dto.valorUnitarioGarantia,
-      totalGarantia: dto.valorTotalGarantia,
       unitarioAlquiler: dto.valorUnitarioAlquiler,
       x1: dto.valorX1,
       x3: dto.valorX3,
       x6: dto.valorX6,
       x12: dto.valorX12,
     },
-    images: dto.images.map(image => ({
-      id: image.id,
-      productoId: image.productoId,
-      isMain: image.isMain,
-      url: image.url,
-      createdAt: image.createdAt,
-    })),
+    image: dto.image
+      ? {
+          id: dto.image?.id,
+          productoId: dto.image?.productoId,
+          isMain: dto.image?.isMain,
+          url: dto.image?.url,
+          createdAt: dto.image?.createdAt,
+        }
+      : undefined,
   };
 };
 

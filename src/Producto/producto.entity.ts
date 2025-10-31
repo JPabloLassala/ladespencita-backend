@@ -26,7 +26,7 @@ export interface Producto {
     x6: number;
     x12: number;
   };
-  images: Image[];
+  image?: Image;
 }
 
 export type ProductoCreate = Omit<Producto, "id" | "images">;

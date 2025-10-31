@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { Dayjs } from "dayjs";
 import { AlquilerRepository } from "src/Alquiler";
 import { AlquilerProductoRepository } from "src/AlquilerProducto";
@@ -8,7 +8,9 @@ import { ProductoRepository } from "./producto.repository";
 @Injectable()
 export class ProductoService {
   constructor(
+    @Inject(forwardRef(() => AlquilerProductoRepository))
     private readonly alquilerProductoRepository: AlquilerProductoRepository,
+    @Inject(forwardRef(() => AlquilerRepository))
     private readonly alquilerRepository: AlquilerRepository,
     private readonly productoRepository: ProductoRepository,
   ) {}

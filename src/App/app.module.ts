@@ -1,11 +1,12 @@
 import { Module } from "@nestjs/common";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
-import { AlquilerModule } from "src/Alquiler/alquiler.module";
+import { AlquilerModule } from "src/Alquiler";
 // import { AuthModule } from "src/Auth";
 import { ProductoModule } from "src/Producto";
 import { AppService } from "./app.service";
 import { ConfigModule } from "@nestjs/config";
+import { AlquilerProductoModule } from "src/AlquilerProducto";
 
 const getPhotoModule = () => {
   return ServeStaticModule.forRoot({
@@ -15,7 +16,13 @@ const getPhotoModule = () => {
 };
 
 @Module({
-  imports: [ConfigModule.forRoot(), AlquilerModule, ProductoModule, getPhotoModule()],
+  imports: [
+    ConfigModule.forRoot(),
+    AlquilerModule,
+    ProductoModule,
+    AlquilerProductoModule,
+    getPhotoModule(),
+  ],
   controllers: [],
   providers: [AppService],
 })

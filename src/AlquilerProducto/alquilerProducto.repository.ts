@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { AlquilerProducto } from "./alquilerProducto.entity";
 import { ALQUILERPRODUCTO_MODEL, PRODUCTO_MODEL } from "src/constants/database";
 import {
@@ -7,6 +7,9 @@ import {
   fromSchemaToAlquilerProducto,
 } from "./alquilerProducto.schema";
 import { ProductoSchema } from "src/Producto";
+import { Op } from "sequelize";
+import { Dayjs } from "dayjs";
+import { AlquilerRepository } from "src/Alquiler";
 
 @Injectable()
 export class AlquilerProductoRepository {
@@ -15,6 +18,8 @@ export class AlquilerProductoRepository {
     private readonly alquilerProductoModel: typeof AlquilerProductoSchema,
     @Inject(PRODUCTO_MODEL)
     private readonly productoModel: typeof ProductoSchema,
+    @Inject(forwardRef(() => AlquilerRepository))
+    private readonly alquilerRepository: AlquilerRepository,
   ) {}
 
   async getProductosFromAlquiler(id: number): Promise<AlquilerProducto[]> {
@@ -135,5 +140,66 @@ export class AlquilerProductoRepository {
     });
 
     return alquilerProductos.map(fromSchemaToAlquilerProducto);
+  }
+
+  async isAbleToRentBetweenDates(
+    since: Dayjs,
+    until: Dayjs,
+    alquilerProductos: Partial<AlquilerProducto>[],
+  ): Promise<boolean> {
+    console.log(since, until);
+    const alquileres = await this.alquilerRepository.getAlquileresBetweenDates({
+      since,
+      until,
+    });
+    const alquilerIds = alquileres.map(a => a.id);
+    const existingAlquilerProductos = await this.getFromAlquilerIds(alquilerIds);
+    const quantityPerProducto = existingAlquilerProductos.reduce<Record<number, number>>(
+      (acc, eap) => {
+        if (!acc[eap.productoId]) {
+          acc[eap.productoId] = 0;
+        }
+
+        acc[eap.productoId] += eap.cantidad;
+
+        return acc;
+      },
+      {},
+    );
+    const productoIds = existingAlquilerProductos.map(ap => ap.productoId);
+    const productos = await this.getFromIds(productoIds);
+    const higherThanStock = alquilerProductos.filter(ap => {
+      const producto = productos.find(p => p.id === ap.productoId);
+
+      if (!producto) return false;
+
+      return quantityPerProducto[ap.productoId] + ap.cantidad > producto.cantidad;
+    });
+
+    return higherThanStock.length === 0;
+  }
+
+  async getFromAlquilerIds(alquilerIds: number[]): Promise<AlquilerProducto[]> {
+    const result = await this.alquilerProductoModel.findAll({
+      where: {
+        alquilerId: {
+          [Op.in]: alquilerIds,
+        },
+      },
+    });
+
+    return result.map(fromSchemaToAlquilerProducto);
+  }
+
+  async getFromIds(productoIds: number[]): Promise<AlquilerProducto[]> {
+    const result = await this.alquilerProductoModel.findAll({
+      where: {
+        productoId: {
+          [Op.in]: productoIds,
+        },
+      },
+    });
+
+    return result.map(fromSchemaToAlquilerProducto);
   }
 }

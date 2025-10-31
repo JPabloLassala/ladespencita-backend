@@ -21,6 +21,7 @@
     "seed": "DATABASE_URL=postgres://user:password@localhost/ladespen ts-node -r tsconfig-paths/register ./seeds/run_seeds.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.726.1",
     "@nestjs/common": "^10.3.9",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",

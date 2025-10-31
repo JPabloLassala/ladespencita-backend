@@ -1,11 +1,16 @@
 import { Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ImageRepository } from "./image.repository";
 
 @Controller("/images")
 export class ImageController {
-  @Post("upload")
+  constructor(private readonly imageRepository: ImageRepository) {}
+
+  @Post()
   @UseInterceptors(FileInterceptor("file"))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const result = await this.imageRepository.uploadFile(file);
+
+    return result;
   }
 }

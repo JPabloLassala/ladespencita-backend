@@ -10,7 +10,7 @@ const alquilerProductoModelProvider = {
   provide: ALQUILERPRODUCTO_MODEL,
   useFactory: (connection: Connection) => {
     return connection.model<AlquilerProductoDTO, Model<AlquilerProductoDTO>>(
-      "Alquiler",
+      "AlquilerProducto",
       AlquilerProductoSchema,
     );
   },
@@ -21,5 +21,6 @@ const alquilerProductoModelProvider = {
   imports: [DatabaseModule],
   controllers: [AlquilerProductoController],
   providers: [alquilerProductoModelProvider, AlquilerProductoRepository],
+  exports: [AlquilerProductoRepository],
 })
 export class AlquilerProductoModule {}

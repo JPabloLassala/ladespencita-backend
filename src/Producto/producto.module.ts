@@ -7,6 +7,7 @@ import { PRODUCTO_MODEL } from "src/constants";
 import { DatabaseModule } from "src/Database";
 import { AlquilerModule } from "src/Alquiler";
 import { AlquilerProductoModule } from "src/AlquilerProducto";
+import { ImageModule } from "src/Image";
 
 export const productoModel = {
   provide: PRODUCTO_MODEL,
@@ -16,6 +17,7 @@ export const productoModel = {
 @Module({
   imports: [
     forwardRef(() => DatabaseModule),
+    forwardRef(() => ImageModule),
     forwardRef(() => AlquilerModule),
     forwardRef(() => AlquilerProductoModule),
   ],

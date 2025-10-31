@@ -36,6 +36,7 @@ export class ImageRepository {
       const createdImage = await this.imageModel.create({
         productoId: +productoId,
         url: uploadedFile.file,
+        isMain: true,
       });
 
       return createdImage;

@@ -8,7 +8,6 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
 } from "sequelize-typescript";
 import { ProductoSchema } from "src/Producto";
 
@@ -16,13 +15,12 @@ export interface IImageSchema {
   id: number;
   nombre: string;
   url: string;
+  isMain: boolean;
   productoId: number;
   createdAt: Date;
-  updatedAt: Date;
 }
 
-export interface IImageCreateSchema
-  extends Optional<IImageSchema, "id" | "createdAt" | "updatedAt"> {}
+export interface IImageCreateSchema extends Optional<IImageSchema, "id" | "createdAt"> {}
 
 @Table({ tableName: "imagenes", timestamps: true })
 export class ImageSchema extends Model<IImageSchema, IImageCreateSchema> {
@@ -37,11 +35,11 @@ export class ImageSchema extends Model<IImageSchema, IImageCreateSchema> {
   @Column(DataType.INTEGER)
   productoId: number;
 
+  @Column({ type: DataType.BOOLEAN, defaultValue: true, field: "is_main" })
+  isMain: boolean;
+
   @CreatedAt
   createdAt: Date;
-
-  @UpdatedAt
-  updatedAt: Date;
 
   @BelongsTo(() => ProductoSchema, "productoId")
   producto: ProductoSchema;

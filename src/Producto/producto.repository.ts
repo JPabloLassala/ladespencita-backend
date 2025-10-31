@@ -1,18 +1,30 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Producto } from "./producto.entity";
+import { Producto, ProductoCreate } from "./producto.entity";
 import { fromProductoToSchema, fromSchemaToProducto, ProductoSchema } from "./producto.schema";
-import { DB_CONNECTION, PRODUCTO_MODEL } from "src/constants";
+import { DB_CONNECTION, IMAGE_MODEL, PRODUCTO_MODEL } from "src/constants";
 import { Sequelize } from "sequelize";
+import { ImageRepository, ImageSchema } from "src/Image";
 
 @Injectable()
 export class ProductoRepository {
   constructor(
     @Inject(PRODUCTO_MODEL) private readonly productoModel: typeof ProductoSchema,
+    @Inject(IMAGE_MODEL) private readonly imageModel: typeof ImageSchema,
     @Inject(DB_CONNECTION) private readonly sequelize: Sequelize,
+    private readonly imageRepository: ImageRepository,
   ) {}
 
   async getAll(): Promise<Producto[]> {
-    const productoModels = await this.productoModel.findAll();
+    const productoModels = await this.productoModel.findAll({
+      include: [
+        {
+          model: this.imageModel,
+          as: "images",
+          required: false,
+          attributes: ["id", "url", "productoId", "createdAt"],
+        },
+      ],
+    });
 
     return productoModels.map(fromSchemaToProducto);
   }
@@ -32,9 +44,10 @@ export class ProductoRepository {
     return fromSchemaToProducto(producto);
   }
 
-  async createOne(partialProducto: Partial<Producto>): Promise<Producto> {
-    const partialProductoSchema = fromProductoToSchema(partialProducto);
-    const result = await this.productoModel.create({ ...partialProductoSchema });
+  async createOne(partialProducto: ProductoCreate): Promise<Producto> {
+    const createProductoSchema = fromProductoToSchema(partialProducto);
+    // const imageSchemas = this.imageRe;
+    const result = await this.productoModel.create({ ...createProductoSchema });
 
     return fromSchemaToProducto(result);
   }

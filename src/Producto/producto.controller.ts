@@ -9,7 +9,7 @@ import {
   Post,
 } from "@nestjs/common";
 import { ProductoRepository } from "./producto.repository";
-import { Producto } from "./producto.entity";
+import { Producto, ProductoCreate } from "./producto.entity";
 import { ProductoService } from "./producto.service";
 import dayjs from "dayjs";
 
@@ -70,7 +70,7 @@ export class ProductoController {
   }
 
   @Post()
-  async create(@Body() createProductDTO: Producto): Promise<Producto> {
+  async create(@Body() createProductDTO: ProductoCreate): Promise<Producto> {
     const partialProducto = createProductDTO;
 
     return await this.productoRepository.createOne(partialProducto);

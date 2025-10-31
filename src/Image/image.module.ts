@@ -13,5 +13,6 @@ export const imageModel = {
 @Module({
   controllers: [ImageController],
   providers: [ImageRepository, s3Provider, imageModel],
+  exports: [imageModel, ImageRepository],
 })
 export class ImageModule {}

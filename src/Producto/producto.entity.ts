@@ -1,5 +1,7 @@
+import { Image } from "src/Image";
+
 export interface Producto {
-  id?: number;
+  id: number;
   nombre: string;
   unidadesMetroLineal: number;
   totales: number;
@@ -25,4 +27,7 @@ export interface Producto {
     x6: number;
     x12: number;
   };
+  images: Image[];
 }
+
+export type ProductoCreate = Omit<Producto, "id" | "images">;

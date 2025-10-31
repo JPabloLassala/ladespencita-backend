@@ -3,6 +3,7 @@ import {
   Column,
   CreatedAt,
   DataType,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -10,6 +11,7 @@ import {
 } from "sequelize-typescript";
 import { Producto } from "./producto.entity";
 import { Optional } from "sequelize";
+import { ImageSchema } from "src/Image";
 
 export interface IProductoSchema {
   id: number;
@@ -84,6 +86,9 @@ export class ProductoSchema extends Model<IProductoSchema, IProductoCreateSchema
   @Column(DataType.INTEGER)
   valorX12: number;
 
+  @HasMany(() => ImageSchema, "productoId")
+  images: ImageSchema[];
+
   @CreatedAt
   createdAt: Date;
   @UpdatedAt
@@ -118,6 +123,13 @@ export const fromSchemaToProducto = (dto: ProductoSchema): Producto => {
       x6: dto.valorX6,
       x12: dto.valorX12,
     },
+    images: dto.images.map(image => ({
+      id: image.id,
+      productoId: image.productoId,
+      isMain: image.isMain,
+      url: image.url,
+      createdAt: image.createdAt,
+    })),
   };
 };
 

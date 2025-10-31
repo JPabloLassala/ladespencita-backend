@@ -23,8 +23,6 @@ export class AlquilerProductoService {
     alquilerProductos: (AlquilerProductoUpdate | AlquilerProductoCreate)[],
     alquilerId: number,
   ): Promise<AlquilerProductoEntity[]> {
-    console.log("alquilerProductos", alquilerProductos);
-
     const apsToCreate = alquilerProductos.filter(
       ap => !ap.hasOwnProperty("id") && ap.cantidad > 0,
     ) as AlquilerProductoCreate[];

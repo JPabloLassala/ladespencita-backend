@@ -9,7 +9,7 @@ RUN yarn
 EXPOSE 3000
 
 # Command to run the application
-CMD ["yarn", "start"]
+CMD ["yarn", "dev"]
 
 FROM node:22-alpine3.20 AS build
 

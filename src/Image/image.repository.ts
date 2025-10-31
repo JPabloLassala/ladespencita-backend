@@ -11,29 +11,33 @@ export class ImageRepository {
     @Inject(IMAGE_MODEL) private readonly imageModel: typeof ImageSchema,
   ) {}
 
-  async uploadFile(file: Express.Multer.File): Promise<{ file: string }> {
-    try {
-      await this.s3.send(
-        new PutObjectCommand({
-          Bucket: process.env.BACKBLAZE_BUCKET,
-          Key: file.originalname,
-          ContentType: file.mimetype,
-          Body: file.buffer,
-        }),
-      );
+  async uploadFile(
+    file: Express.Multer.File,
+    productoId: number,
+    imageNumber: number,
+  ): Promise<{ file: string }> {
+    await this.s3.send(
+      new PutObjectCommand({
+        Bucket: process.env.BACKBLAZE_BUCKET,
+        Key: `${productoId}/${imageNumber}`,
+        ContentType: file.mimetype,
+        Body: file.buffer,
+      }),
+    );
 
-      return {
-        file: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${file.originalname}`,
-      };
-    } catch (error) {
-      throw new Error("Upload failed");
-    }
+    return {
+      file: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${file.originalname}`,
+    };
   }
 
   async createOne(file: Express.Multer.File, productoId: number): Promise<Image> {
     try {
-      const uploadedFile = await this.uploadFile(file);
-      console.log({ productoId: +productoId, url: uploadedFile.file, isMain: true });
+      const imageNumber = await this.imageModel.count({
+        where: {
+          productoId: productoId,
+        },
+      });
+      const uploadedFile = await this.uploadFile(file, productoId, imageNumber);
       const createdImage = await this.imageModel.create({
         productoId: +productoId,
         url: uploadedFile.file,

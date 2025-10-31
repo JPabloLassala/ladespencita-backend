@@ -13,14 +13,6 @@ import { ImageRepository } from "./image.repository";
 export class ImageController {
   constructor(private readonly imageRepository: ImageRepository) {}
 
-  @Post("upload")
-  @UseInterceptors(FileInterceptor("file"))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const result = await this.imageRepository.uploadFile(file);
-
-    return result;
-  }
-
   @Post("uploadMany")
   @UseInterceptors(FileFieldsInterceptor([{ name: "files" }]))
   async uploadFiles(
@@ -38,10 +30,10 @@ export class ImageController {
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   async createOne(
-    @UploadedFile() file: Express.Multer.File,
-    @Body("productoId") productoId: number,
+    @UploadedFile("file") file: Express.Multer.File,
+    @Body("productoId") productoId: string,
   ) {
-    const result = await this.imageRepository.createOne(file, productoId);
+    const result = await this.imageRepository.createOne(file, parseInt(productoId, 10));
 
     return result;
   }

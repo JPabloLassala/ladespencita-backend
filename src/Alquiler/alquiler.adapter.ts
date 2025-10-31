@@ -14,6 +14,7 @@ export class AlquilerAdapter {
   async getAlquileres(): Promise<AlquilerEntity[]> {
     return await this.alquilerRepository.find({
       relations: { productos: true },
+      order: { updatedAt: "DESC", createdAt: "DESC" },
     });
   }
 

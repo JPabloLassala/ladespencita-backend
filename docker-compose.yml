@@ -27,12 +27,11 @@ services:
       target: development
     working_dir: /app
     platform: ${BUILD_PLATFORM:-}
-    command: ["yarn", "dev"]
     container_name: front
     ports:
       - "5173:5173"
     depends_on:
-      - postgres
+      - back
     volumes:
       - .:/front
     environment:

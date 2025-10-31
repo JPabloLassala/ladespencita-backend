@@ -74,8 +74,8 @@ export class ProductoController {
     @Body() createProductDTO: ProductoCreate,
     @UploadedFile("file") file: Express.Multer.File,
   ): Promise<Producto> {
-    console.log(file);
     const tmpProducto = await this.productoRepository.createOne(createProductDTO);
+    console.log(tmpProducto.id);
     await this.imageRepository.createOne(file, tmpProducto.id);
 
     const result = await this.productoRepository.getOne(tmpProducto.id.toString());

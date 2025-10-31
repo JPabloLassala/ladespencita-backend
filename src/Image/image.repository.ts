@@ -33,6 +33,7 @@ export class ImageRepository {
   async createOne(file: Express.Multer.File, productoId: number): Promise<Image> {
     try {
       const uploadedFile = await this.uploadFile(file);
+      console.log({ productoId: +productoId, url: uploadedFile.file, isMain: true });
       const createdImage = await this.imageModel.create({
         productoId: +productoId,
         url: uploadedFile.file,

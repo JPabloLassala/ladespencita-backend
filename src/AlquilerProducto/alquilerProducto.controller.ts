@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 import { AlquilerProductoAdapter } from "./alquilerProducto.adapter";
 import { AlquilerProductoCreateDTO, AlquilerProductoUpdateDTO } from "./alquilerProducto.dto";
 import { AlquilerProductoService } from "./alquilerProducto.service";
@@ -28,8 +28,14 @@ export class AlquilerProductoController {
     return await this.alquilerProductoService.createMany(alquilerProducto, alquilerId);
   }
 
-  @Post("/:alquilerId")
-  async updatealquilerProducto(@Body() alquilerProductoDto: AlquilerProductoUpdateDTO) {
-    return await this.alquilerProductoAdapter.updateAlquilerProducto(alquilerProductoDto);
+  @Put("/:alquilerId")
+  async updatealquilerProductos(
+    @Body() alquilerProductoDto: (AlquilerProductoUpdateDTO | AlquilerProductoCreateDTO)[],
+    @Param("alquilerId") alquilerId: number,
+  ) {
+    return await this.alquilerProductoService.updateAlquilerProductos(
+      alquilerProductoDto,
+      alquilerId,
+    );
   }
 }

@@ -5,6 +5,7 @@ export type AlquilerProductoCreateDTO = Omit<
   "id" | "createdAt" | "updatedAt" | "producto" | "alquiler"
 > & { productoId: number; alquilerId: number };
 
-export type AlquilerProductoUpdateDTO = Partial<AlquilerProductoCreateDTO> & {
-  id: number;
-};
+export type AlquilerProductoUpdateDTO = Omit<
+  AlquilerProductoEntity,
+  "updatedAt" | "producto" | "alquiler"
+>;

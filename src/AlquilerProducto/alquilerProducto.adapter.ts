@@ -136,7 +136,7 @@ export class AlquilerProductoAdapter {
     return await this.alquilerProductoRepository.create(newAlquilerProducto);
   }
 
-  async createBulk(
+  async createMany(
     alquilerProductos: AlquilerProductoCreate[],
     alquilerId: number,
   ): Promise<AlquilerProductoEntity[]> {
@@ -263,6 +263,21 @@ export class AlquilerProductoAdapter {
     }
 
     return true;
+  }
+
+  async updateMany(alquilerProductos: AlquilerProductoUpdate[]): Promise<AlquilerProductoEntity[]> {
+    await Promise.all(
+      alquilerProductos.map(ap => this.alquilerProductoRepository.update({ id: ap.id }, { ...ap })),
+    );
+
+    const updatedIds = alquilerProductos.map(ap => ap.id);
+    return await this.alquilerProductoRepository.findBy({ id: In(updatedIds) });
+  }
+
+  async deleteMany(ids: number[]): Promise<void> {
+    await this.alquilerProductoRepository.delete({
+      id: In(ids),
+    });
   }
 
   async getFromAlquilerIds(alquilerIds: number[]): Promise<AlquilerProductoEntity[]> {

@@ -16,8 +16,8 @@ export class AlquilerRepository {
     return alquilerDocs.map(fromDtoToAlquiler);
   }
 
-  async getAlquiler(proyecto: string): Promise<Alquiler> {
-    const result = await this.alquilerModel.findOne({ proyecto }).exec();
+  async getAlquiler(id: string): Promise<Alquiler> {
+    const result = await this.alquilerModel.findOne({ _id: id }).exec();
 
     return fromDtoToAlquiler(result);
   }

@@ -12,7 +12,7 @@ import { Producto } from "./producto.entity";
 import { Optional } from "sequelize";
 
 export interface IProductoSchema {
-  id: string;
+  id: number;
   nombre: string;
   unidadesMetroLineal: number;
   stock: number;
@@ -44,7 +44,7 @@ export class ProductoSchema extends Model<IProductoSchema, IProductoCreateSchema
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  id: string;
+  id: number;
   @Column(DataType.STRING)
   nombre: string;
   @Column(DataType.INTEGER)

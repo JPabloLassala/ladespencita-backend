@@ -1,10 +1,7 @@
-import { Alquiler } from "src/Alquiler";
-import { Producto } from "src/Producto";
-
 export type AlquilerProducto = {
   id?: number;
-  alquiler: Alquiler;
-  producto: Producto;
+  productoId: number;
+  alquilerId: number;
   costo: {
     producto: number;
     grafica: number;

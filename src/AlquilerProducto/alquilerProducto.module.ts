@@ -4,6 +4,7 @@ import { AlquilerProductoRepository } from "./alquilerProducto.repository";
 import { DatabaseModule } from "src/Database";
 import { ALQUILERPRODUCTO_MODEL } from "src/constants/database";
 import { AlquilerProductoSchema } from "./alquilerProducto.schema";
+import { ProductoModule } from "src/Producto";
 
 export const alquilerProductoModelProvider = {
   provide: ALQUILERPRODUCTO_MODEL,
@@ -11,7 +12,7 @@ export const alquilerProductoModelProvider = {
 };
 
 @Module({
-  imports: [forwardRef(() => DatabaseModule)],
+  imports: [forwardRef(() => DatabaseModule), forwardRef(() => ProductoModule)],
   controllers: [AlquilerProductoController],
   providers: [alquilerProductoModelProvider, AlquilerProductoRepository],
   exports: [AlquilerProductoRepository],

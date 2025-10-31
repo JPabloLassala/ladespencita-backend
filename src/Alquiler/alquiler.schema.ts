@@ -14,7 +14,7 @@ import {
 import { AlquilerProductoSchema, IAlquilerProductoSchema } from "src/AlquilerProducto";
 
 export interface IAlquilerSchema {
-  id: string;
+  id: number;
   productora: string;
   proyecto: string;
   fechaPresupuesto: Date;
@@ -33,16 +33,20 @@ export class AlquilerSchema extends Model<IAlquilerSchema, IAlquilerCreateSchema
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  id: string;
+  id: number;
 
   @Column(DataType.STRING)
   productora: string;
+
   @Column(DataType.STRING)
   proyecto: string;
+
   @Column(DataType.DATE)
   fechaPresupuesto: Date;
+
   @Column(DataType.DATE)
   fechaInicio: Date;
+
   @Column(DataType.DATE)
   fechaFin: Date;
 
@@ -51,6 +55,7 @@ export class AlquilerSchema extends Model<IAlquilerSchema, IAlquilerCreateSchema
 
   @CreatedAt
   createdAt: Date;
+
   @UpdatedAt
   updatedAt: Date;
 }

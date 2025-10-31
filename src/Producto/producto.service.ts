@@ -12,9 +12,9 @@ export class ProductoService {
   async getProductosBetweenDates(alquileres: { since: string; until: string }): Promise<void> {
     const alquileresBetweenDates =
       await this.alquilerRepository.getAlquileresBetweenDates(alquileres);
-    console.log(alquileresBetweenDates.map((a) => a.id));
+    console.log(alquileresBetweenDates.map(a => a.id));
     const alquilerProductosFromAlquileres = await Promise.allSettled(
-      alquileresBetweenDates.map((alquiler) =>
+      alquileresBetweenDates.map(alquiler =>
         this.alquilerProductoRepository.getProductosFromAlquiler(alquiler.id),
       ),
     );

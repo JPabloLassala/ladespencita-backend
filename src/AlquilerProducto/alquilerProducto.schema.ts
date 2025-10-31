@@ -1,18 +1,6 @@
 import { AlquilerProducto } from "./alquilerProducto.entity";
-import {
-  fromProductoToSchema,
-  fromSchemaToProducto,
-  IProductoSchema,
-  Producto,
-  ProductoSchema,
-} from "src/Producto";
-import {
-  Alquiler,
-  AlquilerSchema,
-  fromAlquilerToSchema,
-  fromSchemaToAlquiler,
-  IAlquilerSchema,
-} from "src/Alquiler";
+import { IProductoSchema, Producto, ProductoSchema } from "src/Producto";
+import { Alquiler, AlquilerSchema, IAlquilerSchema } from "src/Alquiler";
 import {
   AutoIncrement,
   BelongsTo,
@@ -30,6 +18,8 @@ export interface IAlquilerProductoSchema {
   id: number;
   producto: IProductoSchema;
   alquiler: IAlquilerSchema;
+  productoId: number;
+  alquilerId: number;
   costoProducto: number;
   costoGrafica: number;
   costoDiseno: number;
@@ -49,9 +39,12 @@ export interface IAlquilerProductoSchema {
 }
 
 export interface IAlquilerProductoCreateSchema
-  extends Optional<IAlquilerProductoSchema, "id" | "createdAt" | "updatedAt"> {}
+  extends Optional<
+    IAlquilerProductoSchema,
+    "id" | "createdAt" | "updatedAt" | "producto" | "alquiler"
+  > {}
 
-@Table({ tableName: "alquileres" })
+@Table({ tableName: "alquiler_productos" })
 export class AlquilerProductoSchema extends Model<
   IAlquilerProductoSchema,
   IAlquilerProductoCreateSchema
@@ -66,6 +59,10 @@ export class AlquilerProductoSchema extends Model<
   @BelongsTo(() => AlquilerSchema, "alquilerId")
   alquiler: AlquilerSchema;
 
+  @Column(DataType.INTEGER)
+  productoId: number;
+  @Column(DataType.INTEGER)
+  alquilerId: number;
   @Column(DataType.INTEGER)
   costoProducto: number;
   @Column(DataType.INTEGER)
@@ -104,8 +101,8 @@ export class AlquilerProductoSchema extends Model<
 export const fromSchemaToAlquilerProducto = (schema: AlquilerProductoSchema): AlquilerProducto => {
   return {
     id: schema.id,
-    alquiler: fromSchemaToAlquiler(schema.alquiler),
-    producto: fromSchemaToProducto(schema.producto),
+    alquilerId: schema.alquilerId,
+    productoId: schema.productoId,
     costo: {
       diseno: schema.costoDiseno,
       grafica: schema.costoGrafica,
@@ -130,8 +127,8 @@ export const fromSchemaToAlquilerProducto = (schema: AlquilerProductoSchema): Al
 export const fromAlquilerProductoToSchema = (ap: AlquilerProducto): AlquilerProductoSchema => {
   return new AlquilerProductoSchema({
     id: ap.id,
-    producto: fromProductoToSchema(ap.producto),
-    alquiler: fromAlquilerToSchema(ap.alquiler),
+    productoId: ap.productoId,
+    alquilerId: ap.alquilerId,
     costoDiseno: ap.costo.diseno,
     costoGrafica: ap.costo.grafica,
     costoProducto: ap.costo.producto,
@@ -157,8 +154,8 @@ export const fromProductoToAlquilerProducto = (
   unidadesCotizadas: number,
 ): AlquilerProducto => {
   return {
-    producto: producto,
-    alquiler: alquiler,
+    productoId: +producto.id,
+    alquilerId: +alquiler.id,
     cantidad,
     costo: {
       producto: producto.costo.producto,

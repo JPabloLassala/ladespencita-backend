@@ -6,10 +6,11 @@ import {
   fromAlquilerProductoToSchema,
   fromSchemaToAlquilerProducto,
 } from "./alquilerProducto.schema";
-import { ProductoSchema } from "src/Producto";
+import { ProductoRepository, ProductoSchema } from "src/Producto";
 import { Op } from "sequelize";
 import { Dayjs } from "dayjs";
 import { AlquilerRepository } from "src/Alquiler";
+import { HigherThanStockError } from "./alquilerProducto.errors";
 
 @Injectable()
 export class AlquilerProductoRepository {
@@ -20,6 +21,8 @@ export class AlquilerProductoRepository {
     private readonly productoModel: typeof ProductoSchema,
     @Inject(forwardRef(() => AlquilerRepository))
     private readonly alquilerRepository: AlquilerRepository,
+    @Inject(forwardRef(() => ProductoRepository))
+    private readonly productoRepository: ProductoRepository,
   ) {}
 
   async getProductosFromAlquiler(id: number): Promise<AlquilerProducto[]> {
@@ -166,17 +169,35 @@ export class AlquilerProductoRepository {
       },
       {},
     );
-    const productoIds = existingAlquilerProductos.map(ap => ap.productoId);
-    const productos = await this.getFromIds(productoIds);
-    const higherThanStock = alquilerProductos.filter(ap => {
-      const producto = productos.find(p => p.id === ap.productoId);
+    const productoStocks = await this.productoRepository.getStockPerId();
+    const stockPerAlquilerProductoSet: Map<number, any> = alquilerProductos.reduce((acc, ap) => {
+      const stock = productoStocks.get(ap.productoId) || 0;
 
-      if (!producto) return false;
+      if (!acc.has(ap.productoId)) {
+        acc.set(ap.productoId, {
+          stock,
+          requested: 0,
+        });
+      }
 
-      return quantityPerProducto[ap.productoId] + ap.cantidad > producto.cantidad;
-    });
+      const current = acc.get(ap.productoId);
+      current.requested += ap.cantidad;
 
-    return higherThanStock.length === 0;
+      return acc;
+    }, new Map());
+    const higherThanStock = Array.from(stockPerAlquilerProductoSet.entries()).filter(
+      ([productoId, { stock, requested }]) => {
+        const existing = quantityPerProducto[productoId] || 0;
+
+        return existing + requested > stock;
+      },
+    );
+
+    if (higherThanStock.length > 0) {
+      throw new HigherThanStockError(higherThanStock);
+    }
+
+    return true;
   }
 
   async getFromAlquilerIds(alquilerIds: number[]): Promise<AlquilerProducto[]> {

@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from "@nestjs/common";
 import { AlquilerProductoRepository } from "./alquilerProducto.repository";
 import { AlquilerProductoDto, fromDtoToAlquilerProducto } from "./alquilerProducto.dto";
 import dayjs from "dayjs";
+import { Response } from "express";
+import { HigherThanStockError } from "./alquilerProducto.errors";
 
 @Controller("alquilerProducto")
 export class AlquilerProductoController {
@@ -9,6 +11,7 @@ export class AlquilerProductoController {
 
   @Post("/betweendates")
   async isAbleToRentBetweenDates(
+    @Res() res: Response,
     @Query("since") since: string,
     @Query("until") until: string,
     @Body() alquilerProductos: Partial<AlquilerProductoDto>[],
@@ -16,11 +19,21 @@ export class AlquilerProductoController {
     const alquilerProductoEntities = alquilerProductos.map(fromDtoToAlquilerProducto);
     const dateSince = dayjs(since);
     const dateUntil = dayjs(until);
-    return await this.alquilerProductoRepository.isAbleToRentBetweenDates(
-      dateSince,
-      dateUntil,
-      alquilerProductoEntities,
-    );
+    try {
+      await this.alquilerProductoRepository.isAbleToRentBetweenDates(
+        dateSince,
+        dateUntil,
+        alquilerProductoEntities,
+      );
+
+      return res.status(HttpStatus.OK).send();
+    } catch (e) {
+      if (e instanceof HigherThanStockError) {
+        return res.status(HttpStatus.BAD_REQUEST).send(e.alquilerProductosStock);
+      }
+
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+    }
   }
 
   @Get("/:alquilerId")

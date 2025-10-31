@@ -1,18 +1,11 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { ProductoController } from "./producto.controller";
-import { ProductoRepository } from "./producto.repository";
+import { ProductoAdapter } from "./producto.adapter";
 import { ProductoService } from "./producto.service";
-import { ProductoSchema } from "./producto.schema";
-import { PRODUCTO_MODEL } from "src/constants";
 import { DatabaseModule } from "src/Database";
 import { AlquilerModule } from "src/Alquiler";
 import { AlquilerProductoModule } from "src/AlquilerProducto";
 import { ImageModule } from "src/Image";
-
-export const productoModel = {
-  provide: PRODUCTO_MODEL,
-  useValue: ProductoSchema,
-};
 
 @Module({
   imports: [
@@ -22,7 +15,7 @@ export const productoModel = {
     forwardRef(() => AlquilerProductoModule),
   ],
   controllers: [ProductoController],
-  providers: [ProductoRepository, ProductoService, productoModel],
-  exports: [productoModel, ProductoRepository],
+  providers: [ProductoAdapter, ProductoService],
+  exports: [ProductoAdapter],
 })
 export class ProductoModule {}

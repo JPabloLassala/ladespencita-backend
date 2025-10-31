@@ -1,18 +1,18 @@
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { Dayjs } from "dayjs";
-import { AlquilerRepository } from "src/Alquiler";
-import { AlquilerProductoRepository } from "src/AlquilerProducto";
-import { Producto } from "./producto.entity";
-import { ProductoRepository } from "./producto.repository";
+import { AlquilerAdapter } from "src/Alquiler";
+import { ProductoAdapter } from "./producto.adapter";
+import { ProductoEntity, ProductoEntityCreate } from "./producto.entity";
+import { AlquilerProductoAdapter } from "src/AlquilerProducto";
 
 @Injectable()
 export class ProductoService {
   constructor(
-    @Inject(forwardRef(() => AlquilerProductoRepository))
-    private readonly alquilerProductoRepository: AlquilerProductoRepository,
-    @Inject(forwardRef(() => AlquilerRepository))
-    private readonly alquilerRepository: AlquilerRepository,
-    private readonly productoRepository: ProductoRepository,
+    @Inject(forwardRef(() => AlquilerProductoAdapter))
+    private readonly alquilerProductoAdapter: AlquilerProductoAdapter,
+    @Inject(forwardRef(() => AlquilerAdapter))
+    private readonly alquilerAdapter: AlquilerAdapter,
+    private readonly productoAdapter: ProductoAdapter,
   ) {}
 
   async getProductosBetweenDates({
@@ -21,16 +21,16 @@ export class ProductoService {
   }: {
     since: Dayjs;
     until: Dayjs;
-  }): Promise<Producto[]> {
-    const alquileres = await this.alquilerRepository.getAlquileresBetweenDates({
+  }): Promise<ProductoEntity[]> {
+    const alquileres = await this.alquilerAdapter.getAlquileresBetweenDates({
       since,
       until,
     });
     Logger.log(alquileres);
-    const alquilerProductos = await this.alquilerProductoRepository.getProductosFromAlquilerIds(
+    const alquilerProductos = await this.alquilerProductoAdapter.getProductosFromAlquilerIds(
       alquileres.map(a => a.id),
     );
-    const productos = await this.productoRepository.getAll();
+    const productos = await this.productoAdapter.getAll();
     const productosInStock = productos.map(p => {
       const alquilerProducto = alquilerProductos.filter(ap => ap.productoId === p.id);
       const amount = alquilerProducto.reduce((acc, ap) => acc + ap.cantidad, 0);
@@ -39,5 +39,13 @@ export class ProductoService {
     });
 
     return productosInStock;
+  }
+
+  async updateOne(partialProducto: Partial<ProductoEntity>): Promise<ProductoEntity> {
+    return this.productoAdapter.updateOne(partialProducto);
+  }
+
+  async createOne(partialProducto: ProductoEntityCreate): Promise<ProductoEntity> {
+    return this.productoAdapter.createOne(partialProducto);
   }
 }

@@ -7,11 +7,11 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileFieldsInterceptor, FileInterceptor } from "@nestjs/platform-express";
-import { ImageRepository } from "./image.repository";
+import { ImageService } from "./image.service";
 
 @Controller("/images")
 export class ImageController {
-  constructor(private readonly imageRepository: ImageRepository) {}
+  constructor(private readonly imageService: ImageService) {}
 
   @Post("uploadMany")
   @UseInterceptors(FileFieldsInterceptor([{ name: "files" }]))
@@ -20,7 +20,7 @@ export class ImageController {
     @Body("productoId") productoId: number,
   ) {
     const createFilePromises = multer.files.map(file =>
-      this.imageRepository.createOne(file, productoId),
+      this.imageService.createOne(file, productoId),
     );
     const result = await Promise.all(createFilePromises);
 
@@ -33,7 +33,7 @@ export class ImageController {
     @UploadedFile("file") file: Express.Multer.File,
     @Body("productoId") productoId: string,
   ) {
-    const result = await this.imageRepository.createOne(file, parseInt(productoId, 10));
+    const result = await this.imageService.createOne(file, parseInt(productoId, 10));
 
     return result;
   }

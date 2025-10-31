@@ -13,39 +13,40 @@ import {
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
-import { ProductoRepository } from "./producto.repository";
-import { Producto, ProductoUpdateCreate } from "./producto.entity";
+import { ProductoAdapter } from "./producto.adapter";
 import { ProductoService } from "./producto.service";
 import dayjs from "dayjs";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ImageRepository } from "src/Image";
+import { ProductoEntity } from "./producto.entity";
+import { ProductoCreateDTO, ProductoUpdateDTO } from "./producto.dto";
+import { ImageService } from "src/Image/image.service";
 
 @Controller("producto")
 export class ProductoController {
   constructor(
-    private readonly productoRepository: ProductoRepository,
+    private readonly productoAdapter: ProductoAdapter,
     private readonly productoService: ProductoService,
-    private readonly imageRepository: ImageRepository,
+    private readonly imageService: ImageService,
   ) {}
 
   @Get()
-  async getAll(): Promise<Producto[]> {
-    return await this.productoRepository.getAll();
+  async getAll(): Promise<ProductoEntity[]> {
+    return await this.productoAdapter.getAll();
   }
 
   @Get("/in-stock")
   async getProductosBetweenDates(
     @Body() dates: { since: string; until: string },
-  ): Promise<Producto[]> {
+  ): Promise<ProductoEntity[]> {
     const since = dayjs(dates.since);
     const until = dayjs(dates.until);
     return await this.productoService.getProductosBetweenDates({ since, until });
   }
 
   @Get(":id")
-  async getOne(@Param("id") id: string): Promise<Producto> {
+  async getOne(@Param("id") id: string): Promise<ProductoEntity> {
     try {
-      return await this.productoRepository.getOne(id);
+      return await this.productoAdapter.getOne(id);
     } catch (error) {
       throw new HttpException(
         { status: HttpStatus.INTERNAL_SERVER_ERROR, error: "Internal Server Error" },
@@ -59,22 +60,17 @@ export class ProductoController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(FileInterceptor("file"))
   async updateOne(
-    @Body() updateProductDTO: ProductoUpdateCreate,
+    @Body() updateProductDTO: ProductoUpdateDTO,
     @UploadedFile() file: Express.Multer.File,
-    @Param("id") id: string,
-  ): Promise<Producto> {
+    @Param("id") id: number,
+  ): Promise<ProductoEntity> {
     try {
       console.log(file);
       if (file) {
-        await this.imageRepository.deleteManyFromProducto(id);
-        await this.imageRepository.createOne(file, +id);
+        await this.imageService.deleteManyFromProducto(id);
+        await this.imageService.createOne(file, +id);
       }
-      await this.productoRepository.updateOne({ id: +id, ...updateProductDTO });
-      const producto = await this.productoRepository.getOne(id);
-
-      console.log(producto);
-
-      return producto;
+      return await this.productoAdapter.updateOne(updateProductDTO);
     } catch (error) {
       throw new HttpException(
         { status: HttpStatus.NOT_MODIFIED, error: "Internal Server Error" },
@@ -88,20 +84,17 @@ export class ProductoController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(FileInterceptor("file"))
   async create(
-    @Body() createProductDTO: ProductoUpdateCreate,
+    @Body() createProductoDTO: ProductoCreateDTO,
     @UploadedFile("file") file: Express.Multer.File,
-  ): Promise<Producto> {
-    const tmpProducto = await this.productoRepository.createOne(createProductDTO);
-    await this.imageRepository.createOne(file, tmpProducto.id);
+  ): Promise<ProductoEntity> {
+    const tmpProducto = await this.productoService.createOne(createProductoDTO);
 
-    const result = await this.productoRepository.getOne(tmpProducto.id.toString());
-
-    return result;
+    await this.imageService.createOne(file, tmpProducto.id);
+    return await this.productoAdapter.getOne(tmpProducto.id.toString());
   }
 
   @Delete(":id")
-  async deleteOne(@Param("id") id: string): Promise<void> {
-    await this.imageRepository.deleteManyFromProducto(id);
-    await this.productoRepository.deleteOne(id);
+  async deleteOne(@Param("id") id: number): Promise<void> {
+    await this.productoAdapter.deleteOne(id);
   }
 }

@@ -7,25 +7,26 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Inject, Injectable } from "@nestjs/common";
-import { IMAGE_MODEL, S3 } from "src/constants";
-import { Image } from "./Imge.entity";
-import { ImageSchema } from "./image.schema";
+import { S3 } from "src/constants";
+import { Repository } from "typeorm";
+import { ImageEntity } from "./image.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
-export class ImageRepository {
+export class ImageAdapter {
   constructor(
     @Inject(S3) private readonly s3: S3Client,
-    @Inject(IMAGE_MODEL) private readonly imageModel: typeof ImageSchema,
+    @InjectRepository(ImageEntity) private readonly imageRepository: Repository<ImageEntity>,
   ) {}
 
-  async createOne(file: Express.Multer.File, productoId: number): Promise<Image> {
-    const imageNumber = await this.imageModel.count({
+  async createOne(file: Express.Multer.File, productoId: number): Promise<ImageEntity> {
+    const imageNumber = await this.imageRepository.count({
       where: {
         productoId: productoId,
       },
     });
     const uploadedFile = await this.uploadFile(file, productoId, imageNumber);
-    const createdImage = await this.imageModel.create({
+    const createdImage = await this.imageRepository.save({
       productoId: +productoId,
       url: uploadedFile.file,
       isMain: true,
@@ -34,16 +35,14 @@ export class ImageRepository {
     return createdImage;
   }
 
-  async deleteManyFromProducto(productoId: string) {
+  async deleteManyFromProducto(productoId: number) {
     await this.deleteFilesFromProducto(productoId);
-    await this.imageModel.destroy({
-      where: {
-        productoId: productoId,
-      },
+    await this.imageRepository.delete({
+      productoId,
     });
   }
 
-  private async deleteFilesFromProducto(productoId: string): Promise<void> {
+  private async deleteFilesFromProducto(productoId: number): Promise<void> {
     const uploadedFiles = await this.getUploadedFilesFromProducto(productoId);
 
     console.log(`Deleting files from Backblaze for product ID: ${productoId}`);
@@ -97,7 +96,7 @@ export class ImageRepository {
   }
 
   private async getUploadedFilesFromProducto(
-    productoId: string,
+    productoId: number,
   ): Promise<ListObjectsV2CommandOutput> {
     return await this.s3.send(
       new ListObjectsV2Command({

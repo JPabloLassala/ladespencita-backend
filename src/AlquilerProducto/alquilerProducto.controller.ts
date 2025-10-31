@@ -1,33 +1,29 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from "@nestjs/common";
-import { AlquilerProductoRepository } from "./alquilerProducto.repository";
-import {
-  AlquilerProductoDto,
-  CreateAlquilerProductoDto,
-  fromDtoToAlquilerProducto,
-} from "./alquilerProducto.dto";
 import dayjs from "dayjs";
 import { Response } from "express";
 import { HigherThanStockError } from "./alquilerProducto.errors";
+import { AlquilerProductoAdapter } from "./alquilerProducto.adapter";
+import { AlquilerProductoEntity } from "./alquilerProducto.entity";
+import { AlquilerProductoCreateDTO, AlquilerProductoUpdateDTO } from "./alquilerProducto.dto";
 
 @Controller("alquilerProducto")
 export class AlquilerProductoController {
-  constructor(private readonly alquilerProductoRepository: AlquilerProductoRepository) {}
+  constructor(private readonly alquilerProductoRepository: AlquilerProductoAdapter) {}
 
   @Post("/betweendates")
   async isAbleToRentBetweenDates(
     @Res() res: Response,
     @Query("since") since: string,
     @Query("until") until: string,
-    @Body() alquilerProductos: Partial<AlquilerProductoDto>[],
+    @Body() alquilerProductos: Partial<AlquilerProductoEntity>[],
   ) {
-    const alquilerProductoEntities = alquilerProductos.map(fromDtoToAlquilerProducto);
     const dateSince = dayjs(since);
     const dateUntil = dayjs(until);
     try {
       await this.alquilerProductoRepository.isAbleToRentBetweenDates(
         dateSince,
         dateUntil,
-        alquilerProductoEntities,
+        alquilerProductos,
       );
 
       return res.status(HttpStatus.OK).send({
@@ -48,14 +44,12 @@ export class AlquilerProductoController {
   }
 
   @Post("/:alquilerId")
-  async createAlquilerProducto(@Body() alquilerProducto: CreateAlquilerProductoDto) {
-    const alquilerProductoEntity = fromDtoToAlquilerProducto(alquilerProducto);
-    return await this.alquilerProductoRepository.createOne(alquilerProductoEntity);
+  async createAlquilerProducto(@Body() alquilerProducto: AlquilerProductoCreateDTO) {
+    return await this.alquilerProductoRepository.createOne(alquilerProducto);
   }
 
   @Post("/:alquilerId")
-  async updatealquilerProducto(@Body() alquilerProductoDto: AlquilerProductoDto) {
-    const alquilerProducto = fromDtoToAlquilerProducto(alquilerProductoDto);
-    return await this.alquilerProductoRepository.updateAlquilerProducto(alquilerProducto);
+  async updatealquilerProducto(@Body() alquilerProductoDto: AlquilerProductoUpdateDTO) {
+    return await this.alquilerProductoRepository.updateAlquilerProducto(alquilerProductoDto);
   }
 }

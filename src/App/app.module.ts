@@ -8,6 +8,7 @@ import { ConfigModule } from "@nestjs/config";
 import { AlquilerProductoModule } from "src/AlquilerProducto";
 import { AuthModule } from "src/Auth";
 import { ImageModule } from "src/Image";
+import { DatabaseModule } from "src/Database";
 
 const getPhotoModule = () => {
   return ServeStaticModule.forRoot({
@@ -19,6 +20,7 @@ const getPhotoModule = () => {
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
     AuthModule,
     AlquilerModule,
     ProductoModule,

@@ -1,21 +1,25 @@
 import { faker } from "@faker-js/faker";
-import { AlquilerProductoSchema, IAlquilerProductoCreateSchema } from "src/AlquilerProducto";
-import { ProductoSchema } from "src/Producto";
 import { alquileres } from "./data/alquileres";
-import { AlquilerSchema } from "src/Alquiler";
+import { AlquilerEntity } from "src/Alquiler/alquiler.entity";
+import { AlquilerProductoCreate } from "src/AlquilerProducto";
+import { ProductoEntity } from "src/Producto";
+import { DataSource } from "typeorm";
 
-export async function seed_Alquileres(): Promise<void> {
-  await seed();
+export async function seed_Alquileres(dataSource): Promise<void> {
+  await seed(dataSource);
   console.log("Alquileres insertados");
 }
 
-async function seed(): Promise<void> {
-  await AlquilerSchema.bulkCreate(alquileres);
+async function seed(dataSource: DataSource): Promise<void> {
+  const alquilerRepository = dataSource.getRepository(AlquilerEntity);
+  const productoRepository = dataSource.getRepository(ProductoEntity);
+  const alquilerProductoRepository = dataSource.getRepository("AlquilerProducto");
+  await alquilerRepository.save(alquileres);
 
-  const alquilerModels = await AlquilerSchema.findAll();
-  const productoModels = await ProductoSchema.findAll();
+  const alquilerModels = await alquilerRepository.find();
+  const productoModels = await productoRepository.find();
 
-  const getProductosAlquilerArray = (): IAlquilerProductoCreateSchema[] => {
+  const getProductosAlquilerArray = (): AlquilerProductoCreate[] => {
     const alquiler = faker.helpers.arrayElement(alquilerModels);
     const productosToParse = faker.helpers.arrayElements(productoModels, { min: 20, max: 30 });
 
@@ -42,5 +46,5 @@ async function seed(): Promise<void> {
     });
   };
 
-  await AlquilerProductoSchema.bulkCreate(getProductosAlquilerArray());
+  await alquilerProductoRepository.save(getProductosAlquilerArray());
 }

@@ -1,67 +1,78 @@
-import { Transform } from "class-transformer";
-import { Image } from "src/Image";
+import { ImageEntity } from "src/Image";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
-export interface Producto {
+@Entity({ name: "productos" })
+export class ProductoEntity {
+  @PrimaryGeneratedColumn()
   id: number;
-  nombre: string;
-  unidadesMetroLineal: number;
-  totales: number;
-  medidas: {
-    altura: number;
-    ancho?: number;
-    profundidad?: number;
-    diametro?: number;
-  };
-  costo: {
-    producto: number;
-    grafica: number;
-    diseno: number;
-    total: number;
-  };
-  valor: {
-    unitarioGarantia: number;
-    unitarioAlquiler: number;
-    x1: number;
-    x3: number;
-    x6: number;
-    x12: number;
-  };
-  image?: Image;
-}
 
-export class ProductoUpdateCreate {
-  id?: number;
+  @Column()
   nombre: string;
 
-  @Transform(({ value }) => +value)
+  @Column()
   unidadesMetroLineal: number;
-  @Transform(({ value }) => +value)
-  metroLineal: number;
-  @Transform(({ value }) => +value)
+
+  @Column()
   totales: number;
-  @Transform(({ value }) => +value)
-  altura: number;
-  @Transform(({ value }) => +value)
-  ancho?: number;
-  @Transform(({ value }) => +value)
-  profundidad?: number;
-  @Transform(({ value }) => +value)
-  diametro?: number;
-  @Transform(({ value }) => +value)
+
+  @Column()
+  medidasAltura: number;
+
+  @Column()
+  medidasAncho?: number;
+
+  @Column()
+  medidasProfundidad?: number;
+
+  @Column()
+  medidasDiametro?: number;
+
+  @Column()
+  costoProducto: number;
+
+  @Column()
+  costoGrafica: number;
+
+  @Column()
+  costoDiseno: number;
+
+  @Column()
+  costoTotal: number;
+
+  @Column()
   valorUnitarioGarantia: number;
-  @Transform(({ value }) => +value)
-  valorUnitarioAlquiler: number;
-  @Transform(({ value }) => +value)
-  valorx1: number;
-  @Transform(({ value }) => +value)
-  valorx3: number;
-  @Transform(({ value }) => +value)
-  valorx6: number;
-  @Transform(({ value }) => +value)
-  valorx12: number;
-  file?: Express.Multer.File;
 
-  constructor(obj: ProductoUpdateCreate) {
-    Object.assign(this, obj);
-  }
+  @Column()
+  valorUnitarioAlquiler: number;
+
+  @Column()
+  valorX1: number;
+
+  @Column()
+  valorX3: number;
+
+  @Column()
+  valorX6: number;
+
+  @Column()
+  valorX12: number;
+
+  @OneToOne(() => ImageEntity, "productoId")
+  image: ImageEntity;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
+
+export type ProductoEntityCreate = Omit<ProductoEntity, "id" | "createdAt" | "updatedAt" | "image">;
+export type ProductoEntityUpdate = Partial<ProductoEntityCreate>;

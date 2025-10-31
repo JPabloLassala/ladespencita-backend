@@ -1,10 +1,11 @@
-import { Producto, ProductoSchemaProps } from "src/Productos";
+import { ProductoRecordDTO, ProductoSchemaProps } from "src/Productos";
 import mongoose from "mongoose";
 
 const AlquilerProductoSchema = new mongoose.Schema(
   {
     producto: new mongoose.Schema(ProductoSchemaProps, {
-      _id: false,
+      id: true,
+      _id: true,
       versionKey: false,
       timestamps: false,
     }),
@@ -22,7 +23,6 @@ const AlquilerProductoSchema = new mongoose.Schema(
     },
   },
   {
-    _id: false,
     versionKey: false,
     timestamps: false,
   },
@@ -46,8 +46,9 @@ export const AlquilerSchema = new mongoose.Schema(
   },
 );
 
-export type AlquilerProductoDTO = {
-  producto: Producto;
+export interface AlquilerProductoDTO {
+  _id?: string;
+  producto: ProductoRecordDTO;
   unidadesAlquiladas: number;
   unidadesCotizadas: number;
   cantidad: number;
@@ -60,9 +61,10 @@ export type AlquilerProductoDTO = {
     x6: number;
     x12: number;
   };
-};
+}
 
-export class AlquilerRecordDTO {
+export interface AlquilerRecordDTO {
+  _id?: string;
   productora: string;
   proyecto: string;
   productos: AlquilerProductoDTO[];

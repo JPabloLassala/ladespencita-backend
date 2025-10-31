@@ -28,7 +28,6 @@ export interface IProductoSchema {
   costoDiseno: number;
   costoTotal: number;
   valorUnitarioGarantia: number;
-  valorTotalGarantia: number;
   valorUnitarioAlquiler: number;
   valorX1: number;
   valorX3: number;
@@ -73,8 +72,6 @@ export class ProductoSchema extends Model<IProductoSchema, IProductoCreateSchema
   costoTotal: number;
   @Column(DataType.INTEGER)
   valorUnitarioGarantia: number;
-  @Column(DataType.INTEGER)
-  valorTotalGarantia: number;
   @Column(DataType.INTEGER)
   valorUnitarioAlquiler: number;
   @Column(DataType.INTEGER)
@@ -149,7 +146,6 @@ export const fromProductoToSchema = (producto: Producto | Partial<Producto>): Pr
     costoDiseno: producto.costo.diseno,
     costoTotal: producto.costo.total,
     valorUnitarioGarantia: producto.valor.unitarioGarantia,
-    valorTotalGarantia: producto.valor.totalGarantia,
     valorUnitarioAlquiler: producto.valor.unitarioAlquiler,
     valorX1: producto.valor.x1,
     valorX3: producto.valor.x3,

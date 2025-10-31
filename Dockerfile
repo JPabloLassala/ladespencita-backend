@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY --chown=node:node . .
 
-RUN yarn
+RUN npm g i nest && yarn
 
 EXPOSE 3000
 

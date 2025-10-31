@@ -16,14 +16,15 @@ export class AlquilerProductoRepository {
 
   async getProductosFromAlquiler(id: string): Promise<AlquilerProducto[]> {
     const alquilerProductoSchemas = await this.alquilerProductoModel.findAll({
-      where: { alquilerId: id },
+      where: { alquiler: { id } },
     });
 
     return alquilerProductoSchemas.map(fromSchemaToAlquilerProducto);
   }
 
   async createOne(partialAlquilerProducto: Partial<AlquilerProducto>): Promise<AlquilerProducto> {
-    const result = await this.alquilerProductoModel.create(partialAlquilerProducto);
+    const asda = fromAlquilerProductoToSchema(partialAlquilerProducto as AlquilerProducto);
+    const result = await this.alquilerProductoModel.create(asda);
 
     return fromSchemaToAlquilerProducto(result);
   }

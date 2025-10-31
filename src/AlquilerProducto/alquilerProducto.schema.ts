@@ -1,22 +1,65 @@
 import { AlquilerProducto } from "./alquilerProducto.entity";
-import { fromSchemaToProducto, Producto, ProductoSchema } from "src/Producto";
-import { Alquiler, AlquilerSchema, fromSchemaToAlquiler } from "src/Alquiler";
+import {
+  fromProductoToSchema,
+  fromSchemaToProducto,
+  IProductoSchema,
+  Producto,
+  ProductoSchema,
+} from "src/Producto";
+import {
+  Alquiler,
+  AlquilerSchema,
+  fromAlquilerToSchema,
+  fromSchemaToAlquiler,
+  IAlquilerSchema,
+} from "src/Alquiler";
 import {
   AutoIncrement,
   BelongsTo,
   Column,
+  CreatedAt,
   DataType,
   Model,
   PrimaryKey,
   Table,
+  UpdatedAt,
 } from "sequelize-typescript";
+import { Optional } from "sequelize";
 
-@Table({ tableName: "alquiler_productos" })
-export class AlquilerProductoSchema extends Model {
+export interface IAlquilerProductoSchema {
+  id: number;
+  producto: IProductoSchema;
+  alquiler: IAlquilerSchema;
+  costoProducto: number;
+  costoGrafica: number;
+  costoDiseno: number;
+  costoTotal: number;
+  unidadesAlquiladas: number;
+  unidadesCotizadas: number;
+  cantidad: number;
+  valorUnitarioGarantia: number;
+  valorTotalGarantia: number;
+  valorUnitarioAlquiler: number;
+  valorX1: number;
+  valorX3: number;
+  valorX6: number;
+  valorX12: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IAlquilerProductoCreateSchema
+  extends Optional<IAlquilerProductoSchema, "id" | "createdAt" | "updatedAt"> {}
+
+@Table({ tableName: "alquileres" })
+export class AlquilerProductoSchema extends Model<
+  IAlquilerProductoSchema,
+  IAlquilerProductoCreateSchema
+> {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  id?: number;
+  id: number;
 
   @BelongsTo(() => ProductoSchema, "productoId")
   producto: ProductoSchema;
@@ -51,26 +94,11 @@ export class AlquilerProductoSchema extends Model {
   valorX6: number;
   @Column(DataType.INTEGER)
   valorX12: number;
-}
 
-export interface AlquilerProductoRecord {
-  id?: number;
-  producto: ProductoSchema;
-  alquiler: AlquilerSchema;
-  costoProducto: number;
-  costoGrafica: number;
-  costoDiseno: number;
-  costoTotal: number;
-  unidadesAlquiladas: number;
-  unidadesCotizadas: number;
-  cantidad: number;
-  valorUnitarioGarantia: number;
-  valorTotalGarantia: number;
-  valorUnitarioAlquiler: number;
-  valorX1: number;
-  valorX3: number;
-  valorX6: number;
-  valorX12: number;
+  @CreatedAt
+  createdAt: Date;
+  @UpdatedAt
+  updatedAt: Date;
 }
 
 export const fromSchemaToAlquilerProducto = (schema: AlquilerProductoSchema): AlquilerProducto => {
@@ -102,13 +130,22 @@ export const fromSchemaToAlquilerProducto = (schema: AlquilerProductoSchema): Al
 export const fromAlquilerProductoToSchema = (ap: AlquilerProducto): AlquilerProductoSchema => {
   return new AlquilerProductoSchema({
     id: ap.id,
-    producto: ap.producto,
-    alquiler: ap.alquiler,
-    costo: ap.costo,
+    producto: fromProductoToSchema(ap.producto),
+    alquiler: fromAlquilerToSchema(ap.alquiler),
+    costoDiseno: ap.costo.diseno,
+    costoGrafica: ap.costo.grafica,
+    costoProducto: ap.costo.producto,
+    costoTotal: ap.costo.total,
     unidadesAlquiladas: ap.unidadesAlquiladas,
     unidadesCotizadas: ap.unidadesCotizadas,
     cantidad: ap.cantidad,
-    valor: ap.valor,
+    valorTotalGarantia: ap.valor.totalGarantia,
+    valorUnitarioAlquiler: ap.valor.unitarioAlquiler,
+    valorUnitarioGarantia: ap.valor.unitarioGarantia,
+    valorX1: ap.valor.x1,
+    valorX3: ap.valor.x3,
+    valorX6: ap.valor.x6,
+    valorX12: ap.valor.x12,
   });
 };
 

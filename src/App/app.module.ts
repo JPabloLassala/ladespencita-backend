@@ -15,7 +15,7 @@ const getPhotoModule = () => {
 };
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, AlquilerModule, ProductoModule, getPhotoModule()],
+  imports: [ConfigModule.forRoot(), AlquilerModule, ProductoModule, getPhotoModule()],
   controllers: [],
   providers: [AppService],
 })

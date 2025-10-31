@@ -15,7 +15,7 @@ export interface IProductoSchema {
   id: number;
   nombre: string;
   unidadesMetroLineal: number;
-  stock: number;
+  totales: number;
   disponibles: number;
   medidasAltura: number;
   medidasAncho?: number;
@@ -50,8 +50,8 @@ export class ProductoSchema extends Model<IProductoSchema, IProductoCreateSchema
   @Column(DataType.INTEGER)
   unidadesMetroLineal: number;
   @Column(DataType.INTEGER)
-  stock: number;
-
+  totales: number;
+  @Column(DataType.INTEGER)
   disponibles: number;
   @Column(DataType.INTEGER)
   medidasAltura: number;
@@ -95,7 +95,7 @@ export const fromSchemaToProducto = (dto: ProductoSchema): Producto => {
     id: dto.id,
     nombre: dto.nombre,
     unidadesMetroLineal: dto.unidadesMetroLineal,
-    stock: dto.stock,
+    totales: dto.totales,
     disponibles: dto.disponibles,
     medidas: {
       altura: dto.medidasAltura,
@@ -126,7 +126,7 @@ export const fromProductoToSchema = (producto: Producto | Partial<Producto>): Pr
     id: producto.id,
     nombre: producto.nombre,
     unidadesMetroLineal: producto.unidadesMetroLineal,
-    stock: producto.stock,
+    totales: producto.totales,
     disponibles: producto.disponibles,
     medidasAltura: producto.medidas.altura,
     medidasAncho: producto.medidas.ancho,

@@ -21,3 +21,5 @@ export type AlquilerProducto = {
     x12: number;
   };
 };
+
+export type CreateAlquilerProducto = Omit<AlquilerProducto, "id">;

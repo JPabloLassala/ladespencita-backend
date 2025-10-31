@@ -2,7 +2,7 @@ export interface Producto {
   id?: number;
   nombre: string;
   unidadesMetroLineal: number;
-  stock: number;
+  totales: number;
   disponibles: number;
   medidas: {
     altura: number;

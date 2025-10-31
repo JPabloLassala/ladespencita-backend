@@ -35,7 +35,7 @@ export class ProductoService {
       const alquilerProducto = alquilerProductos.filter(ap => ap.productoId === p.id);
       const amount = alquilerProducto.reduce((acc, ap) => acc + ap.cantidad, 0);
 
-      return { ...p, cantidad: p.stock - amount };
+      return { ...p, cantidad: p.totales - amount };
     });
 
     return productosInStock;

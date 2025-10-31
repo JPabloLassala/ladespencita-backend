@@ -49,7 +49,7 @@ export class ProductoRepository {
     const productos = await this.productoModel.findAll();
 
     return productos.reduce<Map<number, number>>(
-      (acc, { id, stock }) => acc.set(id, stock),
+      (acc, { id, totales }) => acc.set(id, totales),
       new Map(),
     );
   }

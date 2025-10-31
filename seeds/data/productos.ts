@@ -9,7 +9,7 @@ export const productos: IProductoCreateSchema[] = new Array(100).fill(0).map(() 
   medidasAncho: faker.number.int({ min: 1, max: 5 }),
   medidasProfundidad: faker.number.int({ min: 1, max: 5 }),
   medidasDiametro: faker.number.int({ min: 1, max: 5 }),
-  stock: faker.number.int({ min: 10, max: 99 }),
+  totales: faker.number.int({ min: 10, max: 99 }),
   costoProducto: faker.number.int({ min: 0, max: 7000 }),
   costoGrafica: faker.number.int({ min: 450, max: 3500 }),
   costoDiseno: faker.number.int({ min: 0, max: 3000 }),

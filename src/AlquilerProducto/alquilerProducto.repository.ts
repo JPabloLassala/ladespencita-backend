@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { AlquilerProducto } from "./alquilerProducto.entity";
+import { AlquilerProducto, CreateAlquilerProducto } from "./alquilerProducto.entity";
 import { ALQUILERPRODUCTO_MODEL, PRODUCTO_MODEL } from "src/constants/database";
 import {
   AlquilerProductoSchema,
@@ -58,8 +58,26 @@ export class AlquilerProductoRepository {
     await AlquilerProductoSchema.bulkCreate(apDtos);
   }
 
-  async createOne(partialAlquilerProducto: Partial<AlquilerProducto>): Promise<AlquilerProducto> {
-    const asda = fromAlquilerProductoToSchema(partialAlquilerProducto as AlquilerProducto);
+  async createOne(newAlquilerProducto: CreateAlquilerProducto): Promise<AlquilerProducto> {
+    const producto = await this.productoModel.findOne({
+      where: { id: newAlquilerProducto.productoId },
+    });
+    const existingAlquilerProductos = await this.alquilerProductoModel.findAll({
+      where: { productoId: producto.id },
+    });
+    const exceededAlquilerProductos = this.findQuantityHigherThanStock(
+      [newAlquilerProducto],
+      existingAlquilerProductos,
+      [producto],
+    );
+
+    if (exceededAlquilerProductos.length > 0) {
+      throw new Error(
+        `La cantidad de los siguientes productos supera el stock: ${JSON.stringify(exceededAlquilerProductos)}`,
+      );
+    }
+
+    const asda = fromAlquilerProductoToSchema(newAlquilerProducto as AlquilerProducto);
     const result = await this.alquilerProductoModel.create(asda);
 
     return fromSchemaToAlquilerProducto(result);
@@ -74,17 +92,18 @@ export class AlquilerProductoRepository {
     await AlquilerProductoSchema.bulkCreate(apDtos);
   }
 
-  async updateAlquilerProductos(newAlquilerProductos: Partial<AlquilerProducto>[]): Promise<void> {
-    const productoIds = newAlquilerProductos.map(ap => ap.productoId);
-    const productos = await this.productoModel.findAll({ where: { id: productoIds } });
+  async updateAlquilerProducto(alquilerProducto: AlquilerProducto): Promise<void> {
+    const producto = await this.productoModel.findOne({
+      where: { id: alquilerProducto.productoId },
+    });
     const existingAlquilerProductos = await this.alquilerProductoModel.findAll({
-      where: { productoId: productoIds },
+      where: { productoId: producto.id },
     });
 
     const exceededAlquilerProductos = this.findQuantityHigherThanStock(
-      newAlquilerProductos,
+      [alquilerProducto],
       existingAlquilerProductos,
-      productos,
+      [producto],
     );
 
     if (exceededAlquilerProductos.length > 0) {
@@ -93,12 +112,16 @@ export class AlquilerProductoRepository {
       );
     }
 
-    const apDtos = newAlquilerProductos.map(ap => ({
-      ...fromAlquilerProductoToSchema(ap as AlquilerProducto),
+    const apDto = {
+      ...fromAlquilerProductoToSchema(alquilerProducto),
       id: undefined,
-    }));
+    };
 
-    await AlquilerProductoSchema.bulkCreate(apDtos, { updateOnDuplicate: ["cantidad"] });
+    await AlquilerProductoSchema.update(apDto, {
+      where: {
+        id: alquilerProducto.id,
+      },
+    });
   }
 
   private findQuantityHigherThanStock(
@@ -123,11 +146,11 @@ export class AlquilerProductoRepository {
       const existing = existingAlquilerProductos.filter(eap => eap.productoId === nap.productoId);
       const stockUsed = existing.reduce((acc, eap) => acc + eap.cantidad, 0);
 
-      if (stockUsed + nap.cantidad > producto.stock) {
+      if (stockUsed + nap.cantidad > producto.totales) {
         quantityHigherThanStock.push({
           alquilerId: nap.alquilerId,
           productoId: nap.productoId,
-          stock: producto.stock,
+          stock: producto.totales,
           requested: stockUsed + nap.cantidad,
         });
       }

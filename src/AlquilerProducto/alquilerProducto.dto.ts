@@ -1,4 +1,4 @@
-import { AlquilerProducto } from "./alquilerProducto.entity";
+import { AlquilerProducto, CreateAlquilerProducto } from "./alquilerProducto.entity";
 
 export interface AlquilerProductoDto {
   id: number;
@@ -20,8 +20,12 @@ export interface AlquilerProductoDto {
   valorX12: number;
 }
 
-export const fromDtoToAlquilerProducto = (dto: AlquilerProductoDto): AlquilerProducto => ({
-  id: dto.id,
+export type CreateAlquilerProductoDto = Omit<AlquilerProductoDto, "id">;
+
+export const fromDtoToAlquilerProducto = (
+  dto: AlquilerProductoDto | CreateAlquilerProductoDto,
+): AlquilerProducto | CreateAlquilerProducto => ({
+  id: (dto as AlquilerProductoDto)?.id || undefined,
   productoId: dto.productoId,
   alquilerId: dto.alquilerId,
   costo: {

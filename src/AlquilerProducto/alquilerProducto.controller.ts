@@ -1,6 +1,10 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from "@nestjs/common";
 import { AlquilerProductoRepository } from "./alquilerProducto.repository";
-import { AlquilerProductoDto, fromDtoToAlquilerProducto } from "./alquilerProducto.dto";
+import {
+  AlquilerProductoDto,
+  CreateAlquilerProductoDto,
+  fromDtoToAlquilerProducto,
+} from "./alquilerProducto.dto";
 import dayjs from "dayjs";
 import { Response } from "express";
 import { HigherThanStockError } from "./alquilerProducto.errors";
@@ -44,20 +48,14 @@ export class AlquilerProductoController {
   }
 
   @Post("/:alquilerId")
-  async createAlquilerProductos(
-    @Param("alquilerId") alquilerId: number,
-    @Body() alquilerProductos: Partial<AlquilerProductoDto>[],
-  ) {
-    const alquilerProductoEntities = alquilerProductos.map(fromDtoToAlquilerProducto);
-    return await this.alquilerProductoRepository.createAlquilerProductos(
-      alquilerId,
-      alquilerProductoEntities,
-    );
+  async createAlquilerProducto(@Body() alquilerProducto: CreateAlquilerProductoDto) {
+    const alquilerProductoEntity = fromDtoToAlquilerProducto(alquilerProducto);
+    return await this.alquilerProductoRepository.createOne(alquilerProductoEntity);
   }
 
   @Post("/:alquilerId")
-  async updatealquilerProductos(@Body() alquilerProductos: Partial<AlquilerProductoDto>[]) {
-    const alquilerProductoEntities = alquilerProductos.map(fromDtoToAlquilerProducto);
-    return await this.alquilerProductoRepository.updateAlquilerProductos(alquilerProductoEntities);
+  async updatealquilerProducto(@Body() alquilerProductoDto: AlquilerProductoDto) {
+    const alquilerProducto = fromDtoToAlquilerProducto(alquilerProductoDto);
+    return await this.alquilerProductoRepository.updateAlquilerProducto(alquilerProducto);
   }
 }

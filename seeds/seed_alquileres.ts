@@ -37,7 +37,7 @@ async function seed(): Promise<void> {
         costoTotal: productoToParse.costoTotal,
         unidadesAlquiladas: parseInt(faker.string.numeric(2), 10),
         unidadesCotizadas: parseInt(faker.string.numeric(2), 10),
-        cantidad: faker.number.int({ min: 1, max: productoToParse.stock - 9 }),
+        cantidad: faker.number.int({ min: 1, max: productoToParse.totales - 9 }),
       };
     });
   };

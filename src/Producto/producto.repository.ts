@@ -45,9 +45,8 @@ export class ProductoRepository {
   }
 
   async createOne(partialProducto: ProductoCreate): Promise<Producto> {
-    const createProductoSchema = fromProductoToSchema(partialProducto);
-    // const imageSchemas = this.imageRe;
-    const result = await this.productoModel.create({ ...createProductoSchema });
+    const productoCreateschema = fromProductoCreateToSchema(partialProducto);
+    const result = await this.productoModel.create(productoCreateschema);
 
     return fromSchemaToProducto(result);
   }

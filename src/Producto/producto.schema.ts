@@ -9,7 +9,7 @@ import {
   Table,
   UpdatedAt,
 } from "sequelize-typescript";
-import { Producto } from "./producto.entity";
+import { Producto, ProductoCreate } from "./producto.entity";
 import { Optional } from "sequelize";
 import { ImageSchema } from "src/Image";
 

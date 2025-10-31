@@ -5,3 +5,9 @@ export interface Image {
   isMain: boolean;
   createdAt: Date;
 }
+
+export interface ImageCreate {
+  name: string;
+  mimetype: string;
+  data: string;
+}

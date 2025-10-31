@@ -1,10 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { AlquilerAdapter } from "./alquiler.adapter";
 import { AlquilerCreate, AlquilerEntity } from "./alquiler.entity";
+import { AlquilerProductoAdapter } from "src/AlquilerProducto";
 
 @Injectable()
 export class AlquilerService {
-  constructor(private readonly alquilerAdapter: AlquilerAdapter) {}
+  constructor(
+    private readonly alquilerAdapter: AlquilerAdapter,
+    private readonly alquilerProductoAdapter: AlquilerProductoAdapter,
+  ) {}
 
   async getAlquileres() {
     return await this.alquilerAdapter.getAlquileres();
@@ -15,7 +19,16 @@ export class AlquilerService {
   }
 
   async createAlquiler(alquiler: AlquilerCreate) {
-    return await this.alquilerAdapter.createOne(alquiler);
+    const productos = alquiler.productos;
+    const newAlquiler = await this.alquilerAdapter.createOne(alquiler);
+    const alquilerProductos = await this.alquilerProductoAdapter.createAlquilerProductos(
+      newAlquiler.id,
+      productos,
+    );
+
+    newAlquiler.productos = alquilerProductos;
+
+    return newAlquiler;
   }
 
   async getOne(id: number) {

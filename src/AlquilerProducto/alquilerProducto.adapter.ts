@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { Dayjs } from "dayjs";
-import { AlquilerAdapter } from "src/Alquiler";
+import { ALQUILER_STATUS, AlquilerAdapter } from "src/Alquiler";
 import { HigherThanStockError } from "./alquilerProducto.errors";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProductoAdapter, ProductoEntity } from "src/Producto";
@@ -37,11 +37,44 @@ export class AlquilerProductoAdapter {
   ): Promise<AlquilerProductoEntity[]> {
     const productoIds = alquilerProductos.map(ap => ap.productoId);
     const productos = await this.productoRepository.findBy({ id: In(productoIds) });
-    const exceededAlquilerProductos = this.findQuantityHigherThanStock([], [], productos);
+    const usedAlquilerProductos = await this.alquilerProductoRepository
+      .createQueryBuilder("alquilerProductos")
+      .select("sum(alquilerProductos.cantidad)", "totales")
+      .addSelect("alquilerProductos.productoId", "productoId")
+      .innerJoin("alquilerProductos.alquiler", "alquiler")
+      .where("alquiler.status = :status", { status: ALQUILER_STATUS.ACTIVE })
+      .groupBy("alquilerProductos.productoId")
+      .having("alquilerProductos.productoId IN (:...productoIds)", { productoIds })
+      .getRawMany<{ totales: number; productoId: number }>();
+    const productoStocks = productos.reduce<Map<number, number>>((acc, p) => {
+      acc.set(p.id, p.totales);
+      return acc;
+    }, new Map<number, number>());
+    const requestedHigherThanStock = alquilerProductos.filter(ap => {
+      const used = usedAlquilerProductos.find(uap => uap.productoId === ap.productoId);
+      const usedQty = used ? used.totales : 0;
+      const stock = productoStocks.get(ap.productoId) || 0;
 
-    if (exceededAlquilerProductos.length > 0) {
+      return usedQty + ap.cantidad > stock;
+    });
+
+    if (requestedHigherThanStock.length > 0) {
+      const asd: { productoId: number; stock: number; requested: number }[] =
+        requestedHigherThanStock.map(ap => {
+          const used = usedAlquilerProductos.find(uap => uap.productoId === ap.productoId);
+          const usedQty = used ? used.totales : 0;
+          const stock = productoStocks.get(ap.productoId) || 0;
+
+          return {
+            productoId: ap.productoId,
+            used: usedQty,
+            stock,
+            requested: ap.cantidad,
+          };
+        });
+
       throw new Error(
-        `La cantidad de los siguientes productos supera el stock: ${JSON.stringify(exceededAlquilerProductos)}`,
+        `La cantidad de los siguientes productos supera el stock: ${JSON.stringify(asd)}`,
       );
     }
 

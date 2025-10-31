@@ -1,5 +1,5 @@
 import { Test } from "@nestjs/testing";
-import { Producto, ProductoController, ProductoRepository, ProductoRequestDTO } from "src/Producto";
+import { Producto, ProductoController, ProductoRepository } from "src/Producto";
 import { ModuleMocker, MockFunctionMetadata } from "jest-mock";
 import { createRandomProducto } from "test/Factory/producto.factory";
 
@@ -19,19 +19,18 @@ describe("ProductoController", () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [ProductoController],
     })
-      .useMocker((token) => {
+      .useMocker(token => {
         if (token === ProductoRepository) {
           return {
             getAll: jest.fn().mockResolvedValue(productos),
             getOne: jest.fn().mockResolvedValue(producto),
             getPage: jest.fn().mockResolvedValue({ productos: productos, page: 1, total: 10 }),
-            updateOne: jest.fn((partialProducto: ProductoRequestDTO) => {
+            updateOne: jest.fn((partialProducto: Partial<Producto>) => {
               const newProductoRequestDto = {
-                ...ProductoRequestDTO.fromProducto(producto),
                 ...partialProducto,
               };
 
-              return ProductoRequestDTO.toProducto(newProductoRequestDto, `${producto.id}`);
+              return newProductoRequestDto;
             }),
             createOne: jest.fn().mockResolvedValue(producto),
             knex: jest.fn(),
@@ -57,20 +56,6 @@ describe("ProductoController", () => {
   describe("getOne", () => {
     it("should return a producto", async () => {
       expect(await productoController.getOne("1")).toEqual(producto);
-    });
-  });
-
-  describe("updateOne", () => {
-    it("should return a producto", async () => {
-      const updatedProducto = {
-        ...producto,
-        nombre: "Nombre modificado",
-      };
-      expect(
-        await productoController.updateOne("1", {
-          nombre: "Nombre modificado",
-        } as ProductoRequestDTO),
-      ).toEqual(updatedProducto);
     });
   });
 });

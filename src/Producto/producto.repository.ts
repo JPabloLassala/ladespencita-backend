@@ -17,8 +17,8 @@ export class ProductoRepository {
     return productoModels.map(fromSchemaToProducto);
   }
 
-  async getOne(nombre: string): Promise<Producto> {
-    const productoModel = await this.productoModel.findOne({ where: { nombre } });
+  async getOne(id: string): Promise<Producto> {
+    const productoModel = await this.productoModel.findByPk(id);
 
     return fromSchemaToProducto(productoModel);
   }

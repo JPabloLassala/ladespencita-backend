@@ -11,7 +11,7 @@ import {
 import { ProductoRepository } from "./producto.repository";
 import { Producto } from "./producto.entity";
 
-@Controller("productos")
+@Controller("producto")
 export class ProductoController {
   constructor(private readonly productoRepository: ProductoRepository) {}
 

@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import { ProductoSchema } from "src/Productos";
 import { productos } from "./data/productos";
+import { softDeletePlugin } from "soft-delete-plugin-mongoose";
 
 export async function seed_Products() {
   await mongoose.connect("mongodb://root:example@localhost:27017/nest?authSource=admin");
 
+  ProductoSchema.plugin(softDeletePlugin);
   const ProductoModel = mongoose.model("Producto", ProductoSchema);
   await ProductoModel.deleteMany({});
 

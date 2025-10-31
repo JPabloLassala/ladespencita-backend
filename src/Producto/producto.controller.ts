@@ -10,14 +10,27 @@ import {
 } from "@nestjs/common";
 import { ProductoRepository } from "./producto.repository";
 import { Producto } from "./producto.entity";
+import { ProductoService } from "./producto.service";
 
 @Controller("producto")
 export class ProductoController {
-  constructor(private readonly productoRepository: ProductoRepository) {}
+  constructor(
+    private readonly productoRepository: ProductoRepository,
+    private readonly productoService: ProductoService,
+  ) {}
 
   @Get()
   async getAll(): Promise<Producto[]> {
     return await this.productoRepository.getAll();
+  }
+
+  @Get("/alquiler")
+  async getProductosBetweenDates(
+    @Body() alquileres: { since: string; until: string },
+  ): Promise<Producto[]> {
+    await this.productoService.getProductosBetweenDates(alquileres);
+
+    return [];
   }
 
   @Get(":id")

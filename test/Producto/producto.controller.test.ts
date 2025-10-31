@@ -1,10 +1,5 @@
 import { Test } from "@nestjs/testing";
-import {
-  Producto,
-  ProductoController,
-  ProductoRepository,
-  ProductoRequestDTO,
-} from "src/Productos";
+import { Producto, ProductoController, ProductoRepository, ProductoRequestDTO } from "src/Producto";
 import { ModuleMocker, MockFunctionMetadata } from "jest-mock";
 import { createRandomProducto } from "test/Factory/producto.factory";
 

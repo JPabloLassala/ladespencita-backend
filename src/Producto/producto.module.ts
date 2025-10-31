@@ -7,6 +7,9 @@ import { Connection } from "mongoose";
 import { PRODUCTO_MODEL } from "src/constants/database";
 import { ProductoRecordDTO, ProductoSchema } from "./producto.schema";
 import { SoftDeleteModel, softDeletePlugin } from "soft-delete-plugin-mongoose";
+import { ProductoService } from "./producto.service";
+import { AlquilerModule } from "src/Alquiler";
+import { AlquilerProductoModule } from "src/AlquilerProducto";
 
 const productoModelProvider = {
   provide: PRODUCTO_MODEL,
@@ -22,8 +25,8 @@ const productoModelProvider = {
 };
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AlquilerModule, AlquilerProductoModule],
   controllers: [ProductoController],
-  providers: [ProductoRepository, productoModelProvider],
+  providers: [ProductoRepository, productoModelProvider, ProductoService],
 })
 export class ProductoModule {}

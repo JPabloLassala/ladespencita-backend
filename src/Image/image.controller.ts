@@ -9,6 +9,7 @@ export class ImageController {
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
     const result = await this.imageRepository.uploadFile(file);
 
     return result;

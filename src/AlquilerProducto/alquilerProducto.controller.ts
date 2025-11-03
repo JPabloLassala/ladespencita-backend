@@ -1,6 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { AlquilerProductoAdapter } from "./alquilerProducto.adapter";
-import { AlquilerProductoCreateDTO, AlquilerProductoUpdateDTO } from "./alquilerProducto.dto";
+import {
+  AlquilerProductoCreateDTO,
+  AlquilerProductoUpdateDTO,
+  CheckRemainingDto,
+} from "./alquilerProducto.dto";
 import { AlquilerProductoService } from "./alquilerProducto.service";
 
 @Controller("alquilerProducto")
@@ -10,9 +14,9 @@ export class AlquilerProductoController {
     private readonly alquilerProductoService: AlquilerProductoService,
   ) {}
 
-  @Get("/availability")
-  async checkAlquilerProductosAvailability(@Body() alquilerProductos: AlquilerProductoCreateDTO[]) {
-    return await this.alquilerProductoService.checkAlquilerProductsAvailability(alquilerProductos);
+  @Get("/stock")
+  async checkRemaining(@Query() query: CheckRemainingDto) {
+    return await this.alquilerProductoService.checkRemaining(query.since, query.until);
   }
 
   @Get("/:alquilerId")

@@ -4,6 +4,8 @@ import { AlquilerService } from "./alquiler.service";
 import { AlquilerCreate, AlquilerEntity, AlquilerUpdate } from "./alquiler.entity";
 import { ProductoHigherThanAvailableError } from "./alquiler.error";
 
+// const syncTimeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 @Controller("alquiler")
 export class AlquilerController {
   constructor(private readonly alquilerService: AlquilerService) {}

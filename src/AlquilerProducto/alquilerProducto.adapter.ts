@@ -53,50 +53,42 @@ export class AlquilerProductoAdapter {
     });
   }
 
-  async checkAlquilerProductosAvailability(
-    alquilerProductos: AlquilerProductoCreate[],
-  ): Promise<void> {
-    const productoIds = alquilerProductos.map(ap => ap.productoId);
-    const productos = await this.productoRepository.findBy({ id: In(productoIds) });
+  async checkRemaining(
+    since: Date,
+    until: Date,
+  ): Promise<{ productoId: number; stock: number; used: number; remaining: number }[]> {
+    console.log("since", since);
+    console.log("until", until);
     const usedAlquilerProductos = await this.alquilerProductoRepository
       .createQueryBuilder("alquilerProductos")
       .select("CAST(sum(alquilerProductos.cantidad) AS INTEGER)", "used")
       .addSelect("alquilerProductos.productoId", "productoId")
       .innerJoin("alquilerProductos.alquiler", "alquiler")
-      .where("alquiler.status = :status", { status: ALQUILER_STATUS.ACTIVE })
+      .where("alquiler.status IN (:...status)", {
+        status: [ALQUILER_STATUS.ACTIVE, ALQUILER_STATUS.BUDGETED],
+      })
+      .andWhere(
+        `((alquiler.fechaInicio BETWEEN :since AND :until)
+          OR (alquiler.fechaFin BETWEEN :since AND :until) 
+          OR (:since BETWEEN alquiler.fechaInicio AND alquiler.fechaFin) 
+          OR (:until BETWEEN alquiler.fechaInicio AND alquiler.fechaFin))`,
+        { since, until },
+      )
       .groupBy("alquilerProductos.productoId")
-      .having("alquilerProductos.productoId IN (:...productoIds)", { productoIds })
       .getRawMany<{ used: number; productoId: number }>();
 
-    const stocksProductos = productos.reduce<{ stock: number; productoId: number }[]>((acc, p) => {
-      acc.push({ productoId: p.id, stock: p.totales });
-      return acc;
-    }, []);
+    const productos = await this.productoRepository.find();
 
-    const requestedHigherThanStock = alquilerProductos.filter(ap => {
-      const usedProducto = usedAlquilerProductos.find(uap => uap.productoId === ap.productoId);
-      const usedQty = usedProducto ? usedProducto.used : 0;
-      const stock = stocksProductos.find(ps => ps.productoId === ap.productoId)?.stock || 0;
+    return usedAlquilerProductos.map(sp => {
+      const producto = productos.find(p => p.id === sp.productoId);
 
-      return usedQty + ap.cantidad > stock;
+      return {
+        productoId: sp.productoId,
+        stock: producto ? producto.totales : 0,
+        used: sp.used,
+        remaining: producto ? producto.totales - sp.used : 0,
+      };
     });
-
-    if (requestedHigherThanStock.length > 0) {
-      const error: UsedProductoError[] = requestedHigherThanStock.map(ap => {
-        const usedProducto = usedAlquilerProductos.find(uap => uap.productoId === ap.productoId);
-        const usedQty = usedProducto ? usedProducto.used : 0;
-        const stock = stocksProductos.find(ps => ps.productoId === ap.productoId)?.stock || 0;
-
-        return {
-          productoId: ap.productoId,
-          used: usedQty,
-          stock,
-          requested: ap.cantidad,
-        };
-      });
-
-      throw new ProductoHigherThanAvailableError(error);
-    }
   }
 
   async createAlquilerProductos(

@@ -10,8 +10,8 @@ import {
 export class AlquilerProductoService {
   constructor(private readonly alquilerProductoAdapter: AlquilerProductoAdapter) {}
 
-  async checkAlquilerProductsAvailability(ap: AlquilerProductoCreate[]) {
-    return await this.alquilerProductoAdapter.checkAlquilerProductosAvailability(ap);
+  async checkRemaining(since: Date, until: Date) {
+    return await this.alquilerProductoAdapter.checkRemaining(since, until);
   }
 
   async createMany(alquilerProductos: AlquilerProductoCreate[], alquilerId: number) {

@@ -65,3 +65,5 @@ db-data
 *.jpg
 
 B*.txt
+
+pgdata/

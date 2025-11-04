@@ -16,6 +16,6 @@ export const DatabaseModule: DynamicModule = TypeOrmModule.forRootAsync({
     synchronize: true,
     retryAttempts: 3,
     retryDelay: 3000,
-    logging: true,
+    logging: false,
   }),
 });

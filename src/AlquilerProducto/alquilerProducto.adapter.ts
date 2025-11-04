@@ -79,14 +79,14 @@ export class AlquilerProductoAdapter {
 
     const productos = await this.productoRepository.find();
 
-    return usedAlquilerProductos.map(sp => {
-      const producto = productos.find(p => p.id === sp.productoId);
-
+    return productos.map(p => {
+      const ap = usedAlquilerProductos.find(sp => sp.productoId === p.id);
+      const used = ap ? ap.used : 0;
       return {
-        productoId: sp.productoId,
-        stock: producto ? producto.totales : 0,
-        used: sp.used,
-        remaining: producto ? producto.totales - sp.used : 0,
+        productoId: p.id,
+        stock: p.totales,
+        used: used,
+        remaining: p.totales - used,
       };
     });
   }

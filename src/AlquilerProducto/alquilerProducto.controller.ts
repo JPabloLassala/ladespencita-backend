@@ -16,7 +16,11 @@ export class AlquilerProductoController {
 
   @Get("/stock")
   async checkRemaining(@Query() query: CheckRemainingDto) {
-    return await this.alquilerProductoService.checkRemaining(query.since, query.until);
+    return await this.alquilerProductoService.checkRemaining(
+      query.since,
+      query.until,
+      query.alquilerId,
+    );
   }
 
   @Get("/:alquilerId")

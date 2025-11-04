@@ -52,6 +52,7 @@ export class AlquilerProductoAdapter {
   async checkRemaining(
     since: Date,
     until: Date,
+    alquilerId?: number,
   ): Promise<{ productoId: number; stock: number; used: number; remaining: number }[]> {
     const usedAlquilerProductos = await this.alquilerProductoRepository
       .createQueryBuilder("alquilerProductos")
@@ -61,6 +62,7 @@ export class AlquilerProductoAdapter {
       .where("alquiler.status IN (:...status)", {
         status: [ALQUILER_STATUS.ACTIVE, ALQUILER_STATUS.BUDGETED],
       })
+      .andWhere(alquilerId ? "alquiler.id != :alquilerId" : "1=1", { alquilerId })
       .andWhere(
         `((alquiler.fechaInicio BETWEEN :since AND :until)
           OR (alquiler.fechaFin BETWEEN :since AND :until) 

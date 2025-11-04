@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { AlquilerProductoEntity } from "./alquilerProducto.entity";
-import { IsDate } from "class-validator";
+import { IsDate, IsNotEmpty, IsNumber, IsOptional, IsPositive } from "class-validator";
 
 export type AlquilerProductoCreateDTO = Omit<
   AlquilerProductoEntity,
@@ -20,4 +20,10 @@ export class CheckRemainingDto {
   @Type(() => Date)
   @IsDate()
   until: Date;
+
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  alquilerId?: number;
 }

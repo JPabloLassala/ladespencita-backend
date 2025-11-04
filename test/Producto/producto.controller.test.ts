@@ -1,5 +1,5 @@
 import { Test } from "@nestjs/testing";
-import { Producto, ProductoController, ProductoRepository } from "src/Producto";
+import { ProductoEntity, ProductoController, ProductoAdapter } from "src/Producto";
 import { ModuleMocker, MockFunctionMetadata } from "jest-mock";
 import { createRandomProducto } from "test/Factory/producto.factory";
 
@@ -7,8 +7,8 @@ const moduleMocker = new ModuleMocker(global);
 
 describe("ProductoController", () => {
   let productoController: ProductoController;
-  let productos: Producto[];
-  let producto: Producto;
+  let productos: ProductoEntity[];
+  let producto: ProductoEntity;
 
   beforeAll(() => {
     productos = new Array(10).fill(0).map(() => createRandomProducto());
@@ -20,12 +20,12 @@ describe("ProductoController", () => {
       controllers: [ProductoController],
     })
       .useMocker(token => {
-        if (token === ProductoRepository) {
+        if (token === ProductoAdapter) {
           return {
             getAll: jest.fn().mockResolvedValue(productos),
             getOne: jest.fn().mockResolvedValue(producto),
             getPage: jest.fn().mockResolvedValue({ productos: productos, page: 1, total: 10 }),
-            updateOne: jest.fn((partialProducto: Partial<Producto>) => {
+            updateOne: jest.fn((partialProducto: Partial<ProductoEntity>) => {
               const newProductoRequestDto = {
                 ...partialProducto,
               };
@@ -34,7 +34,7 @@ describe("ProductoController", () => {
             }),
             createOne: jest.fn().mockResolvedValue(producto),
             knex: jest.fn(),
-          } as unknown as ProductoRepository;
+          } as unknown as ProductoAdapter;
         }
         if (typeof token === "function") {
           const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;

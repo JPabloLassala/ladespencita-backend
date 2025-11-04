@@ -20,10 +20,6 @@ export class AlquilerProductoAdapter {
     private readonly alquilerProductoRepository: Repository<AlquilerProductoEntity>,
     @InjectRepository(ProductoEntity)
     private readonly productoRepository: Repository<ProductoEntity>,
-    @Inject(forwardRef(() => AlquilerAdapter))
-    private readonly alquilerAdapter: AlquilerAdapter,
-    @Inject(forwardRef(() => ProductoAdapter))
-    private readonly productoAdapter: ProductoAdapter,
   ) {}
 
   async getProductosFromAlquiler(id: number): Promise<AlquilerProductoEntity[]> {
@@ -57,8 +53,6 @@ export class AlquilerProductoAdapter {
     since: Date,
     until: Date,
   ): Promise<{ productoId: number; stock: number; used: number; remaining: number }[]> {
-    console.log("since", since);
-    console.log("until", until);
     const usedAlquilerProductos = await this.alquilerProductoRepository
       .createQueryBuilder("alquilerProductos")
       .select("CAST(sum(alquilerProductos.cantidad) AS INTEGER)", "used")

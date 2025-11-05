@@ -1,6 +1,4 @@
 import { Module } from "@nestjs/common";
-import { ServeStaticModule } from "@nestjs/serve-static";
-import { join } from "path";
 import { AlquilerModule } from "src/Alquiler";
 import { ProductoModule } from "src/Producto";
 import { AppService } from "./app.service";
@@ -26,9 +24,7 @@ const getPhotoModule = () => {
     ProductoModule,
     AlquilerProductoModule,
     ImageModule,
-    getPhotoModule(),
+    SheetsModule,
   ],
-  controllers: [],
-  providers: [AppService],
 })
 export class AppModule {}

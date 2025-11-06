@@ -6,7 +6,7 @@ import { AlquilerProductoModule } from "src/AlquilerProducto";
 import { AuthModule } from "src/Auth";
 import { ImageModule } from "src/Image";
 import { DatabaseModule } from "src/Database";
-import { SheetsModule } from "src/Sheet";
+import { SheetModule } from "src/Sheet";
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { SheetsModule } from "src/Sheet";
     ProductoModule,
     AlquilerProductoModule,
     ImageModule,
-    SheetsModule,
+    SheetModule,
   ],
 })
 export class AppModule {}

@@ -65,7 +65,7 @@ export class ProductoEntity {
   valorX12: number;
 
   @OneToOne(() => ImageEntity, p => p.producto)
-  image: ImageEntity;
+  image?: ImageEntity;
 
   @CreateDateColumn({ nullable: false, default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

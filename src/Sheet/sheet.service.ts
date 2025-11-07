@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import * as XLSX from "xlsx";
 import { readFileSync } from "fs";
 import { ProductoEntity, ProductoEntityCreate } from "src/Producto";
+import { get } from "http";
 
 @Injectable()
 export class SheetService {
@@ -45,21 +46,33 @@ export class SheetService {
 
       return acc;
     }, new Map<number, any>());
-    // console.log("producto", rows2.get(5));
-    // console.log("producto", rows2.get(6));
 
-    const productos: any[] = Array.from(rows2).map(([, row]) => {
-      return Object.entries(row).reduce((acc, [letter, value]: [string, any]) => {
-        const key = columnV.get(letter);
-        if (!key) return acc;
-        const keyF = columnF.get(letter);
+    const getProductoFromRow: (row: any) => ProductoEntityCreate = row => {
+      const getValueInt = (cell: XLSX.CellObject) => parseInt(cell?.v as string);
+      const getValue = (cell: XLSX.CellObject) => cell?.v as string;
+      if (getValue(row?.B) === "Arveja lata") {
+        console.log("Found Arveja lata:", row);
+      }
+      return {
+        nombre: getValue(row?.B),
+        unidadesMetroLineal: getValueInt(row?.C),
+        medidasAltura: getValueInt(row?.D),
+        totales: getValueInt(row?.F),
+        costoProducto: getValueInt(row?.J),
+        costoGrafica: getValueInt(row?.K),
+        costoDiseno: getValueInt(row?.L),
+        costoTotal: getValueInt(row?.J) + getValueInt(row?.K) + getValueInt(row?.L),
+        valorUnitarioGarantia: getValueInt(row?.N),
+        valorUnitarioAlquiler: getValueInt(row?.T),
+        valorX1: getValueInt(row?.N) * 0.5,
+        valorX3: getValueInt(row?.N) * 0.45,
+        valorX6: getValueInt(row?.N) * 0.35,
+        valorX12: getValueInt(row?.N) * 0.3,
+      };
+    };
+    const productos: ProductoEntityCreate[] = Array.from(rows2.values()).map(getProductoFromRow);
+    // console.log("productos", productos);
 
-        acc[key] = (value as XLSX.CellObject)?.v;
-        return acc;
-      }, {});
-    });
-    console.log("productoData", productos);
-
-    return { asda: "asda" };
+    return { productos };
   }
 }

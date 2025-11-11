@@ -81,14 +81,21 @@ export class ImageAdapter {
     imageNumber: number,
   ): Promise<{ file: string }> {
     const extension = file.originalname.split(".").pop();
-    await this.s3.send(
-      new PutObjectCommand({
-        Bucket: process.env.BACKBLAZE_BUCKET,
-        Key: `${productoId}/${imageNumber}.${extension}`,
-        ContentType: file.mimetype,
-        Body: file.buffer,
-      }),
-    );
+    try {
+      console.log("file.buffer", file.buffer);
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.BACKBLAZE_BUCKET,
+          Key: `${productoId}/${imageNumber}.${extension}`,
+          ContentType: file.mimetype,
+          ContentLength: file.size,
+          Body: file.buffer,
+        }),
+      );
+    } catch (error) {
+      console.error("Error uploading file to Backblaze:", error);
+      throw error;
+    }
 
     return {
       file: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${productoId}/${imageNumber}.${extension}`,

@@ -70,7 +70,7 @@ export class ProductoController {
         await this.imageService.deleteManyFromProducto(id);
         await this.imageService.createOne(file, +id);
       }
-      return await this.productoAdapter.updateOne(updateProductDTO);
+      return await this.productoAdapter.updateOne(updateProductDTO.body);
     } catch (error) {
       throw new HttpException(
         { status: HttpStatus.NOT_MODIFIED, error: "Internal Server Error" },

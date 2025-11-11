@@ -19,4 +19,17 @@ export class ProductoCreateDTO {
   body: ProductoDTO;
 }
 
-export type ProductoUpdateDTO = Partial<ProductoDTO>;
+export class ProductoUpdateDTO {
+  file?: Express.Multer.File;
+
+  @IsObject({ message: "body must be an object" })
+  @Transform(({ value }) => {
+    if (typeof value !== "string") return value;
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
+  })
+  body: Partial<ProductoDTO>;
+}

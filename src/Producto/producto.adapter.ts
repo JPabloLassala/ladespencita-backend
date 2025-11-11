@@ -30,12 +30,7 @@ export class ProductoAdapter {
   }
 
   async updateOne(partialProducto: Partial<ProductoEntity>): Promise<ProductoEntity> {
-    await this.productoRepository.update(
-      { id: partialProducto.id },
-      {
-        ...partialProducto,
-      },
-    );
+    await this.productoRepository.update({ id: partialProducto.id }, { ...partialProducto });
 
     return await this.productoRepository.findOne({
       where: { id: partialProducto.id },

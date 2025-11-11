@@ -8,12 +8,7 @@ async function bootstrap() {
   const httpAdapter = app.get(HttpAdapterHost);
 
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-    }),
-  );
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen(3000);
 
   console.log(`Application is running on: ${await app.getUrl()}`);

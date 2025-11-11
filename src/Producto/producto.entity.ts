@@ -1,3 +1,5 @@
+import { Type } from "class-transformer";
+import { IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 import { ImageEntity } from "src/Image";
 import {
   Column,
@@ -14,63 +16,103 @@ export class ProductoEntity {
   id: number;
 
   @Column()
+  @IsString()
   nombre: string;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   unidadesMetroLineal: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   totales: number;
 
-  @Column()
+  @Column({ nullable: true })
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
   medidasAltura: number;
 
-  @Column()
+  @Column({ nullable: true })
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
   medidasAncho?: number;
 
-  @Column()
+  @Column({ nullable: true })
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
   medidasProfundidad?: number;
 
-  @Column()
+  @Column({ nullable: true })
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
   medidasDiametro?: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   costoProducto: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   costoGrafica: number;
 
   @Column()
-  costoDiseno: number;
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  costoDiseno?: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   costoTotal: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   valorUnitarioGarantia: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   valorUnitarioAlquiler: number;
 
   @Column()
-  valorX1: number;
+  @IsNumber()
+  @IsPositive()
+  valorX1?: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   valorX3: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   valorX6: number;
 
   @Column()
+  @IsNumber()
+  @IsPositive()
   valorX12: number;
 
   @OneToOne(() => ImageEntity, p => p.producto)
   image?: ImageEntity;
 
   @CreateDateColumn({ nullable: false, default: () => "CURRENT_TIMESTAMP" })
+  @Type(() => Date)
   createdAt: Date;
 
   @UpdateDateColumn({ nullable: true, default: () => "CURRENT_TIMESTAMP" })
+  @Type(() => Date)
   updatedAt?: Date;
 }
 

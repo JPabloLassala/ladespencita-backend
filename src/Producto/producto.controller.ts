@@ -84,10 +84,10 @@ export class ProductoController {
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(FileInterceptor("file"))
   async create(
-    @Body() createProductoDTO: ProductoCreateDTO,
+    @Body() body: ProductoCreateDTO,
     @UploadedFile("file") file: Express.Multer.File,
   ): Promise<ProductoEntity> {
-    const tmpProducto = await this.productoService.createOne(createProductoDTO);
+    const tmpProducto = await this.productoService.createOne(body.body);
 
     await this.imageService.createOne(file, tmpProducto.id);
     return await this.productoAdapter.getOne(tmpProducto.id.toString());

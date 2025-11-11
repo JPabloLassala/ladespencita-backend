@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { ProductoEntity } from "./producto.entity";
 import { IsObject } from "class-validator";
 

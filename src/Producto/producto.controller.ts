@@ -65,7 +65,6 @@ export class ProductoController {
     @Param("id") id: number,
   ): Promise<ProductoEntity> {
     try {
-      console.log(file);
       if (file) {
         await this.imageService.deleteManyFromProducto(id);
         await this.imageService.createOne(file, +id);
@@ -87,14 +86,13 @@ export class ProductoController {
     @Body() body: ProductoCreateDTO,
     @UploadedFile("file") file: Express.Multer.File,
   ): Promise<ProductoEntity> {
-    const tmpProducto = await this.productoService.createOne(body.body);
+    const tmpProducto = await this.productoService.createOne(body.body, file);
 
-    await this.imageService.createOne(file, tmpProducto.id);
     return await this.productoAdapter.getOne(tmpProducto.id.toString());
   }
 
   @Delete(":id")
   async deleteOne(@Param("id") id: number): Promise<void> {
-    await this.productoAdapter.deleteOne(id);
+    return await this.productoService.deleteOne(id);
   }
 }

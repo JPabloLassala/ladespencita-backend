@@ -32,6 +32,12 @@ export class AlquilerAdapter {
     });
   }
 
+  async getAlquileresWithProductoId(productoId: number): Promise<AlquilerEntity[]> {
+    return await this.alquilerRepository.find({
+      where: { productos: { productoId } },
+    });
+  }
+
   async getAlquiler(id: number): Promise<AlquilerEntity> {
     return await this.alquilerRepository.findOneBy({ id });
   }

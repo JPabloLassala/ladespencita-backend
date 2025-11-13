@@ -63,6 +63,9 @@ export class ProductoService {
     if (alquileres.length > 0) {
       throw new Error("Cannot delete producto that is used in alquileres");
     }
-    await this.imageService.deleteManyFromProducto(id);
+    await Promise.all([
+      this.imageService.deleteManyFromProducto(id),
+      this.productoAdapter.deleteOne(id),
+    ]);
   }
 }

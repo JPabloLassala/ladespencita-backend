@@ -11,6 +11,7 @@ import { S3 } from "src/constants";
 import { Repository } from "typeorm";
 import { ImageEntity } from "./image.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import sharp from "sharp";
 
 @Injectable()
 export class ImageAdapter {
@@ -81,15 +82,21 @@ export class ImageAdapter {
     imageNumber: number,
   ): Promise<{ file: string }> {
     const extension = file.originalname.split(".").pop();
+    const jpegBuffer = await sharp(file.buffer)
+      .rotate() // auto-orient based on EXIF
+      .jpeg({
+        quality: 80, // tweak between 60–85 for size vs quality
+        mozjpeg: true,
+      })
+      .toBuffer();
     try {
-      console.log("file.buffer", file.buffer);
       await this.s3.send(
         new PutObjectCommand({
           Bucket: process.env.BACKBLAZE_BUCKET,
           Key: `${productoId}/${imageNumber}.${extension}`,
-          ContentType: file.mimetype,
-          ContentLength: file.size,
-          Body: file.buffer,
+          ContentType: "image/jpeg",
+          ContentLength: jpegBuffer.length,
+          Body: jpegBuffer,
         }),
       );
     } catch (error) {

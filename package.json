@@ -42,6 +42,7 @@
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "sharp": "^0.34.5",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.27",
     "webpack": "^5.94.0",

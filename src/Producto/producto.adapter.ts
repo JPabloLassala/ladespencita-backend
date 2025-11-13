@@ -23,9 +23,7 @@ export class ProductoAdapter {
   async getOne(id: string): Promise<ProductoEntity> {
     return await this.productoRepository.findOne({
       where: { id: +id },
-      relations: {
-        image: true,
-      },
+      relations: { image: true },
     });
   }
 

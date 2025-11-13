@@ -7,7 +7,7 @@ export const s3Provider: Provider = {
   useFactory: () => {
     const s3 = new S3Client({
       endpoint: "https://s3.us-west-004.backblazeb2.com",
-      region: "s3.us-west-004",
+      region: "us-west-004",
       credentials: {
         accessKeyId: process.env.BACKBLAZE_KEY_ID,
         secretAccessKey: process.env.BACKBLAZE_KEY,

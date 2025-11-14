@@ -2,9 +2,10 @@ import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { Dayjs } from "dayjs";
 import { AlquilerAdapter } from "src/Alquiler";
 import { ProductoAdapter } from "./producto.adapter";
-import { ProductoEntity, ProductoEntityCreate } from "./producto.entity";
+import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "./producto.entity";
 import { AlquilerProductoAdapter } from "src/AlquilerProducto";
 import { ImageService } from "src/Image/image.service";
+import { ImageEntity } from "src/Image";
 
 @Injectable()
 export class ProductoService {
@@ -43,18 +44,31 @@ export class ProductoService {
     return productosInStock;
   }
 
-  async updateOne(partialProducto: Partial<ProductoEntity>): Promise<ProductoEntity> {
-    return this.productoAdapter.updateOne(partialProducto);
-  }
-
   async createOne(
     partialProducto: ProductoEntityCreate,
     file: Express.Multer.File,
   ): Promise<ProductoEntity> {
     const result = await this.productoAdapter.createOne(partialProducto);
-    await this.imageService.createOne(file, result.id);
+    const image = await this.imageService.createOne(file, result.id);
 
-    return result;
+    return { ...result, image };
+  }
+
+  async updateOne(
+    partialProducto: ProductoEntityUpdate,
+    file: Express.Multer.File,
+  ): Promise<ProductoEntity> {
+    let image: ImageEntity;
+
+    if (file) {
+      [, image] = await Promise.all([
+        this.imageService.deleteManyFromProducto(partialProducto.id),
+        await this.imageService.createOne(file, partialProducto.id),
+      ]);
+    }
+    const updated = this.productoAdapter.updateOne(partialProducto);
+
+    return { ...updated, image };
   }
 
   async deleteOne(id: number): Promise<void> {
@@ -63,9 +77,7 @@ export class ProductoService {
     if (alquileres.length > 0) {
       throw new Error("Cannot delete producto that is used in alquileres");
     }
-    await Promise.all([
-      this.imageService.deleteManyFromProducto(id),
-      this.productoAdapter.deleteOne(id),
-    ]);
+    await this.imageService.deleteManyFromProducto(id);
+    await this.productoAdapter.deleteOne(id);
   }
 }

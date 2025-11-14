@@ -117,4 +117,4 @@ export class ProductoEntity {
 }
 
 export type ProductoEntityCreate = Omit<ProductoEntity, "id" | "createdAt" | "updatedAt" | "image">;
-export type ProductoEntityUpdate = Partial<ProductoEntityCreate>;
+export type ProductoEntityUpdate = Partial<ProductoEntityCreate> & { id: number };

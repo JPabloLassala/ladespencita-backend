@@ -44,7 +44,7 @@ export class ProductoController {
   }
 
   @Get(":id")
-  async getOne(@Param("id") id: string): Promise<ProductoEntity> {
+  async getOne(@Param("id") id: number): Promise<ProductoEntity> {
     try {
       return await this.productoAdapter.getOne(id);
     } catch (error) {
@@ -61,15 +61,11 @@ export class ProductoController {
   @UseInterceptors(FileInterceptor("file"))
   async updateOne(
     @Body() updateProductDTO: ProductoUpdateDTO,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile("file") file: Express.Multer.File,
     @Param("id") id: number,
   ): Promise<ProductoEntity> {
     try {
-      if (file) {
-        await this.imageService.deleteManyFromProducto(id);
-        await this.imageService.createOne(file, +id);
-      }
-      return await this.productoAdapter.updateOne(updateProductDTO.body);
+      return await this.productoService.updateOne(updateProductDTO.body, file);
     } catch (error) {
       throw new HttpException(
         { status: HttpStatus.NOT_MODIFIED, error: "Internal Server Error" },
@@ -86,9 +82,7 @@ export class ProductoController {
     @Body() body: ProductoCreateDTO,
     @UploadedFile("file") file: Express.Multer.File,
   ): Promise<ProductoEntity> {
-    const tmpProducto = await this.productoService.createOne(body.body, file);
-
-    return await this.productoAdapter.getOne(tmpProducto.id.toString());
+    return await this.productoService.createOne(body.body, file);
   }
 
   @Delete(":id")

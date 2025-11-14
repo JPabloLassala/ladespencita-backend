@@ -20,22 +20,12 @@ export class ProductoAdapter {
     return productos;
   }
 
-  async getOne(id: string): Promise<ProductoEntity> {
-    return await this.productoRepository.findOne({
-      where: { id: +id },
-      relations: { image: true },
-    });
+  async getOne(id: number): Promise<ProductoEntity> {
+    return await this.productoRepository.findOne({ where: { id }, relations: { image: true } });
   }
 
   async updateOne(partialProducto: Partial<ProductoEntity>): Promise<ProductoEntity> {
-    await this.productoRepository.update({ id: partialProducto.id }, { ...partialProducto });
-
-    return await this.productoRepository.findOne({
-      where: { id: partialProducto.id },
-      relations: {
-        image: true,
-      },
-    });
+    return await this.productoRepository.save({ id: partialProducto.id, ...partialProducto });
   }
 
   async createOne(partialProducto: ProductoEntityCreate): Promise<ProductoEntity> {

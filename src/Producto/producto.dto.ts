@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { ProductoEntity } from "./producto.entity";
+import { ProductoEntity, ProductoEntityUpdate } from "./producto.entity";
 import { IsObject } from "class-validator";
 
 export type ProductoDTO = Omit<ProductoEntity, "id" | "image" | "createdAt" | "updatedAt">;
@@ -31,5 +31,5 @@ export class ProductoUpdateDTO {
       return value;
     }
   })
-  body: Partial<ProductoDTO>;
+  body: ProductoEntityUpdate;
 }

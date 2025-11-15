@@ -12,6 +12,7 @@ import { Repository } from "typeorm";
 import { ImageEntity } from "./image.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import sharp from "sharp";
+import dayjs from "dayjs";
 
 @Injectable()
 export class ImageAdapter {
@@ -21,12 +22,7 @@ export class ImageAdapter {
   ) {}
 
   async createOne(file: Express.Multer.File, productoId: number): Promise<ImageEntity> {
-    const imageNumber = await this.imageRepository.count({
-      where: {
-        productoId: productoId,
-      },
-    });
-    const uploadedFile = await this.uploadFile(file, productoId, imageNumber);
+    const uploadedFile = await this.uploadFile(file, productoId);
     const createdImage = await this.imageRepository.save({
       productoId: +productoId,
       url: uploadedFile.file,
@@ -79,8 +75,8 @@ export class ImageAdapter {
   private async uploadFile(
     file: Express.Multer.File,
     productoId: number,
-    imageNumber: number,
   ): Promise<{ file: string }> {
+    const timeStamp = dayjs().format("YYYYMMDDHHmmssSSS");
     const extension = file.originalname.split(".").pop();
     const jpegBuffer = await sharp(file.buffer)
       .rotate() // auto-orient based on EXIF
@@ -93,7 +89,7 @@ export class ImageAdapter {
       await this.s3.send(
         new PutObjectCommand({
           Bucket: process.env.BACKBLAZE_BUCKET,
-          Key: `${productoId}/${imageNumber}.${extension}`,
+          Key: `${productoId}/${timeStamp}-${productoId}.${extension}`,
           ContentType: "image/jpeg",
           ContentLength: jpegBuffer.length,
           Body: jpegBuffer,

@@ -60,15 +60,14 @@ export class ProductoService {
   ): Promise<ProductoEntity> {
     let image: ImageEntity;
 
+    const updated = await this.productoAdapter.updateOne(partialProducto);
     if (file) {
-      [, image] = await Promise.all([
-        this.imageService.deleteManyFromProducto(partialProducto.id),
-        await this.imageService.createOne(file, partialProducto.id),
-      ]);
+      await this.imageService.deleteManyFromProducto(partialProducto.id);
+      image = await this.imageService.createOne(file, partialProducto.id);
+      updated.image = image;
     }
-    const updated = this.productoAdapter.updateOne(partialProducto);
 
-    return { ...updated, image };
+    return updated;
   }
 
   async deleteOne(id: number): Promise<void> {

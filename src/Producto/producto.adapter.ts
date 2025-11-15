@@ -24,8 +24,8 @@ export class ProductoAdapter {
     return await this.productoRepository.findOne({ where: { id }, relations: { image: true } });
   }
 
-  async updateOne(partialProducto: Partial<ProductoEntity>): Promise<ProductoEntity> {
-    return await this.productoRepository.save({ id: partialProducto.id, ...partialProducto });
+  async updateOne(partial: Partial<ProductoEntity>): Promise<ProductoEntity> {
+    return await this.productoRepository.save({ id: partial.id, ...partial });
   }
 
   async createOne(partialProducto: ProductoEntityCreate): Promise<ProductoEntity> {

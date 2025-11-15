@@ -101,7 +101,7 @@ export class ImageAdapter {
     }
 
     return {
-      file: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${productoId}/${imageNumber}.${extension}`,
+      file: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${productoId}/${timeStamp}-${productoId}.${extension}`,
     };
   }
 

@@ -12,9 +12,8 @@ export class ProductoAdapter {
 
   async getAll(): Promise<ProductoEntity[]> {
     const productos = await this.productoRepository.find({
-      relations: {
-        image: true,
-      },
+      relations: { image: true },
+      order: { nombre: "ASC" },
     });
 
     return productos;

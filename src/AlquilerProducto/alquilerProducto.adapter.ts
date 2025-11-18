@@ -23,7 +23,10 @@ export class AlquilerProductoAdapter {
   ) {}
 
   async getProductosFromAlquiler(id: number): Promise<AlquilerProductoEntity[]> {
-    return await this.alquilerProductoRepository.findBy({ alquilerId: id });
+    return await this.alquilerProductoRepository.find({
+      where: { alquilerId: id },
+      order: { producto: { nombre: "ASC" } },
+    });
   }
 
   async getRemainingStock(): Promise<AlquilerProductoRemaining[]> {

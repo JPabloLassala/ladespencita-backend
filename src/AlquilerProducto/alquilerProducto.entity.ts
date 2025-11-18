@@ -31,6 +31,8 @@ export class AlquilerProductoEntity {
   costoTotal: number;
   @Column()
   cantidad: number;
+  @Column({ nullable: false, default: 0 })
+  precioFinal: number;
   @Column()
   valorUnitarioGarantia: number;
   @Column()

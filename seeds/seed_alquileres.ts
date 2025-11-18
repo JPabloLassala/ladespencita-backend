@@ -35,6 +35,7 @@ async function seed(dataSource: DataSource): Promise<void> {
         valorX3: valorx1 * 3,
         valorX6: valorx1 * 6,
         valorX12: valorx1 * 12,
+        precioFinal: valorx1,
         costoProducto: productoToParse.costoProducto,
         costoGrafica: productoToParse.costoGrafica,
         costoDiseno: productoToParse.costoDiseno,

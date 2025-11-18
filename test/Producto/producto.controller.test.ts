@@ -55,7 +55,7 @@ describe("ProductoController", () => {
 
   describe("getOne", () => {
     it("should return a producto", async () => {
-      expect(await productoController.getOne("1")).toEqual(producto);
+      expect(await productoController.getOne(1)).toEqual(producto);
     });
   });
 });

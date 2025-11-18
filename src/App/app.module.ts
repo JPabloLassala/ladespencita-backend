@@ -17,6 +17,7 @@ import { SheetModule } from "src/Sheet";
     ProductoModule,
     AlquilerProductoModule,
     ImageModule,
+    SheetModule,
   ],
 })
 export class AppModule {}

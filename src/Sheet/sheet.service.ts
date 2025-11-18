@@ -1,78 +1,311 @@
 import { Injectable } from "@nestjs/common";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import * as XLSX from "xlsx";
-import { readFileSync } from "fs";
 import { ProductoEntity, ProductoEntityCreate } from "src/Producto";
-import { get } from "http";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import JSZip from "jszip";
+import { XMLParser } from "fast-xml-parser";
+import sharp from "sharp";
+import dayjs from "dayjs";
+import { ImageEntity } from "src/Image";
+import Dinero from "dinero.js";
 
 @Injectable()
 export class SheetService {
-  async parseExcel(filePath: string): Promise<any> {
-    const columnV = new Map<string, keyof ProductoEntityCreate>([
-      ["B", "nombre"],
-      ["C", "unidadesMetroLineal"],
-      ["D", "medidasAltura"],
-      ["F", "totales"],
-      ["J", "costoProducto"],
-      ["K", "costoGrafica"],
-      ["L", "costoDiseno"],
-      ["T", "valorUnitarioAlquiler"],
-    ]);
-    const columnF = new Map<string, keyof ProductoEntityCreate>([
-      ["B", "nombre"],
-      ["C", "unidadesMetroLineal"],
-      ["D", "medidasAltura"],
-      ["F", "totales"],
-      ["J", "costoProducto"],
-      ["K", "costoGrafica"],
-      ["L", "costoDiseno"],
-      ["M", "costoTotal"],
-      ["N", "valorUnitarioGarantia"],
-      ["T", "valorUnitarioAlquiler"],
-    ]);
+  private readonly s3: S3Client;
 
-    const buffer = readFileSync(filePath);
+  constructor(
+    @InjectRepository(ProductoEntity) private productoRepository: Repository<ProductoEntity>,
+  ) {
+    this.s3 = new S3Client({
+      endpoint: "https://s3.us-west-004.backblazeb2.com",
+      region: "us-west-004",
+      credentials: {
+        accessKeyId: process.env.BACKBLAZE_KEY_ID,
+        secretAccessKey: process.env.BACKBLAZE_KEY,
+      },
+      forcePathStyle: true,
+    });
+  }
+
+  columnToLetter(col: number) {
+    let s = "";
+    while (col >= 0) {
+      s = String.fromCharCode((col % 26) + 65) + s;
+      col = Math.floor(col / 26) - 1;
+    }
+    return s;
+  }
+
+  async parseExcel(file: Express.Multer.File): Promise<any> {
+    const buffer = file.buffer;
+    const imagesWithNames = await this.extractJpegImagesWithNames(
+      file.buffer,
+      "INVENTARIOPLANTILLA PRESUPUESTO",
+    );
     const workbook = XLSX.read(buffer, { type: "buffer" });
     const sheetName = "INVENTARIOPLANTILLA PRESUPUESTO";
     const sheet = workbook.Sheets[sheetName];
-    const rows2 = Object.entries(sheet).reduce((acc, [key, value]) => {
-      const number = parseInt(key.replace(/[^0-9]/g, ""), 10);
-      const col = key.replace(/[0-9]/g, "");
-      if (number < 5) return acc;
-      const row = acc.get(number) || {};
-      if (!row) {
-        acc.set(number, []);
-      }
-      acc.set(number, { ...row, [col]: value });
 
-      return acc;
-    }, new Map<number, any>());
+    const createdProductos: ProductoEntity[] = [];
+    const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1");
 
-    const getProductoFromRow: (row: any) => ProductoEntityCreate = row => {
-      const getValueInt = (cell: XLSX.CellObject) => parseInt(cell?.v as string);
-      const getValue = (cell: XLSX.CellObject) => cell?.v as string;
-      if (getValue(row?.B) === "Arveja lata") {
-        console.log("Found Arveja lata:", row);
-      }
-      return {
-        nombre: getValue(row?.B),
-        unidadesMetroLineal: getValueInt(row?.C),
-        medidasAltura: getValueInt(row?.D),
-        totales: getValueInt(row?.F),
-        costoProducto: getValueInt(row?.J),
-        costoGrafica: getValueInt(row?.K),
-        costoDiseno: getValueInt(row?.L),
-        costoTotal: getValueInt(row?.J) + getValueInt(row?.K) + getValueInt(row?.L),
-        valorUnitarioGarantia: getValueInt(row?.N),
-        valorUnitarioAlquiler: getValueInt(row?.T),
-        valorX1: getValueInt(row?.N) * 0.5,
-        valorX3: getValueInt(row?.N) * 0.45,
-        valorX6: getValueInt(row?.N) * 0.35,
-        valorX12: getValueInt(row?.N) * 0.3,
+    for (let rowIndex = 4; rowIndex <= range.e.r; rowIndex++) {
+      const excelRow = rowIndex + 1; // 1-based row number in the sheet
+      const nombre = this.getCellValue(sheet, `B${excelRow}`);
+
+      if (!nombre || `${nombre}`.trim().toLowerCase() === "producto") continue;
+
+      const costoProducto = this.toNumber(this.getCellValue(sheet, `J${excelRow}`));
+      if (costoProducto === null) continue;
+
+      const producto: ProductoEntityCreate = {
+        nombre: `${nombre}`.trim(),
+        unidadesMetroLineal: this.toNumber(this.getCellValue(sheet, `C${excelRow}`)) ?? 0,
+        medidasAltura: this.toMillimeters(this.getCellValue(sheet, `D${excelRow}`)),
+        medidasAncho: undefined,
+        medidasProfundidad: undefined,
+        medidasDiametro: undefined,
+        totales:
+          this.toNumber(this.getCellValue(sheet, `F${excelRow}`)) ??
+          this.toNumber(this.getCellValue(sheet, `E${excelRow}`)) ??
+          0,
+        costoProducto,
+        costoGrafica: this.toNumber(this.getCellValue(sheet, `K${excelRow}`)) ?? 0,
+        costoDiseno: this.toNumber(this.getCellValue(sheet, `L${excelRow}`)) ?? 0,
+        costoTotal: this.toNumber(this.getCellValue(sheet, `M${excelRow}`)) ?? 0,
+        valorUnitarioGarantia: this.toCents(this.getCellValue(sheet, `N${excelRow}`)) ?? 0,
+        valorUnitarioAlquiler: this.toCents(this.getCellValue(sheet, `T${excelRow}`)) ?? 0,
+        valorX1: this.toNumber(this.getCellValue(sheet, `O${excelRow}`)) ?? 0,
+        valorX3: this.toNumber(this.getCellValue(sheet, `P${excelRow}`)) ?? 0,
+        valorX6: this.toNumber(this.getCellValue(sheet, `Q${excelRow}`)) ?? 0,
+        valorX12: this.toNumber(this.getCellValue(sheet, `R${excelRow}`)) ?? 0,
       };
-    };
-    const productos: ProductoEntityCreate[] = Array.from(rows2.values()).map(getProductoFromRow);
-    // console.log("productos", productos);
 
-    return { productos };
+      // Avoid inserting empty rows
+      if (!producto.nombre) continue;
+
+      console.log("producto", producto);
+      const newProducto = await this.productoRepository.save(producto);
+
+      const imageForRow = imagesWithNames.find(
+        img => this.getRowFromCell(img.cell) === excelRow || img.name === producto.nombre,
+      );
+
+      if (imageForRow) {
+        const savedImage = await this.uploadCompressedImage(imageForRow, newProducto.id);
+        if (savedImage) {
+          newProducto.image = savedImage;
+        }
+      }
+
+      createdProductos.push(newProducto);
+    }
+
+    return { created: createdProductos.length, productos: createdProductos };
+  }
+
+  async extractJpegImagesWithNames(buffer: Buffer, sheetName = "INVENTARIOPLANTILLA PRESUPUESTO") {
+    const zip = await JSZip.loadAsync(new Uint8Array(buffer));
+
+    const xmlFile = zip.file("content.xml");
+    if (!xmlFile) throw new Error("content.xml not found");
+
+    const xml = await xmlFile.async("string");
+
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+      attributeNamePrefix: "",
+    });
+
+    const json = parser.parse(xml);
+    const spreadsheet = json["office:document-content"]?.["office:body"]?.["office:spreadsheet"];
+
+    let sheets = spreadsheet["table:table"];
+    if (!Array.isArray(sheets)) sheets = [sheets];
+
+    const sheet = sheets.find(s => s["table:name"] === sheetName);
+    if (!sheet) throw new Error(`Sheet "${sheetName}" not found`);
+
+    const rows = sheet["table:table-row"];
+    if (!rows) return [];
+
+    const results: Array<{
+      buffer: Buffer;
+      cell: string;
+      fileName: string;
+      name: string | null; // <-- THE NEW FIELD
+    }> = [];
+
+    let rowIndex = 0;
+
+    for (const row of rows) {
+      let cells = row["table:table-cell"];
+      if (!cells) {
+        rowIndex++;
+        continue;
+      }
+
+      if (!Array.isArray(cells)) cells = [cells];
+
+      let colIndex = 0;
+
+      for (const cell of cells) {
+        const repeat = Number(cell["table:number-columns-repeated"] || 1);
+
+        // IMAGE EXTRACTION
+        if (cell["draw:frame"]) {
+          const frames = Array.isArray(cell["draw:frame"])
+            ? cell["draw:frame"]
+            : [cell["draw:frame"]];
+
+          for (const frame of frames) {
+            const img = frame["draw:image"];
+            if (!img) continue;
+
+            const imgList = Array.isArray(img) ? img : [img];
+
+            for (const i of imgList) {
+              const href = i["xlink:href"];
+              if (!href) continue;
+
+              const lower = href.toLowerCase();
+              if (!lower.endsWith(".jpg") && !lower.endsWith(".jpeg")) continue;
+
+              const fixedPath = href.replace(/^\.?\//, "");
+              const imgFile = zip.file(fixedPath);
+              if (!imgFile) continue;
+
+              const buffer = await imgFile.async("nodebuffer");
+
+              // Compute cell location
+              const excelCol = this.columnToLetter(colIndex);
+              const excelRow = rowIndex + 1;
+              const cellRef = `${excelCol}${excelRow}`;
+
+              // --- NEW: Read the value in column B (colIndex 1) ---
+              let name: string | null = null;
+              const nameCell = cells[1]; // B column
+              if (nameCell) {
+                const textObj = nameCell["text:p"] ?? nameCell["office:value"] ?? null;
+
+                if (typeof textObj === "string") {
+                  name = textObj;
+                } else if (Array.isArray(textObj)) {
+                  name = textObj.join(" ");
+                }
+              }
+
+              results.push({
+                buffer,
+                cell: cellRef,
+                fileName: fixedPath.split("/").pop()!,
+                name,
+              });
+            }
+          }
+        }
+
+        colIndex += repeat;
+      }
+
+      rowIndex++;
+    }
+
+    return results;
+  }
+
+  private getCellValue(sheet: XLSX.WorkSheet, cell: string): any {
+    return sheet[cell]?.v;
+  }
+
+  private toNumber(value: any): number | null {
+    if (value === null || value === undefined || value === "") return null;
+    if (typeof value === "number") return value;
+    if (typeof value === "string") {
+      const cleaned = value.replace(",", ".").replace(/[^0-9.\-]/g, "");
+      if (!cleaned) return null;
+      const parsed = parseFloat(cleaned);
+      return Number.isNaN(parsed) ? null : parsed;
+    }
+    return null;
+  }
+
+  private getRowFromCell(cell: string): number | null {
+    const digits = cell.replace(/[^0-9]/g, "");
+    return digits ? parseInt(digits, 10) : null;
+  }
+
+  private toCents(value: any): number | null {
+    const parsed = this.toNumber(value);
+    if (parsed === null) return null;
+
+    return Dinero({
+      amount: Math.round(parsed * 100),
+      currency: "USD",
+    }).getAmount();
+  }
+
+  private toMillimeters(value: any): number | null {
+    if (value === null || value === undefined || value === "") return null;
+
+    let rawStr = "";
+    if (typeof value === "number") {
+      rawStr = String(value);
+    } else if (typeof value === "string") {
+      rawStr = value;
+    } else {
+      return null;
+    }
+
+    const lower = rawStr.toLowerCase();
+    const numericPart = lower.match(/-?\d+(?:[.,]\d+)?/);
+    if (!numericPart) return null;
+
+    const num = parseFloat(numericPart[0].replace(",", "."));
+
+    let factor = 10; // default assume centimeters
+    if (lower.includes("mm")) factor = 1;
+    else if (lower.includes("cm")) factor = 10;
+    else if (lower.includes("m")) factor = 1000;
+
+    return Math.round(num * factor);
+  }
+
+  private async uploadCompressedImage(
+    image: { buffer: Buffer; fileName: string },
+    productoId: number,
+  ): Promise<ImageEntity> {
+    const jpegBuffer = await sharp(image.buffer)
+      .rotate()
+      .jpeg({
+        quality: 80,
+        mozjpeg: true,
+      })
+      .toBuffer();
+
+    const extension = image.fileName.split(".").pop() || "jpg";
+    const timeStamp = dayjs().format("YYYYMMDDHHmmssSSS");
+    const key = `${productoId}/${timeStamp}-${productoId}.${extension}`;
+
+    await this.s3.send(
+      new PutObjectCommand({
+        Bucket: process.env.BACKBLAZE_BUCKET,
+        Key: key,
+        ContentType: "image/jpeg",
+        ContentLength: jpegBuffer.length,
+        Body: jpegBuffer,
+        CacheControl: "public, max-age=31536000",
+      }),
+    );
+
+    const imageRepository = this.productoRepository.manager.getRepository(ImageEntity);
+
+    return await imageRepository.save({
+      productoId,
+      url: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${key}`,
+      isMain: true,
+    });
   }
 }

@@ -1,16 +1,13 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { Dayjs } from "dayjs";
-import { ALQUILER_STATUS, AlquilerAdapter } from "src/Alquiler";
-import { HigherThanStockError } from "./alquilerProducto.errors";
+import { Injectable } from "@nestjs/common";
+import { ALQUILER_STATUS } from "src/Alquiler";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ProductoAdapter, ProductoEntity } from "src/Producto";
+import { ProductoEntity } from "src/Producto";
 import { In, Repository } from "typeorm";
 import {
   AlquilerProductoCreate,
   AlquilerProductoEntity,
   AlquilerProductoUpdate,
 } from "./alquilerProducto.entity";
-import { ProductoHigherThanAvailableError, UsedProductoError } from "src/Alquiler/alquiler.error";
 import { AlquilerProductoRemaining } from "./alquilerProducto.types";
 
 @Injectable()

@@ -67,3 +67,6 @@ db-data
 B*.txt
 
 pgdata/
+*.ods
+*.xslx
+*.xls

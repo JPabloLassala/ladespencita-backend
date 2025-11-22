@@ -19,13 +19,11 @@ export class SheetService {
     @InjectRepository(ProductoEntity) private productoRepository: Repository<ProductoEntity>,
   ) {
     this.s3 = new S3Client({
-      endpoint: "https://s3.us-west-004.backblazeb2.com",
-      region: "us-west-004",
+      region: process.env.AWS_REGION,
       credentials: {
-        accessKeyId: process.env.BACKBLAZE_KEY_ID,
-        secretAccessKey: process.env.BACKBLAZE_KEY,
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       },
-      forcePathStyle: true,
     });
   }
 
@@ -289,22 +287,26 @@ export class SheetService {
     const timeStamp = dayjs().format("YYYYMMDDHHmmssSSS");
     const key = `${productoId}/${timeStamp}-${productoId}.${extension}`;
 
-    await this.s3.send(
-      new PutObjectCommand({
-        Bucket: process.env.BACKBLAZE_BUCKET,
-        Key: key,
-        ContentType: "image/jpeg",
-        ContentLength: jpegBuffer.length,
-        Body: jpegBuffer,
-        CacheControl: "public, max-age=31536000",
-      }),
-    );
-
+    try {
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: key,
+          ContentType: "image/jpeg",
+          ContentLength: jpegBuffer.length,
+          Body: jpegBuffer,
+          CacheControl: "public, max-age=31536000",
+        }),
+      );
+    } catch (error) {
+      console.error("Error uploading image to S3:", error);
+      throw error;
+    }
     const imageRepository = this.productoRepository.manager.getRepository(ImageEntity);
 
     return await imageRepository.save({
       productoId,
-      url: `https://f004.backblazeb2.com/file/${process.env.BACKBLAZE_BUCKET}/${key}`,
+      url: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
       isMain: true,
     });
   }

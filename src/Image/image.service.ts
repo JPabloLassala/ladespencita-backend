@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ImageAdapter } from "./image.adapter";
 import { ImageEntity } from "./image.entity";
-
 @Injectable()
 export class ImageService {
   constructor(private readonly imageAdapter: ImageAdapter) {}

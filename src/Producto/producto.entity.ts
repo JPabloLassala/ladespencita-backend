@@ -5,7 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -104,8 +104,8 @@ export class ProductoEntity {
   @IsPositive()
   valorX12: number;
 
-  @OneToOne(() => ImageEntity, p => p.producto)
-  image?: ImageEntity;
+  @OneToMany(() => ImageEntity, p => p.producto)
+  images: ImageEntity[];
 
   @CreateDateColumn({ nullable: false, default: () => "CURRENT_TIMESTAMP" })
   @Type(() => Date)
@@ -116,5 +116,8 @@ export class ProductoEntity {
   updatedAt?: Date;
 }
 
-export type ProductoEntityCreate = Omit<ProductoEntity, "id" | "createdAt" | "updatedAt" | "image">;
+export type ProductoEntityCreate = Omit<
+  ProductoEntity,
+  "id" | "createdAt" | "updatedAt" | "images"
+>;
 export type ProductoEntityUpdate = Partial<ProductoEntityCreate> & { id: number };

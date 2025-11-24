@@ -12,7 +12,7 @@ export class ProductoAdapter {
 
   async getAll(): Promise<ProductoEntity[]> {
     const productos = await this.productoRepository.find({
-      relations: { image: true },
+      relations: { images: true },
       order: { nombre: "ASC" },
     });
 
@@ -20,7 +20,7 @@ export class ProductoAdapter {
   }
 
   async getOne(id: number): Promise<ProductoEntity> {
-    return await this.productoRepository.findOne({ where: { id }, relations: { image: true } });
+    return await this.productoRepository.findOne({ where: { id }, relations: { images: true } });
   }
 
   async updateOne(partial: Partial<ProductoEntity>): Promise<ProductoEntity> {

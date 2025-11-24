@@ -21,4 +21,5 @@ export const productos: ProductoEntityCreate[] = new Array(100).fill(0).map(() =
   valorX3: faker.number.int({ min: 0, max: 4500 }),
   valorX6: faker.number.int({ min: 0, max: 3500 }),
   valorX12: faker.number.int({ min: 0, max: 3000 }),
+  images: [],
 }));

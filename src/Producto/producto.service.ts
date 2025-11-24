@@ -49,9 +49,9 @@ export class ProductoService {
     file: Express.Multer.File,
   ): Promise<ProductoEntity> {
     const result = await this.productoAdapter.createOne(partialProducto);
-    const image = await this.imageService.createOne(file, result.id);
+    const images = await this.imageService.createOne(file, result.id);
 
-    return { ...result, image };
+    return { ...result, images: [images] };
   }
 
   async updateOne(
@@ -64,7 +64,7 @@ export class ProductoService {
     if (file) {
       await this.imageService.deleteManyFromProducto(partialProducto.id);
       image = await this.imageService.createOne(file, partialProducto.id);
-      updated.image = image;
+      updated.images = [image];
     }
 
     return updated;

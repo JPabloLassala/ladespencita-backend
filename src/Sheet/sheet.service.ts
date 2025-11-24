@@ -7,9 +7,9 @@ import { Repository } from "typeorm";
 import JSZip from "jszip";
 import { XMLParser } from "fast-xml-parser";
 import sharp from "sharp";
-import dayjs from "dayjs";
 import { ImageEntity } from "src/Image";
 import Dinero from "dinero.js";
+import { IMAGE_FORMAT, IMAGE_TYPE } from "src/constants";
 
 @Injectable()
 export class SheetService {
@@ -92,9 +92,9 @@ export class SheetService {
       );
 
       if (imageForRow) {
-        const savedImage = await this.uploadCompressedImage(imageForRow, newProducto.id);
-        if (savedImage) {
-          newProducto.image = savedImage;
+        const savedImages = await this.uploadCompressedImage(imageForRow, newProducto.id);
+        if (savedImages) {
+          newProducto.images = savedImages;
         }
       }
 
@@ -274,27 +274,43 @@ export class SheetService {
   private async uploadCompressedImage(
     image: { buffer: Buffer; fileName: string },
     productoId: number,
-  ): Promise<ImageEntity> {
-    const jpegBuffer = await sharp(image.buffer)
-      .rotate()
-      .jpeg({
-        quality: 80,
-        mozjpeg: true,
-      })
-      .toBuffer();
-
-    const extension = image.fileName.split(".").pop() || "jpg";
-    const timeStamp = dayjs().format("YYYYMMDDHHmmssSSS");
-    const key = `${productoId}/${timeStamp}-${productoId}.${extension}`;
+  ): Promise<ImageEntity[]> {
+    const thumbBuffer = await sharp(image.buffer).resize(200).webp({ quality: 80 }).toBuffer();
+    const galleryBuffer = await sharp(image.buffer).resize(800).webp({ quality: 80 }).toBuffer();
+    const fullBuffer = await sharp(image.buffer).webp({ quality: 80 }).toBuffer();
+    const extension = "webp";
+    const thumbKey = `${productoId}/${productoId}-200.${extension}`;
+    const galleryKey = `${productoId}/${productoId}-800.${extension}`;
+    const fullKey = `${productoId}/${productoId}-full.${extension}`;
 
     try {
       await this.s3.send(
         new PutObjectCommand({
           Bucket: process.env.S3_BUCKET_NAME,
-          Key: key,
-          ContentType: "image/jpeg",
-          ContentLength: jpegBuffer.length,
-          Body: jpegBuffer,
+          Key: thumbKey,
+          ContentType: "image/webp",
+          ContentLength: thumbBuffer.length,
+          Body: thumbBuffer,
+          CacheControl: "public, max-age=31536000",
+        }),
+      );
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: galleryKey,
+          ContentType: "image/webp",
+          ContentLength: galleryBuffer.length,
+          Body: galleryBuffer,
+          CacheControl: "public, max-age=31536000",
+        }),
+      );
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: fullKey,
+          ContentType: "image/webp",
+          ContentLength: fullBuffer.length,
+          Body: fullBuffer,
           CacheControl: "public, max-age=31536000",
         }),
       );
@@ -304,10 +320,30 @@ export class SheetService {
     }
     const imageRepository = this.productoRepository.manager.getRepository(ImageEntity);
 
-    return await imageRepository.save({
-      productoId,
-      url: `${process.env.CDN_BASE_URL}/${key}`,
-      isMain: true,
-    });
+    const images = await Promise.all([
+      imageRepository.save({
+        productoId,
+        url: `${process.env.CDN_BASE_URL}/${fullKey}`,
+        format: IMAGE_FORMAT.WEBP,
+        type: IMAGE_TYPE.FULL,
+        isMain: true,
+      }),
+      imageRepository.save({
+        productoId,
+        url: `${process.env.CDN_BASE_URL}/${galleryKey}`,
+        format: IMAGE_FORMAT.WEBP,
+        type: IMAGE_TYPE.GALLERY,
+        isMain: false,
+      }),
+      imageRepository.save({
+        productoId,
+        url: `${process.env.CDN_BASE_URL}/${thumbKey}`,
+        format: IMAGE_FORMAT.WEBP,
+        type: IMAGE_TYPE.THUMBNAIL,
+        isMain: false,
+      }),
+    ]);
+
+    return images;
   }
 }

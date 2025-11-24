@@ -1,10 +1,11 @@
+import { IMAGE_FORMAT, IMAGE_TYPE } from "src/constants";
 import { ProductoEntity } from "src/Producto";
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 
@@ -22,10 +23,16 @@ export class ImageEntity {
   @Column({ default: true, name: "is_main" })
   isMain: boolean;
 
+  @Column({ type: "varchar", default: IMAGE_TYPE.GALLERY })
+  type: IMAGE_TYPE;
+
+  @Column({ type: "varchar", default: IMAGE_FORMAT.JPEG })
+  format: IMAGE_FORMAT;
+
   @CreateDateColumn()
   createdAt: Date;
 
-  @OneToOne(() => ProductoEntity, p => p.image)
+  @ManyToOne(() => ProductoEntity, p => p.images, { onDelete: "CASCADE" })
   @JoinColumn({ name: "productoId" })
   producto: ProductoEntity;
 }

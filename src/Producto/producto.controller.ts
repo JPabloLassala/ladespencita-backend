@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ProductoEntity } from "./producto.entity";
 import { ProductoCreateDTO, ProductoUpdateDTO } from "./producto.dto";
-import { ImageService } from "src/Image/image.service";
+import { ImageService } from "src/Image";
 
 @Controller("producto")
 export class ProductoController {

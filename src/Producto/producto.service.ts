@@ -4,8 +4,7 @@ import { AlquilerAdapter } from "src/Alquiler";
 import { ProductoAdapter } from "./producto.adapter";
 import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "./producto.entity";
 import { AlquilerProductoAdapter } from "src/AlquilerProducto";
-import { ImageService } from "src/Image/image.service";
-import { ImageEntity } from "src/Image";
+import { ImageEntity, ImageService } from "src/Image";
 
 @Injectable()
 export class ProductoService {
@@ -49,9 +48,9 @@ export class ProductoService {
     file: Express.Multer.File,
   ): Promise<ProductoEntity> {
     const result = await this.productoAdapter.createOne(partialProducto);
-    const images = await this.imageService.createOne(file, result.id);
+    const images = await this.imageService.create(file, result.id);
 
-    return { ...result, images: [images] };
+    return { ...result, images };
   }
 
   async updateOne(
@@ -63,8 +62,8 @@ export class ProductoService {
     const updated = await this.productoAdapter.updateOne(partialProducto);
     if (file) {
       await this.imageService.deleteManyFromProducto(partialProducto.id);
-      image = await this.imageService.createOne(file, partialProducto.id);
-      updated.images = [image];
+      const images = await this.imageService.create(file, partialProducto.id);
+      updated.images = images;
     }
 
     return updated;

@@ -19,9 +19,7 @@ export class ImageController {
     @UploadedFiles() multer: { files: Express.Multer.File[] },
     @Body("productoId") productoId: number,
   ) {
-    const createFilePromises = multer.files.map(file =>
-      this.imageService.createOne(file, productoId),
-    );
+    const createFilePromises = multer.files.map(file => this.imageService.create(file, productoId));
     const result = await Promise.all(createFilePromises);
 
     return result;
@@ -33,7 +31,7 @@ export class ImageController {
     @UploadedFile("file") file: Express.Multer.File,
     @Body("productoId") productoId: string,
   ) {
-    const result = await this.imageService.createOne(file, parseInt(productoId, 10));
+    const result = await this.imageService.create(file, parseInt(productoId, 10));
 
     return result;
   }

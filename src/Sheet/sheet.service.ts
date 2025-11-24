@@ -320,28 +320,28 @@ export class SheetService {
     }
     const imageRepository = this.productoRepository.manager.getRepository(ImageEntity);
 
-    const images = await Promise.all([
-      imageRepository.save({
+    const images = await imageRepository.save([
+      {
         productoId,
         url: `${process.env.CDN_BASE_URL}/${fullKey}`,
         format: IMAGE_FORMAT.WEBP,
         type: IMAGE_TYPE.FULL,
         isMain: true,
-      }),
-      imageRepository.save({
+      },
+      {
         productoId,
         url: `${process.env.CDN_BASE_URL}/${galleryKey}`,
         format: IMAGE_FORMAT.WEBP,
         type: IMAGE_TYPE.GALLERY,
         isMain: false,
-      }),
-      imageRepository.save({
+      },
+      {
         productoId,
         url: `${process.env.CDN_BASE_URL}/${thumbKey}`,
         format: IMAGE_FORMAT.WEBP,
         type: IMAGE_TYPE.THUMBNAIL,
         isMain: false,
-      }),
+      },
     ]);
 
     return images;

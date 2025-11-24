@@ -306,7 +306,7 @@ export class SheetService {
 
     return await imageRepository.save({
       productoId,
-      url: `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
+      url: `${process.env.CDN_BASE_URL}/${key}`,
       isMain: true,
     });
   }

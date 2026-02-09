@@ -12,8 +12,6 @@ import { Repository } from "typeorm";
 import { ImageEntity } from "./image.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import sharp from "sharp";
-import dayjs from "dayjs";
-import { buffer } from "stream/consumers";
 
 @Injectable()
 export class ImageService {

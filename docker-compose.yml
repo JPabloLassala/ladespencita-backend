@@ -25,7 +25,7 @@ services:
     build:
       context: "../ladespensita"
       dockerfile: Dockerfile
-      target: development
+      target: production
     working_dir: /front
     platform: ${BUILD_PLATFORM:-}
     container_name: front

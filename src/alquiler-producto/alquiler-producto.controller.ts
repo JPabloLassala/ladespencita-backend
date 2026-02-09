@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from "@nestjs/common";
-import { AlquilerProductoAdapter } from "./alquilerProducto.adapter";
+import { AlquilerProductoAdapter } from "./alquiler-producto.adapter";
 import {
   AlquilerProductoCreateDTO,
   AlquilerProductoUpdateDTO,
   CheckRemainingDto,
-} from "./alquilerProducto.dto";
-import { AlquilerProductoService } from "./alquilerProducto.service";
+} from "./alquiler-producto.dto";
+import { AlquilerProductoService } from "./alquiler-producto.service";
 
 @Controller("alquilerProducto")
 export class AlquilerProductoController {

@@ -1,4 +1,4 @@
-import { ProductoEntity } from "src/Producto";
+import { ProductoEntity } from "src/producto";
 import {
   Column,
   CreateDateColumn,
@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { AlquilerEntity } from "src/Alquiler/alquiler.entity";
+import { AlquilerEntity } from "src/alquiler/alquiler.entity";
 
 @Entity({ name: "alquiler_productos" })
 @Unique("uq_alquiler_producto", ["productoId", "alquilerId"])

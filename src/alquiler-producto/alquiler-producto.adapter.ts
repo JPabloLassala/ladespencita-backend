@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { ALQUILER_STATUS } from "src/Alquiler";
+import { ALQUILER_STATUS } from "src/alquiler";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ProductoEntity } from "src/Producto";
+import { ProductoEntity } from "src/producto";
 import { In, Repository } from "typeorm";
 import {
   AlquilerProductoCreate,
   AlquilerProductoEntity,
   AlquilerProductoUpdate,
-} from "./alquilerProducto.entity";
-import { AlquilerProductoRemaining } from "./alquilerProducto.types";
+} from "./alquiler-producto.entity";
+import { AlquilerProductoRemaining } from "./alquiler-producto.types";
 
 @Injectable()
 export class AlquilerProductoAdapter {

@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { AlquilerProductoAdapter } from "./alquilerProducto.adapter";
+import { AlquilerProductoAdapter } from "./alquiler-producto.adapter";
 import {
   AlquilerProductoCreate,
   AlquilerProductoEntity,
   AlquilerProductoUpdate,
-} from "./alquilerProducto.entity";
+} from "./alquiler-producto.entity";
 
 @Injectable()
 export class AlquilerProductoService {

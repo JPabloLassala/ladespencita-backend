@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { ProductoEntityCreate } from "src/Producto";
+import { ProductoEntityCreate } from "src/producto";
 
 export const productos: ProductoEntityCreate[] = new Array(100).fill(0).map(() => ({
   nombre: faker.commerce.productName(),

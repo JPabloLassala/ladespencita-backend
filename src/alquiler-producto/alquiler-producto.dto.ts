@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { AlquilerProductoEntity } from "./alquilerProducto.entity";
+import { AlquilerProductoEntity } from "./alquiler-producto.entity";
 import { IsDate, IsNumber, IsOptional, IsPositive } from "class-validator";
 
 export type AlquilerProductoCreateDTO = Omit<

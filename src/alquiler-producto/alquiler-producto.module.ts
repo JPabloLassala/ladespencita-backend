@@ -1,12 +1,12 @@
 import { forwardRef, Module } from "@nestjs/common";
-import { AlquilerProductoController } from "./alquilerProducto.controller";
-import { AlquilerProductoAdapter } from "./alquilerProducto.adapter";
-import { DatabaseModule } from "src/Database";
-import { ProductoEntity, ProductoModule } from "src/Producto";
-import { AlquilerModule } from "src/Alquiler";
+import { AlquilerProductoController } from "./alquiler-producto.controller";
+import { AlquilerProductoAdapter } from "./alquiler-producto.adapter";
+import { DatabaseModule } from "src/database";
+import { ProductoEntity, ProductoModule } from "src/producto";
+import { AlquilerModule } from "src/alquiler";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AlquilerProductoEntity } from "./alquilerProducto.entity";
-import { AlquilerProductoService } from "./alquilerProducto.service";
+import { AlquilerProductoEntity } from "./alquiler-producto.entity";
+import { AlquilerProductoService } from "./alquiler-producto.service";
 
 @Module({
   imports: [

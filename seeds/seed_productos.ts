@@ -1,4 +1,4 @@
-import { ProductoEntity } from "src/Producto";
+import { ProductoEntity } from "src/producto";
 import { productos } from "./data/productos";
 
 export async function seed_Products(dataSource) {

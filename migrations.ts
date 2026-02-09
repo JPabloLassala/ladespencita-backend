@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { createDataSourceOptions } from "src/Database/database.config";
+import { createDataSourceOptions } from "src/database/database.config";
 
 const databaseUrl = process.env.DATABASE_URL;
 

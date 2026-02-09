@@ -2,7 +2,7 @@ import { forwardRef, Module } from "@nestjs/common";
 import { ProductoController } from "./producto.controller";
 import { ProductoAdapter } from "./producto.adapter";
 import { ProductoService } from "./producto.service";
-import { DatabaseModule } from "src/database";
+import { DatabaseModule } from "src/infrastructure/database";
 import { AlquilerModule } from "src/modules/alquiler";
 import { AlquilerProductoModule } from "src/modules/alquiler-producto";
 import { ImageModule } from "src/modules/image";

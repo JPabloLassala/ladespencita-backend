@@ -1,4 +1,4 @@
-import { IMAGE_FORMAT, IMAGE_TYPE } from "src/constants";
+import { IMAGE_FORMAT, IMAGE_TYPE } from "src/common/constants";
 import { ProductoEntity } from "src/modules/producto";
 import {
   Column,

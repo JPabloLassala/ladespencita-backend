@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { DatabaseModule } from "src/database";
+import { DatabaseModule } from "src/infrastructure/database";
 import { AlquilerController } from "./alquiler.controller";
 import { AlquilerAdapter } from "./alquiler.adapter";
 import { AlquilerService } from "./alquiler.service";

@@ -5,8 +5,8 @@ import { ConfigModule } from "@nestjs/config";
 import { AlquilerProductoModule } from "src/modules/alquiler-producto";
 import { AuthModule } from "src/auth";
 import { ImageModule } from "src/modules/image";
-import { DatabaseModule } from "src/database";
 import { SheetModule } from "src/modules/sheet";
+import { DatabaseModule } from "src/infrastructure/database";
 
 @Module({
   imports: [

@@ -1,7 +1,7 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { AlquilerProductoController } from "./alquiler-producto.controller";
 import { AlquilerProductoAdapter } from "./alquiler-producto.adapter";
-import { DatabaseModule } from "src/database";
+import { DatabaseModule } from "src/infrastructure/database";
 import { ProductoEntity, ProductoModule } from "src/modules/producto";
 import { AlquilerModule } from "src/modules/alquiler";
 import { TypeOrmModule } from "@nestjs/typeorm";

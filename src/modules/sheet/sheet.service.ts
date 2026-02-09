@@ -5,7 +5,7 @@ import Dinero from "dinero.js";
 import { XMLParser } from "fast-xml-parser";
 import JSZip from "jszip";
 import sharp from "sharp";
-import { IMAGE_FORMAT, IMAGE_TYPE } from "src/constants";
+import { IMAGE_FORMAT, IMAGE_TYPE } from "src/common/constants";
 import { ImageEntity } from "src/modules/image";
 import { ProductoEntity, ProductoEntityCreate } from "src/modules/producto";
 import { Repository } from "typeorm";

@@ -7,7 +7,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Inject, Injectable } from "@nestjs/common";
-import { IMAGE_FORMAT, IMAGE_TYPE, S3 } from "src/constants";
+import { IMAGE_FORMAT, IMAGE_TYPE, S3 } from "src/common/constants";
 import { Repository } from "typeorm";
 import { ImageEntity } from "./image.entity";
 import { InjectRepository } from "@nestjs/typeorm";

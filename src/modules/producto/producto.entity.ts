@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
-import { ImageEntity } from "src/image";
+import { ImageEntity } from "src/modules/image";
 import {
   Column,
   CreateDateColumn,

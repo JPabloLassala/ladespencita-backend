@@ -1,10 +1,10 @@
 import { forwardRef, Inject, Injectable, Logger } from "@nestjs/common";
 import { Dayjs } from "dayjs";
-import { AlquilerAdapter } from "src/alquiler";
+import { AlquilerAdapter } from "src/modules/alquiler";
 import { ProductoAdapter } from "./producto.adapter";
 import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "./producto.entity";
-import { AlquilerProductoAdapter } from "src/alquiler-producto";
-import { ImageEntity, ImageService } from "src/image";
+import { AlquilerProductoAdapter } from "src/modules/alquiler-producto";
+import { ImageEntity, ImageService } from "src/modules/image";
 
 @Injectable()
 export class ProductoService {

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { AlquilerAdapter } from "./alquiler.adapter";
 import { AlquilerCreate, AlquilerUpdate } from "./alquiler.entity";
-import { AlquilerProductoService } from "src/alquiler-producto/alquiler-producto.service";
+import { AlquilerProductoService } from "src/modules/alquiler-producto/alquiler-producto.service";
 
 @Injectable()
 export class AlquilerService {

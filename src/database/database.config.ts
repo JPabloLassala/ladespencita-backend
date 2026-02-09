@@ -1,8 +1,8 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { AlquilerEntity } from "src/alquiler";
-import { AlquilerProductoEntity } from "src/alquiler-producto";
-import { ImageEntity } from "src/image";
-import { ProductoEntity } from "src/producto";
+import { AlquilerEntity } from "src/modules/alquiler";
+import { AlquilerProductoEntity } from "src/modules/alquiler-producto";
+import { ImageEntity } from "src/modules/image";
+import { ProductoEntity } from "src/modules/producto";
 import { DataSourceOptions } from "typeorm";
 
 export const DATABASE_ENTITIES = [

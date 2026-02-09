@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { alquileres } from "./data/alquileres";
-import { AlquilerEntity } from "src/alquiler/alquiler.entity";
-import { AlquilerProductoCreate } from "src/alquiler-producto";
-import { ProductoEntity } from "src/producto";
+import { AlquilerEntity } from "src/modules/alquiler/alquiler.entity";
+import { AlquilerProductoCreate } from "src/modules/alquiler-producto";
+import { ProductoEntity } from "src/modules/producto";
 import { DataSource } from "typeorm";
 
 export async function seed_Alquileres(dataSource): Promise<void> {

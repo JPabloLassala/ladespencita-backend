@@ -6,8 +6,8 @@ import { XMLParser } from "fast-xml-parser";
 import JSZip from "jszip";
 import sharp from "sharp";
 import { IMAGE_FORMAT, IMAGE_TYPE } from "src/constants";
-import { ImageEntity } from "src/image";
-import { ProductoEntity, ProductoEntityCreate } from "src/producto";
+import { ImageEntity } from "src/modules/image";
+import { ProductoEntity, ProductoEntityCreate } from "src/modules/producto";
 import { Repository } from "typeorm";
 import * as XLSX from "xlsx";
 

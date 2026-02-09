@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { ALQUILER_STATUS } from "src/alquiler";
-import { AlquilerCreate } from "src/alquiler/alquiler.entity";
+import { ALQUILER_STATUS } from "src/modules/alquiler";
+import { AlquilerCreate } from "src/modules/alquiler/alquiler.entity";
 
 export const alquileres: AlquilerCreate[] = new Array(5).fill(undefined).map(() => ({
   productora: faker.company.name(),

@@ -1,5 +1,5 @@
 import { IMAGE_FORMAT, IMAGE_TYPE } from "src/constants";
-import { ProductoEntity } from "src/producto";
+import { ProductoEntity } from "src/modules/producto";
 import {
   Column,
   CreateDateColumn,

@@ -5,7 +5,7 @@ import { AlquilerAdapter } from "./alquiler.adapter";
 import { AlquilerService } from "./alquiler.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AlquilerEntity } from ".";
-import { AlquilerProductoModule } from "src/alquiler-producto";
+import { AlquilerProductoModule } from "src/modules/alquiler-producto";
 
 @Module({
   imports: [DatabaseModule, TypeOrmModule.forFeature([AlquilerEntity]), AlquilerProductoModule],

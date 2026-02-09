@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { ALQUILER_STATUS } from "src/alquiler";
+import { ALQUILER_STATUS } from "src/modules/alquiler";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ProductoEntity } from "src/producto";
+import { ProductoEntity } from "src/modules/producto";
 import { In, Repository } from "typeorm";
 import {
   AlquilerProductoCreate,

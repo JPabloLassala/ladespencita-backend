@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
-import { AlquilerModule } from "src/alquiler";
-import { ProductoModule } from "src/producto";
+import { AlquilerModule } from "src/modules/alquiler";
+import { ProductoModule } from "src/modules/producto";
 import { ConfigModule } from "@nestjs/config";
-import { AlquilerProductoModule } from "src/alquiler-producto";
+import { AlquilerProductoModule } from "src/modules/alquiler-producto";
 import { AuthModule } from "src/auth";
-import { ImageModule } from "src/image";
+import { ImageModule } from "src/modules/image";
 import { DatabaseModule } from "src/database";
-import { SheetModule } from "src/sheet";
+import { SheetModule } from "src/modules/sheet";
 
 @Module({
   imports: [

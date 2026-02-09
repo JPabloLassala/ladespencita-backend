@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { SheetService } from "./sheet.service";
 import { SheetController } from "./sheet.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { ProductoEntity } from "src/producto";
+import { ProductoEntity } from "src/modules/producto";
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProductoEntity])],

@@ -3,9 +3,9 @@ import { ProductoController } from "./producto.controller";
 import { ProductoAdapter } from "./producto.adapter";
 import { ProductoService } from "./producto.service";
 import { DatabaseModule } from "src/database";
-import { AlquilerModule } from "src/alquiler";
-import { AlquilerProductoModule } from "src/alquiler-producto";
-import { ImageModule } from "src/image";
+import { AlquilerModule } from "src/modules/alquiler";
+import { AlquilerProductoModule } from "src/modules/alquiler-producto";
+import { ImageModule } from "src/modules/image";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ProductoEntity } from "./producto.entity";
 

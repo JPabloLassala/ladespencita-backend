@@ -1,73 +1,90 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# La Despencita Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend service built with NestJS, TypeORM, and PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**Requirements**
 
-## Description
+- Node.js and Yarn
+- Docker (optional for local Postgres)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+**Environment**
+Create a `.env` file based on `.env.example` if you use env files. Required values:
 
-## Installation
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `DEFINED_USERNAME`
+- `DEFINED_PASSWORD`
+- `CDN_BASE_URL`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_REGION`
+- `S3_BUCKET_NAME`
+
+If you use Docker Compose, `DATABASE_URL` is already set for the container.
+
+**Install**
 
 ```bash
-$ yarn install
+yarn install
 ```
 
-## Running the app
+**Run (local)**
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn dev
 ```
 
-## Test
+**Run (Docker)**
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+docker compose up --build
 ```
 
-## Support
+Postgres data is bound to `./assets/pgdata` via the `postgres-data` volume in `docker-compose.yml`.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**Migrations**
+The TypeORM CLI uses `migrations.ts` at the repo root.
 
-## Stay in touch
+```bash
+# show migrations
+yarn migration:show
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# run migrations
+yarn migration:run
 
-## License
+# revert last migration
+yarn migration:revert
+```
 
-Nest is [MIT licensed](LICENSE).
+**Seeds**
+
+```bash
+yarn seed
+```
+
+**Tests**
+
+```bash
+yarn test
+yarn test:watch
+yarn test:cov
+yarn test:e2e
+```
+
+**Scripts**
+
+```bash
+yarn build
+yarn start
+yarn start:prod
+yarn lint
+yarn format
+```
+
+**Project Structure**
+
+- `src/modules/*` feature modules
+- `src/common/*` shared helpers (guards, filters, decorators, constants)
+- `src/infrastructure/*` external integrations (database, config, storage)
+- `seeds/*` data seed scripts
+- `migrations.ts` TypeORM CLI datasource

@@ -1,21 +1,16 @@
-import { DynamicModule, Module } from "@nestjs/common";
+import { DynamicModule } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AlquilerEntity } from "src/Alquiler";
-import { AlquilerProductoEntity } from "src/AlquilerProducto";
-import { ImageEntity } from "src/Image";
-import { ProductoEntity } from "src/Producto";
+import { createNestTypeOrmOptions } from "./database.config";
 
 export const DatabaseModule: DynamicModule = TypeOrmModule.forRootAsync({
   imports: [ConfigModule],
   inject: [ConfigService],
-  useFactory: (configService: ConfigService) => ({
-    type: "postgres",
-    url: configService.get("DATABASE_URL"),
-    entities: [ProductoEntity, AlquilerEntity, ImageEntity, AlquilerProductoEntity],
-    synchronize: true,
-    retryAttempts: 3,
-    retryDelay: 3000,
-    logging: false,
-  }),
+  useFactory: (configService: ConfigService) => {
+    const databaseUrl = configService.get<string>("DATABASE_URL");
+    if (!databaseUrl) {
+      throw new Error("DATABASE_URL is required");
+    }
+    return createNestTypeOrmOptions(databaseUrl);
+  },
 });

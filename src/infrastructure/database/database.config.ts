@@ -5,20 +5,14 @@ import { ImageEntity } from "src/modules/image";
 import { ProductoEntity } from "src/modules/producto";
 import { DataSourceOptions } from "typeorm";
 
-export const DATABASE_ENTITIES = [
-  ProductoEntity,
-  AlquilerEntity,
-  ImageEntity,
-  AlquilerProductoEntity,
-];
-
 export const DATABASE_MIGRATIONS = ["src/Database/migrations/**/*.ts"];
 
 export function createDataSourceOptions(databaseUrl: string): DataSourceOptions {
+  console.log("__dirname", __dirname);
   return {
     type: "postgres",
     url: databaseUrl,
-    entities: DATABASE_ENTITIES,
+    entities: [AlquilerEntity, ProductoEntity, AlquilerProductoEntity, ImageEntity],
     migrations: DATABASE_MIGRATIONS,
     synchronize: false,
     logging: false,

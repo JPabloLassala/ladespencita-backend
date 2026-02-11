@@ -8,7 +8,6 @@ import { DataSourceOptions } from "typeorm";
 export const DATABASE_MIGRATIONS = ["src/Database/migrations/**/*.ts"];
 
 export function createDataSourceOptions(databaseUrl: string): DataSourceOptions {
-  console.log("__dirname", __dirname);
   return {
     type: "postgres",
     url: databaseUrl,

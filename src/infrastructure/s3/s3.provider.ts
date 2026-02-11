@@ -2,7 +2,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { Provider } from "@nestjs/common";
 import { S3 } from "src/common/constants";
 
-export const s3Provider: Provider = {
+export const S3Provider: Provider = {
   provide: S3,
   useFactory: () => {
     const s3 = new S3Client({

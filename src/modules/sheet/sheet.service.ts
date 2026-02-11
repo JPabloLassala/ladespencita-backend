@@ -1,11 +1,11 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable, Logger, Provider } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import Dinero from "dinero.js";
 import { XMLParser } from "fast-xml-parser";
 import JSZip from "jszip";
 import sharp from "sharp";
-import { IMAGE_FORMAT, IMAGE_TYPE } from "src/common/constants";
+import { IMAGE_FORMAT, IMAGE_TYPE, S3 } from "src/common/constants";
 import { ImageEntity } from "src/modules/image";
 import { ProductoEntity, ProductoEntityCreate } from "src/modules/producto";
 import { Repository } from "typeorm";
@@ -13,19 +13,10 @@ import * as XLSX from "xlsx";
 
 @Injectable()
 export class SheetService {
-  private readonly s3: S3Client;
-
   constructor(
     @InjectRepository(ProductoEntity) private productoRepository: Repository<ProductoEntity>,
-  ) {
-    this.s3 = new S3Client({
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-    });
-  }
+    @Inject(S3) private readonly s3: S3Client,
+  ) {}
 
   columnToLetter(col: number) {
     let s = "";
@@ -84,8 +75,8 @@ export class SheetService {
       // Avoid inserting empty rows
       if (!producto.nombre) continue;
 
-      console.log("producto", producto);
       const newProducto = await this.productoRepository.save(producto);
+      Logger.log(`Parsed Producto ${newProducto.id}`);
 
       const imageForRow = imagesWithNames.find(
         img => this.getRowFromCell(img.cell) === excelRow || img.name === producto.nombre,

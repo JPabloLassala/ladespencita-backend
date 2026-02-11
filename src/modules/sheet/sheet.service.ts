@@ -34,21 +34,38 @@ export class SheetService {
       file.buffer,
       "INVENTARIOPLANTILLA PRESUPUESTO",
     );
+    const imagesByRow = new Map<number, (typeof imagesWithNames)[number]>();
+    const imagesByName = new Map<string, (typeof imagesWithNames)[number]>();
+    for (const img of imagesWithNames) {
+      const row = this.getRowFromCell(img.cell);
+      if (row !== null && !imagesByRow.has(row)) imagesByRow.set(row, img);
+      if (img.name) {
+        const key = img.name.trim().toLowerCase();
+        if (key && !imagesByName.has(key)) imagesByName.set(key, img);
+      }
+    }
     const workbook = XLSX.read(buffer, { type: "buffer" });
     const sheetName = "INVENTARIOPLANTILLA PRESUPUESTO";
     const sheet = workbook.Sheets[sheetName];
 
-    const createdProductos: ProductoEntity[] = [];
     const range = XLSX.utils.decode_range(sheet["!ref"] ?? "A1");
-
+    const rowIndices: number[] = [];
     for (let rowIndex = 4; rowIndex <= range.e.r; rowIndex++) {
+      rowIndices.push(rowIndex);
+    }
+
+    const parsedConcurrency = Number(process.env.SHEET_PARSE_CONCURRENCY ?? 4);
+    const concurrency =
+      Number.isFinite(parsedConcurrency) && parsedConcurrency > 0 ? parsedConcurrency : 4;
+
+    const results = await this.mapWithConcurrency(rowIndices, concurrency, async rowIndex => {
       const excelRow = rowIndex + 1; // 1-based row number in the sheet
       const nombre = this.getCellValue(sheet, `B${excelRow}`);
 
-      if (!nombre || `${nombre}`.trim().toLowerCase() === "producto") continue;
+      if (!nombre || `${nombre}`.trim().toLowerCase() === "producto") return null;
 
       const costoProducto = this.toNumber(this.getCellValue(sheet, `J${excelRow}`));
-      if (costoProducto === null) continue;
+      if (costoProducto === null) return null;
 
       const producto: ProductoEntityCreate = {
         nombre: `${nombre}`.trim(),
@@ -75,14 +92,13 @@ export class SheetService {
 
       // Avoid inserting empty rows
       Logger.log(`Producto name: ${producto.nombre}`, SheetService.name);
-      if (!producto.nombre) continue;
+      if (!producto.nombre) return null;
 
       const newProducto = await this.productoRepository.save(producto);
       Logger.log(`Parsed Producto ${newProducto.id}`, SheetService.name);
 
-      const imageForRow = imagesWithNames.find(
-        img => this.getRowFromCell(img.cell) === excelRow || img.name === producto.nombre,
-      );
+      const nameKey = producto.nombre.trim().toLowerCase();
+      const imageForRow = imagesByRow.get(excelRow) ?? imagesByName.get(nameKey);
 
       if (imageForRow) {
         const savedImages = await this.uploadCompressedImage(imageForRow, newProducto.id);
@@ -91,8 +107,12 @@ export class SheetService {
         }
       }
 
-      createdProductos.push(newProducto);
-    }
+      return newProducto;
+    });
+
+    const createdProductos = results.filter(
+      (producto): producto is ProductoEntity => producto !== null,
+    );
 
     return { created: createdProductos.length, productos: createdProductos };
   }
@@ -268,45 +288,49 @@ export class SheetService {
     image: { buffer: Buffer; fileName: string },
     productoId: number,
   ): Promise<ImageEntity[]> {
-    const thumbBuffer = await sharp(image.buffer).resize(200).webp({ quality: 80 }).toBuffer();
-    const galleryBuffer = await sharp(image.buffer).resize(800).webp({ quality: 80 }).toBuffer();
-    const fullBuffer = await sharp(image.buffer).webp({ quality: 80 }).toBuffer();
+    const [thumbBuffer, galleryBuffer, fullBuffer] = await Promise.all([
+      sharp(image.buffer).resize(200).webp({ quality: 80 }).toBuffer(),
+      sharp(image.buffer).resize(800).webp({ quality: 80 }).toBuffer(),
+      sharp(image.buffer).webp({ quality: 80 }).toBuffer(),
+    ]);
     const extension = "webp";
     const thumbKey = `${productoId}/${productoId}-200.${extension}`;
     const galleryKey = `${productoId}/${productoId}-800.${extension}`;
     const fullKey = `${productoId}/${productoId}-full.${extension}`;
 
     try {
-      await this.s3.send(
-        new PutObjectCommand({
-          Bucket: process.env.S3_BUCKET_NAME,
-          Key: thumbKey,
-          ContentType: "image/webp",
-          ContentLength: thumbBuffer.length,
-          Body: thumbBuffer,
-          CacheControl: "public, max-age=31536000",
-        }),
-      );
-      await this.s3.send(
-        new PutObjectCommand({
-          Bucket: process.env.S3_BUCKET_NAME,
-          Key: galleryKey,
-          ContentType: "image/webp",
-          ContentLength: galleryBuffer.length,
-          Body: galleryBuffer,
-          CacheControl: "public, max-age=31536000",
-        }),
-      );
-      await this.s3.send(
-        new PutObjectCommand({
-          Bucket: process.env.S3_BUCKET_NAME,
-          Key: fullKey,
-          ContentType: "image/webp",
-          ContentLength: fullBuffer.length,
-          Body: fullBuffer,
-          CacheControl: "public, max-age=31536000",
-        }),
-      );
+      await Promise.all([
+        this.s3.send(
+          new PutObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: thumbKey,
+            ContentType: "image/webp",
+            ContentLength: thumbBuffer.length,
+            Body: thumbBuffer,
+            CacheControl: "public, max-age=31536000",
+          }),
+        ),
+        this.s3.send(
+          new PutObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: galleryKey,
+            ContentType: "image/webp",
+            ContentLength: galleryBuffer.length,
+            Body: galleryBuffer,
+            CacheControl: "public, max-age=31536000",
+          }),
+        ),
+        this.s3.send(
+          new PutObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME,
+            Key: fullKey,
+            ContentType: "image/webp",
+            ContentLength: fullBuffer.length,
+            Body: fullBuffer,
+            CacheControl: "public, max-age=31536000",
+          }),
+        ),
+      ]);
     } catch (error) {
       console.error("Error uploading image to S3:", error);
       throw error;
@@ -338,5 +362,29 @@ export class SheetService {
     ]);
 
     return images;
+  }
+
+  private async mapWithConcurrency<T, R>(
+    items: T[],
+    limit: number,
+    worker: (item: T, index: number) => Promise<R>,
+  ): Promise<R[]> {
+    if (items.length === 0) return [];
+
+    const results = new Array<R>(items.length);
+    let nextIndex = 0;
+    const workerCount = Math.min(limit, items.length);
+
+    const workers = Array.from({ length: workerCount }, async () => {
+      while (true) {
+        const currentIndex = nextIndex;
+        if (currentIndex >= items.length) break;
+        nextIndex += 1;
+        results[currentIndex] = await worker(items[currentIndex], currentIndex);
+      }
+    });
+
+    await Promise.all(workers);
+    return results;
   }
 }

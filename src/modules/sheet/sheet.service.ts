@@ -29,6 +29,7 @@ export class SheetService {
 
   async parseExcel(file: Express.Multer.File): Promise<any> {
     const buffer = file.buffer;
+    Logger.log(`Got buffer ${buffer.length}`, SheetService.name);
     const imagesWithNames = await this.extractJpegImagesWithNames(
       file.buffer,
       "INVENTARIOPLANTILLA PRESUPUESTO",
@@ -73,10 +74,11 @@ export class SheetService {
       };
 
       // Avoid inserting empty rows
+      Logger.log(`Producto name: ${producto.nombre}`, SheetService.name);
       if (!producto.nombre) continue;
 
       const newProducto = await this.productoRepository.save(producto);
-      Logger.log(`Parsed Producto ${newProducto.id}`);
+      Logger.log(`Parsed Producto ${newProducto.id}`, SheetService.name);
 
       const imageForRow = imagesWithNames.find(
         img => this.getRowFromCell(img.cell) === excelRow || img.name === producto.nombre,

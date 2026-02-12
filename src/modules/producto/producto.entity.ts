@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -16,6 +17,7 @@ export class ProductoEntity {
   id: number;
 
   @Column()
+  @Index("idx_productos_nombre")
   @IsString()
   nombre: string;
 

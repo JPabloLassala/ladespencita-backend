@@ -27,7 +27,7 @@ export class AlquilerProductoService {
       ap => !ap.hasOwnProperty("id") && ap.cantidad > 0,
     ) as AlquilerProductoCreate[];
     const apsToUpdate = alquilerProductos.filter(ap =>
-      ap.hasOwnProperty("id"),
+      ap.hasOwnProperty("id") && ap.cantidad > 0,
     ) as AlquilerProductoUpdate[];
     const apsToDelete = alquilerProductos
       .filter(ap => ap.cantidad === 0 && ap.hasOwnProperty("id"))

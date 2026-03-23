@@ -1,8 +1,8 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { AlquilerEntity } from "src/modules/alquiler";
-import { AlquilerProductoEntity } from "src/modules/alquiler-producto";
-import { ImageEntity } from "src/modules/image";
-import { ProductoEntity } from "src/modules/producto";
+import { AlquilerEntity } from "src/modules/alquiler/alquiler.entity";
+import { AlquilerProductoEntity } from "src/modules/alquiler-producto/alquiler-producto.entity";
+import { ImageEntity } from "src/modules/image/image.entity";
+import { ProductoEntity } from "src/modules/producto/producto.entity";
 import { DataSourceOptions } from "typeorm";
 
 export const DATABASE_MIGRATIONS = ["src/Database/migrations/**/*.ts"];
@@ -21,7 +21,7 @@ export function createDataSourceOptions(databaseUrl: string): DataSourceOptions 
 export function createNestTypeOrmOptions(databaseUrl: string): TypeOrmModuleOptions {
   return {
     ...createDataSourceOptions(databaseUrl),
-    synchronize: true,
+    synchronize: false,
     retryAttempts: 3,
     retryDelay: 3000,
   };

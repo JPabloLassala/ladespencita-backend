@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { ALQUILER_STATUS } from "src/modules/alquiler";
+import { ALQUILER_STATUS } from "src/modules/alquiler/alquiler.const";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ProductoEntity } from "src/modules/producto";
+import { ProductoEntity } from "src/modules/producto/producto.entity";
 import { In, Repository } from "typeorm";
 import {
   AlquilerProductoCreate,
@@ -121,7 +121,7 @@ export class AlquilerProductoAdapter {
       );
     }
 
-    return await this.alquilerProductoRepository.create(newAlquilerProducto);
+    return await this.alquilerProductoRepository.save(newAlquilerProducto);
   }
 
   async createMany(
@@ -208,6 +208,7 @@ export class AlquilerProductoAdapter {
   }
 
   async deleteMany(ids: number[]): Promise<void> {
+    if (ids.length === 0) return;
     await this.alquilerProductoRepository.delete({
       id: In(ids),
     });

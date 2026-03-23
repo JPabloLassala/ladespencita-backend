@@ -3,11 +3,10 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
   UsePipes,
@@ -18,7 +17,7 @@ import { ProductoService } from "./producto.service";
 import dayjs from "dayjs";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ProductoEntity } from "./producto.entity";
-import { ProductoCreateDTO, ProductoUpdateDTO } from "./producto.dto";
+import { InStockQueryDto, ProductoCreateDTO, ProductoUpdateDTO } from "./producto.dto";
 import { ImageService } from "src/modules/image";
 
 @Controller("producto")
@@ -36,7 +35,7 @@ export class ProductoController {
 
   @Get("/in-stock")
   async getProductosBetweenDates(
-    @Body() dates: { since: string; until: string },
+    @Query() dates: InStockQueryDto,
   ): Promise<ProductoEntity[]> {
     const since = dayjs(dates.since);
     const until = dayjs(dates.until);
@@ -45,15 +44,7 @@ export class ProductoController {
 
   @Get(":id")
   async getOne(@Param("id") id: number): Promise<ProductoEntity> {
-    try {
-      return await this.productoAdapter.getOne(id);
-    } catch (error) {
-      throw new HttpException(
-        { status: HttpStatus.INTERNAL_SERVER_ERROR, error: "Internal Server Error" },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        { cause: error },
-      );
-    }
+    return await this.productoAdapter.getOne(id);
   }
 
   @Put(":id")
@@ -64,15 +55,7 @@ export class ProductoController {
     @UploadedFile("file") file: Express.Multer.File,
     @Param("id") id: number,
   ): Promise<ProductoEntity> {
-    try {
-      return await this.productoService.updateOne(updateProductDTO.body, file);
-    } catch (error) {
-      throw new HttpException(
-        { status: HttpStatus.NOT_MODIFIED, error: "Internal Server Error" },
-        HttpStatus.NOT_MODIFIED,
-        { cause: error },
-      );
-    }
+    return await this.productoService.updateOne(updateProductDTO.body, file);
   }
 
   @Post()

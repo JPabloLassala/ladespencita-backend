@@ -1,6 +1,6 @@
-import { Transform } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { ProductoEntity, ProductoEntityUpdate } from "./producto.entity";
-import { IsObject } from "class-validator";
+import { IsDate, IsObject } from "class-validator";
 
 export type ProductoDTO = Omit<ProductoEntity, "id" | "image" | "createdAt" | "updatedAt">;
 
@@ -32,4 +32,14 @@ export class ProductoUpdateDTO {
     }
   })
   body: ProductoEntityUpdate;
+}
+
+export class InStockQueryDto {
+  @Type(() => Date)
+  @IsDate()
+  since: Date;
+
+  @Type(() => Date)
+  @IsDate()
+  until: Date;
 }

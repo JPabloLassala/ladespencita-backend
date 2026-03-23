@@ -1,4 +1,4 @@
-import { AlquilerProductoEntity } from "src/modules/alquiler-producto";
+import { AlquilerProductoEntity } from "src/modules/alquiler-producto/alquiler-producto.entity";
 import {
   Column,
   CreateDateColumn,

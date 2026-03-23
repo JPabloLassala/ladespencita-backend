@@ -1,13 +1,18 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectDataSource } from "@nestjs/typeorm";
+import { DataSource } from "typeorm";
 import { AlquilerAdapter } from "./alquiler.adapter";
 import { AlquilerCreate, AlquilerUpdate } from "./alquiler.entity";
+import { AlquilerEntity } from "./alquiler.entity";
 import { AlquilerProductoService } from "src/modules/alquiler-producto/alquiler-producto.service";
+import { AlquilerProductoEntity } from "src/modules/alquiler-producto/alquiler-producto.entity";
 
 @Injectable()
 export class AlquilerService {
   constructor(
     private readonly alquilerAdapter: AlquilerAdapter,
     private readonly alquilerProductoService: AlquilerProductoService,
+    @InjectDataSource() private readonly dataSource: DataSource,
   ) {}
 
   async getAlquileres() {
@@ -15,7 +20,9 @@ export class AlquilerService {
   }
 
   async getAlquiler(id: number) {
-    return await this.alquilerAdapter.getAlquiler(id);
+    const alquiler = await this.alquilerAdapter.getAlquiler(id);
+    if (!alquiler) throw new NotFoundException(`Alquiler ${id} not found`);
+    return alquiler;
   }
 
   async createAlquiler(alquiler: AlquilerCreate) {
@@ -31,7 +38,9 @@ export class AlquilerService {
   }
 
   async deleteAlquiler(id: number) {
-    await this.alquilerProductoService.deleteByAlquilerId(id);
-    await this.alquilerAdapter.deleteOne(id);
+    await this.dataSource.transaction(async manager => {
+      await manager.delete(AlquilerProductoEntity, { alquilerId: id });
+      await manager.delete(AlquilerEntity, { id });
+    });
   }
 }

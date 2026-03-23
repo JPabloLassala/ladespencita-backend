@@ -6,12 +6,11 @@ export class AuthService {
   constructor(private jwtService: JwtService) {}
 
   async signIn(username: string, password: string) {
-    if (username === process.env.DEFINED_USERNAME && password !== process.env.DEFINED_PASSWORD) {
-      throw new UnauthorizedException("Invalid password");
-    }
-
-    if (username !== process.env.DEFINED_USERNAME) {
-      throw new UnauthorizedException("Invalid username");
+    if (
+      username !== process.env.DEFINED_USERNAME ||
+      password !== process.env.DEFINED_PASSWORD
+    ) {
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const payload = { sub: 1, username: username };

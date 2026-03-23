@@ -23,7 +23,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
       message: exception instanceof Error ? exception.message : exception,
-      stack: exception instanceof Error ? exception.stack.split("\n") : null,
     };
 
     this.logger.error(exception);

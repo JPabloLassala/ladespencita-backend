@@ -4,7 +4,7 @@ import { AlquilerAdapter } from "src/modules/alquiler";
 import { ProductoAdapter } from "./producto.adapter";
 import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "./producto.entity";
 import { AlquilerProductoAdapter } from "src/modules/alquiler-producto";
-import { ImageEntity, ImageService } from "src/modules/image";
+import { ImageService } from "src/modules/image";
 
 @Injectable()
 export class ProductoService {
@@ -57,13 +57,18 @@ export class ProductoService {
     partialProducto: ProductoEntityUpdate,
     file: Express.Multer.File,
   ): Promise<ProductoEntity> {
-    let image: ImageEntity;
-
     const updated = await this.productoAdapter.updateOne(partialProducto);
     if (file) {
-      await this.imageService.deleteManyFromProducto(partialProducto.id);
-      const images = await this.imageService.create(file, partialProducto.id);
-      updated.images = images;
+      // Get current images BEFORE uploading new ones so we know which IDs to remove
+      const current = await this.productoAdapter.getOne(partialProducto.id);
+      const oldImageIds = (current?.images ?? []).map(img => img.id);
+      // Upload new images first — if this fails, old images are untouched
+      const newImages = await this.imageService.create(file, partialProducto.id);
+      updated.images = newImages;
+      // Delete only the old images by specific ID, after the upload succeeds
+      if (oldImageIds.length > 0) {
+        await this.imageService.deleteManyByIds(oldImageIds);
+      }
     }
 
     return updated;

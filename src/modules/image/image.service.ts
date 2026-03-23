@@ -8,7 +8,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { Inject, Injectable } from "@nestjs/common";
 import { IMAGE_FORMAT, IMAGE_TYPE, S3 } from "src/common/constants";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { ImageEntity } from "./image.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import sharp from "sharp";
@@ -56,6 +56,11 @@ export class ImageService {
     });
   }
 
+  async deleteManyByIds(ids: number[]): Promise<void> {
+    if (ids.length === 0) return;
+    await this.imageRepository.delete({ id: In(ids) });
+  }
+
   private async deleteFilesFromProducto(productoId: number): Promise<void> {
     const uploadedFiles = await this.getUploadedFilesFromProducto(productoId);
 
@@ -70,7 +75,7 @@ export class ImageService {
     console.log(`Object path: ${JSON.stringify(uploadedFiles.Contents[0])} `);
 
     const deleteImagesCommand = new DeleteObjectsCommand({
-      Bucket: process.env.BACKBLAZE_BUCKET,
+      Bucket: process.env.S3_BUCKET_NAME,
       Delete: {
         Objects: uploadedFiles.Contents.map((obj: _Object) => ({
           Key: obj.Key!,
@@ -151,7 +156,7 @@ export class ImageService {
   ): Promise<ListObjectsV2CommandOutput> {
     return await this.s3.send(
       new ListObjectsV2Command({
-        Bucket: process.env.BACKBLAZE_BUCKET,
+        Bucket: process.env.S3_BUCKET_NAME,
         Prefix: `${productoId}/`,
       }),
     );
